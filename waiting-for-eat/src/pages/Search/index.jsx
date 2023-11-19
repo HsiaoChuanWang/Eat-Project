@@ -6,7 +6,7 @@ const libraries = ["places"]; //
 
 const Search = () => {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_API_KEY,
     libraries,
   });
 

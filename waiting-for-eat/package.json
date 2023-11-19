@@ -12,9 +12,11 @@
   "dependencies": {
     "@googlemaps/react-wrapper": "^1.1.35",
     "@react-google-maps/api": "^2.19.2",
+    "@react-oauth/google": "^0.12.1",
     "firebase": "^10.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-google-calendar-api": "^2.3.0",
     "react-router-dom": "^6.19.0",
     "styled-components": "^6.1.1",
     "zustand": "^4.4.6"
