@@ -1,17 +1,16 @@
-import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import { GoogleMap } from "@react-google-maps/api";
 import React, { useCallback, useEffect, useMemo } from "react";
 import "./_map.css";
 
-export default function GoogleMaps({
-  currentPosition,
-  mapRef,
-  map,
-  setMap,
-  onLoad,
-  marks,
-}) {
-  // const [currentInfoWindow, setCurrentInfoWindow] = useState(null)
-  // <GoogleMap> 條件設定，隱藏不必要的按鈕
+function MyGoogleMaps({ currentPosition, mapRef, map, setMap, onLoad, marks }) {
+  //三、地圖加載時進行初始化
+  const handleMapLoad = useCallback((map) => {
+    mapRef.current = map;
+    setMap(map);
+    onLoad(map);
+  }, []);
+
+  // 五、隱藏google map上不必要的按鈕
   const options = useMemo(
     () => ({
       disableDefaultUI: true,
@@ -22,38 +21,19 @@ export default function GoogleMaps({
     []
   );
 
-  const handleMapLoad = useCallback((map) => {
-    mapRef.current = map;
-    setMap(map);
-    // map.setZomm(18)
-    // map.setCenter(coords)
-    onLoad(map);
-  }, []);
-
+  //六、使用紅色Mark，標記出位置所有符合的位置
   useEffect(() => {
-    console.log(marks);
+    // console.log(marks);
     marks.map((markInfo) => {
-      const lat = markInfo.geometry.location.lat();
-      const lng = markInfo.geometry.location.lng();
+      const lat = markInfo.lat;
+      const lng = markInfo.lng;
       const marker = new window.google.maps.Marker({
-        key: markInfo.place_id,
         map,
         position: { lat, lng },
       });
 
       const infoWindow = new window.google.maps.InfoWindow();
-      console.log(marker);
-
-      //取得詳細資訊
-      // const PlacesService = new window.google.maps.places.PlacesService(map);
-      // PlacesService.getDetails({placeId : markInfo.place_id},(results, status)=>{
-      //   if (status === 'OK') {
-      //     console.log(results)
-      //   } else {
-      //     console.log('error')
-      //     console.log(`Geocode + ${status}`)
-      //   }
-      // })
+      //   console.log(marker);
 
       marker.addListener("click", () => {
         infoWindow.setContent(`
@@ -67,25 +47,11 @@ export default function GoogleMaps({
             </div>
           `);
         infoWindow.open(map, marker);
-        // setCurrentInfoWindow(infoWindow)
       });
     });
   }, [marks]);
 
-  // useEffect(() => {
-  //   if (map) {
-  //     const clickListener = map.addListener('click', () => {
-  //       if (currentInfoWindow) {
-  //         currentInfoWindow.close()
-  //         setCurrentInfoWindow(null)
-  //       }
-  //     })
-  //     return () => {
-  //       window.google.maps.event.removeListener(clickListener)
-  //     }
-  //   }
-  // }, [map])
-
+  //二、使用<GoogleMap></GoogleMap>來載入地圖
   return (
     <GoogleMap
       zoom={18}
@@ -94,7 +60,9 @@ export default function GoogleMaps({
       options={options}
       onLoad={handleMapLoad}
     >
-      <MarkerF position={currentPosition} />
+      {/* <MarkerF position={currentPosition} /> */}
     </GoogleMap>
   );
 }
+
+export default MyGoogleMaps;
