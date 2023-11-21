@@ -1,8 +1,66 @@
 import { EditorState, convertToRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import React, { useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import db from "../../firebase";
+
+//上傳照片，拿回URL
+async function uploadPicture(picture) {
+  const storage = getStorage();
+  const storageRef = ref(storage, "666"); //666是傳上去的檔案名
+  await uploadBytes(storageRef, picture); //picture是要上傳上去的img路徑
+  const downloadURL = await getDownloadURL(storageRef); //downloadURL是回傳的url
+  return { data: { link: downloadURL } };
+}
+
+//解決因為圖片死去的問題
+function myBlockRenderer(contentBlock) {
+  const type = contentBlock.getType();
+
+  //將圖片類型轉換成mediaComponent
+  if (type === "atomic") {
+    return {
+      component: Media,
+      editable: false,
+      props: {
+        foo: "bar",
+      },
+    };
+  }
+}
+function Media(props) {
+  console.log(props);
+  const { block, contentState } = props;
+  const data = contentState.getEntity(block.getEntityAt(0)).getData();
+  const emptyHtml = " ";
+  return (
+    <div>
+      {emptyHtml}
+      <img
+        src={data.src}
+        alt={data.alt || ""}
+        style={{
+          height: data.height || "auto",
+          width: data.width || "auto",
+        }}
+      />
+    </div>
+  );
+}
+
+//送出html到firestore
+async function handleSend({ editorState }) {
+  const uploadHtml = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+  console.log(uploadHtml);
+  const postRef = doc(db, "post", "kR0VeTSdZfz0pLBAnF0y");
+  await updateDoc(postRef, {
+    content: uploadHtml,
+    createdDate: serverTimestamp(),
+  });
+}
 
 function TextEditor() {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -12,30 +70,10 @@ function TextEditor() {
   }
 
   function _uploadImageCallBack(file) {
-    // long story short, every time we upload an image, we
-    // need to save it to the state so we can get it's data
-    // later when we decide what to do with it.
-
-    // Make sure you have a uploadImages: [] as your default state
-    // let uploadedImages = [this.state.uploadedImages];
-
-    const imageObject = {
-      file: file,
-      localSrc: URL.createObjectURL(file),
-    };
-
-    // uploadedImages.push(imageObject);
-
-    // this.setState(uploadedImages: uploadedImages)
-
-    // We need to return a promise with the image src
-    // the img src we will use here will be what's needed
-    // to preview it in the browser. This will be different than what
-    // we will see in the index.md file we generate.
-    return new Promise((resolve, reject) => {
-      resolve({ data: { link: imageObject.localSrc } });
-    });
+    const pictureURL = uploadPicture(file);
+    return pictureURL;
   }
+
   return (
     <div>
       <Editor
@@ -44,6 +82,7 @@ function TextEditor() {
         wrapperClassName="wrapperClassName"
         editorClassName="editorClassName"
         onEditorStateChange={onEditorStateChange}
+        customBlockRenderFunc={myBlockRenderer}
         toolbar={{
           options: [
             "inline",
@@ -75,7 +114,7 @@ function TextEditor() {
           image: {
             urlEnabled: true,
             uploadEnabled: true,
-            alignmentEnabled: true, // 是否显示排列按钮 相当于text-align
+            alignmentEnabled: false, // 是否顯示圖片排列置中與否，相當於text-align
             uploadCallback: _uploadImageCallBack,
             previewImage: true,
             inputAccept: "image/gif,image/jpeg,image/jpg,image/png,image/svg",
@@ -87,10 +126,12 @@ function TextEditor() {
           },
         }}
       />
-      <textarea
+      <button onClick={() => handleSend({ editorState })}>送出</button>
+      {/* <textarea
+        style={{ height: 400 + "px" }}
         disabled
         value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-      />
+      /> */}
     </div>
   );
 }
