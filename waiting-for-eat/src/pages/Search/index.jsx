@@ -3,6 +3,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { useCallback, useMemo, useRef, useState } from "react";
 import db from "../../firebase";
 import MyGoogleMaps from "./MyGoogleMaps";
+import bbq from "./bbq.jpg";
 import hotpot from "./hotpot.jpg";
 
 const libraries = ["places"];
@@ -19,7 +20,6 @@ function Search() {
   const mapRef = useRef();
   const onLoad = useCallback((map) => {
     mapRef.current = map;
-    // console.log(map);
   }, []);
 
   //四、設定初使地圖畫面之經緯度，使用useMemo(dependencies[])控制只渲染一次
@@ -34,52 +34,23 @@ function Search() {
   //五、設定取得input後的值，該如何變化
   // map是google map的物件，設置state的變化去追蹤它的變化
   const [searchName, setSearchName] = useState("");
-  const [searchCategory, setSearchCategory] = useState(null);
+  const [searchPlace, setSearchPlace] = useState("");
   const [restaurant, setRestaurant] = useState({});
   const [searchLat, setSearchLat] = useState(0);
   const [searchLng, setSearchLng] = useState(0);
   const [map, setMap] = useState(null);
   const [currentPosition, setCurrentPosition] = useState(defaultCenter);
-  const [marks, setmarks] = useState([]);
-
-  function handleRestaurant() {
-    getSingleRestaurant(searchName);
-    const PlacesService = new window.google.maps.places.PlacesService(map); //查詢地點
-    const searchCenter = new window.google.maps.LatLng(
-      currentPosition.lat,
-      currentPosition.lng
-    ); //查詢座標
-
-    // const PlaceSearchRequest = {
-    //   keyword: searchName,
-    //   location: searchCenter,
-    //   radius: "5000",
-    //   type: "restaurant",
-    // }; //中心發散500公尺
-
-    // PlacesService.nearbySearch(PlaceSearchRequest, (results, status) => {
-    //   if (status === "OK") {
-    //     setmarks(results);
-    //     console.log(results);
-    //   } else {
-    //     console.log("error");
-    //     console.log(`Geocode + ${status}`);
-    //   }
-    // }); //搜尋附近
-
-    // console.log(marks);
-  }
+  const [marks, setMarks] = useState([]);
 
   const companyRef = collection(db, "company");
 
   //搜尋特定一間店的店名
-  async function getSingleRestaurant(searchitem) {
+  async function getRestaurant(searchitem) {
     const q = query(companyRef, where("name", "==", searchitem));
     const querySnapshot = await getDocs(q);
 
     let dataList = [];
     querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
       const data = doc.data();
       dataList.push(data);
 
@@ -88,13 +59,38 @@ function Search() {
         lng: data.lng,
       });
     });
-    setmarks(dataList);
+    setMarks(dataList);
+  }
+
+  function handleRestaurant() {
+    getRestaurant(searchName);
+  }
+
+  //搜尋地點
+  async function getPlace(searchitem) {
+    const q = query(companyRef, where("city", "==", searchitem));
+    const querySnapshot = await getDocs(q);
+
+    let dataList = [];
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      dataList.push(data);
+
+      setCurrentPosition({
+        lat: data.lat,
+        lng: data.lng,
+      });
+    });
+    setMarks(dataList);
+  }
+
+  function handlePlace() {
+    getPlace(searchPlace);
   }
 
   //照片選擇食物類別
   function handleCategory(e) {
     getCategory(e.target.title);
-    console.log(e.target.title);
   }
 
   async function getCategory(item) {
@@ -106,23 +102,20 @@ function Search() {
     querySnapshot.forEach((doc) => {
       selectedCategory = Number(doc.id);
     });
-    console.log(typeof selectedCategory);
 
     const qq = query(companyRef, where("category", "==", selectedCategory));
     const querySnapshotC = await getDocs(qq);
 
     let dataList = [];
     querySnapshotC.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
       const data = doc.data();
       dataList.push(data);
-
-      setCurrentPosition({
-        lat: data.lat,
-        lng: data.lng,
-      });
     });
-    setmarks(dataList);
+    setMarks(dataList);
+    setCurrentPosition({
+      lat: dataList[0].lat,
+      lng: dataList[0].lng,
+    });
   }
 
   //二、提醒使用者正在載入，使用<GoogleMap></GoogleMap>來載入地圖
@@ -140,22 +133,36 @@ function Search() {
           marks={marks}
         />
       </div>
-
       <div>
         <input
           value={searchName}
+          placeholder="搜尋餐廳"
           onChange={(e) => setSearchName(e.target.value)}
         ></input>
         <button onClick={handleRestaurant}>按我</button>
 
         <input
-          value={searchName}
-          onChange={(e) => setSearchName(e.target.value)}
+          value={searchPlace}
+          placeholder="搜尋地點"
+          onChange={(e) => setSearchPlace(e.target.value)}
         ></input>
-        <button onClick={handleRestaurant}>按我</button>
+        <button onClick={handlePlace}>按我</button>
       </div>
 
+      {marks.map((mark, index) => {
+        return (
+          <div key={mark.name}>
+            <h2>
+              {index + 1}.{mark.name}
+            </h2>
+            <h4>{mark.phone}</h4>
+            <h4>{mark.address}</h4>
+          </div>
+        );
+      })}
+
       <img src={hotpot} title="hotpot" onClick={(e) => handleCategory(e)} />
+      <img src={bbq} title="bbq" onClick={(e) => handleCategory(e)} />
     </div>
   );
 }
