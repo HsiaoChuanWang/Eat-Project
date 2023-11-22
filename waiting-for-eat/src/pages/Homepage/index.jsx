@@ -22,7 +22,7 @@ async function addData() {
   const companyRef = collection(db, "company");
   const docRef = await addDoc(
     collection(companyRef, "iXMWwyDZeyWJZ9FryUex", "food"),
-    { orange: "orangeorange" }
+    { orange: "orangeorange" },
   );
   console.log("Document written with ID: ", docRef.id);
 }
@@ -36,7 +36,9 @@ function Post() {
 
   return (
     <>
-      <h3>我是首頁</h3>
+      <h3 className="my-container item-center m-auto flex justify-center p-6">
+        我是首頁
+      </h3>
       <h3>我是子集合的資料</h3>
       <p>apple</p>
       <p>banana</p>
