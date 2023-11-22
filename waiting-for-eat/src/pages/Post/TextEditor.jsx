@@ -31,6 +31,7 @@ function myBlockRenderer(contentBlock) {
     };
   }
 }
+
 function Media(props) {
   console.log(props);
   const { block, contentState } = props;
