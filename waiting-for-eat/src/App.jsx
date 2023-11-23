@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Post from "./pages/Post";
 import Editor from "./pages/Post/TextEditor";
 import Search from "./pages/Search";
+import Test from "./pages/test";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/editor" element={<Editor />} />
           <Route path="/post" element={<Post />} />
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="/test" element={<Test />} />
         </Routes>
       </BrowserRouter>
     </>

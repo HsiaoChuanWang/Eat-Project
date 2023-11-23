@@ -1,50 +1,57 @@
-import {
-  addDoc,
-  collection,
-  collectionGroup,
-  getDocs,
-  query,
-} from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import db from "../../firebase";
+import { auth } from "../../firebase";
 
-//取得子集合資料
-async function getData({ setFood }) {
-  const datas = query(collectionGroup(db, "food"));
-  const querySnapshot = await getDocs(datas);
-  querySnapshot.forEach((doc) => {
-    setFood(doc.data());
-  });
-}
-
-//新增子集合資料
-async function addData() {
-  const companyRef = collection(db, "company");
-  const docRef = await addDoc(
-    collection(companyRef, "iXMWwyDZeyWJZ9FryUex", "food"),
-    { orange: "orangeorange" },
-  );
-  console.log("Document written with ID: ", docRef.id);
-}
+//native登入
 
 function Post() {
-  const [food, setFood] = useState({});
+  const [account, setAccount] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
-  useEffect(() => {
-    getData({ setFood });
-  }, []);
+  useEffect(() => {}, []);
+  function handleClick() {
+    console.log(password);
+    console.log(email);
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed up
+        const user = userCredential.user;
+        // ...
+        console.log(user);
+        console.log(auth.currentUser);
+      })
+      .then(() => {
+        updateProfile(auth.currentUser, {
+          displayName: "Jane Q. User",
+          photoURL: "https://example.com/jane-q-user/profile.jpg",
+        });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
+  }
 
   return (
     <>
-      <h3 className="my-container item-center m-auto flex justify-center p-6">
-        我是首頁
-      </h3>
-      <h3>我是子集合的資料</h3>
-      <p>apple</p>
-      <p>banana</p>
-      <button onClick={addData}>我想送東西進去子集合</button>
-      <h3>再抓新增的子集合資料</h3>
-      <p>好像沒有比較方便，讓我們放棄他</p>
+      <input
+        placeholder="帳號"
+        value={account}
+        onChange={(e) => setAccount(e.target.value)}
+      ></input>
+      <input
+        placeholder="密碼"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      ></input>
+      <input
+        placeholder="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      ></input>
+      <button onClick={handleClick}>send</button>
     </>
   );
 }
