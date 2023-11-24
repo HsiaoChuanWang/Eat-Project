@@ -1,0 +1,8 @@
+/* :root {
+  --fc-: 100vw;
+  --fc-daygrid-event-dot-width: 5px;
+} */
+
+.fc {
+  width: 100vw;
+}

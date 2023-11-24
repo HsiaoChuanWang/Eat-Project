@@ -10,6 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.9",
+    "@fullcalendar/interaction": "^6.1.9",
+    "@fullcalendar/react": "^6.1.9",
+    "@fullcalendar/resource-timeline": "^6.1.9",
     "@googlemaps/react-wrapper": "^1.1.35",
     "@react-google-maps/api": "^2.19.2",
     "@react-oauth/google": "^0.12.1",
