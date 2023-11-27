@@ -28,7 +28,7 @@ function Search() {
       lat: 25.033671,
       lng: 121.564427,
     }),
-    []
+    [],
   );
 
   //五、設定取得input後的值，該如何變化
@@ -100,7 +100,7 @@ function Search() {
 
     let selectedCategory;
     querySnapshot.forEach((doc) => {
-      selectedCategory = Number(doc.id);
+      selectedCategory = doc.id;
     });
 
     const qq = query(companyRef, where("category", "==", selectedCategory));

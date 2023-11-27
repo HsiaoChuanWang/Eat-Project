@@ -2,7 +2,6 @@ import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import { useRef } from "react";
-import "./calendar.css";
 
 export default function FullCalendarTimeLineView() {
   const myRef = useRef();
@@ -53,7 +52,7 @@ export default function FullCalendarTimeLineView() {
         },
       ]}
       eventDrop={MyDropEvent}
-      //   dateClick={MyAddEvent}
+      dateClick={MyAddEvent}
       eventClick={MyEventClick}
       resources={[
         { id: "a", building: "asd", title: "Auditorium A" },
