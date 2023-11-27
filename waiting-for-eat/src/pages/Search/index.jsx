@@ -3,8 +3,6 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { useCallback, useMemo, useRef, useState } from "react";
 import db from "../../firebase";
 import MyGoogleMaps from "./MyGoogleMaps";
-import bbq from "./bbq.jpg";
-import hotpot from "./hotpot.jpg";
 
 const libraries = ["places"];
 
@@ -88,36 +86,6 @@ function Search() {
     getPlace(searchPlace);
   }
 
-  //照片選擇食物類別
-  function handleCategory(e) {
-    getCategory(e.target.title);
-  }
-
-  async function getCategory(item) {
-    const categoryRef = collection(db, "category");
-    const q = query(categoryRef, where("type", "==", item));
-    const querySnapshot = await getDocs(q);
-
-    let selectedCategory;
-    querySnapshot.forEach((doc) => {
-      selectedCategory = doc.id;
-    });
-
-    const qq = query(companyRef, where("category", "==", selectedCategory));
-    const querySnapshotC = await getDocs(qq);
-
-    let dataList = [];
-    querySnapshotC.forEach((doc) => {
-      const data = doc.data();
-      dataList.push(data);
-    });
-    setMarks(dataList);
-    setCurrentPosition({
-      lat: dataList[0].lat,
-      lng: dataList[0].lng,
-    });
-  }
-
   //二、提醒使用者正在載入，使用<GoogleMap></GoogleMap>來載入地圖
   if (!isLoaded) return <div>Loading...</div>;
 
@@ -160,9 +128,6 @@ function Search() {
           </div>
         );
       })}
-
-      <img src={hotpot} title="hotpot" onClick={(e) => handleCategory(e)} />
-      <img src={bbq} title="bbq" onClick={(e) => handleCategory(e)} />
     </div>
   );
 }
