@@ -8,7 +8,7 @@ function StepFour() {
       <h2 className="mx-40 my-8 text-2xl">請重新登入</h2>
       <button
         className="my-8 ml-48 border-2 border-solid border-black text-xl"
-        // onClick={navigate("/")}
+        onClick={() => navigate("/login")}
       >
         重新登入
       </button>
