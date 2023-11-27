@@ -1,10 +1,12 @@
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import db from "../firebase";
 
 const useUserStore = create(
   immer((set, get) => ({
+    isLogin: false,
+
     userInfo: {
       providerId: "",
       userId: "",
@@ -53,6 +55,28 @@ const useUserStore = create(
       sendfirestore(detailInfo);
     },
 
+    getUserFirestore: () => {
+      const userId = get().userInfo.userId;
+
+      async function getfirestore() {
+        const docRef = doc(db, "user", userId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          //   console.log("Document data:", docSnap.data());
+          const result = docSnap.data();
+          //   console.log(result);
+          set((state) => {
+            state.detailInfo = result;
+          });
+        } else {
+          // docSnap.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      }
+      getfirestore();
+    },
+
     getCompanyInfo: (data) => {
       set((state) => {
         state.companyInfo = data;
@@ -73,8 +97,29 @@ const useUserStore = create(
         });
         sendUserFirestore();
       }
-
       sendfirestore(companyInfo);
+    },
+
+    getCompanyFirestore: () => {
+      const companyId = get().detailInfo.companyId;
+
+      async function getfirestore() {
+        const docRef = doc(db, "company", companyId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          //   console.log("Document data:", docSnap.data());
+          const result = docSnap.data();
+          //   console.log(result);
+          set((state) => {
+            state.companyInfo = result;
+          });
+        } else {
+          // docSnap.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      }
+      getfirestore();
     },
   })),
 );

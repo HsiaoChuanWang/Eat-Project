@@ -1,23 +1,63 @@
+import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import useHeaderStore from "../../stores/headerStore";
 import logo from "./fakelogo.svg";
 
 function Header() {
   const navigate = useNavigate();
+  const situation = useHeaderStore((state) => state.situation);
+  const setHeader = useHeaderStore((state) => state.setHeader);
+  const auth = getAuth();
+
+  function logOut() {
+    signOut(auth)
+      .then(() => {
+        alert("已登出");
+        console.log("LoginOut successfully!");
+      })
+      .catch((error) => {
+        console.log("LoginOut failed!", "=", error);
+      });
+  }
+
+  const buttonSignUp = [{ link: "", displayText: "首頁", status: "LogOut" }];
+
   const buttonLogOut = [
-    { link: "login", displayText: "登入" },
-    { link: "signup", displayText: "註冊" },
-  ];
-  const buttonDiner = [
-    { link: "diner", displayText: "食客專區" },
-    { link: "", displayText: "登出" },
-  ];
-  const buttonBoss = [
-    { link: "boss", displayText: "業者專區" },
-    { link: "", displayText: "登出" },
+    { link: "login", displayText: "登入", status: "SignUp" },
+    { link: "signup", displayText: "註冊", status: "SignUp" },
   ];
 
-  const renderSwitch = (situation) => {
+  const buttonDiner = [
+    { link: "diner", displayText: "食客專區", status: "DinerLogIn" },
+    { link: "", displayText: "登出", status: "LogOut" },
+  ];
+
+  const buttonBoss = [
+    { link: "boss", displayText: "業者專區", status: "BossLogIn" },
+    { link: "", displayText: "登出", status: "LogOut" },
+  ];
+
+  const renderSwitch = () => {
     switch (situation) {
+      case "SignUp":
+        return buttonSignUp.map((item) => (
+          <button
+            key={item.displayText}
+            className="m-2.5 rounded-sm border-2 border-solid border-black text-lg"
+            onClick={() => {
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
+              setHeader(item.status);
+              console.log(item.status);
+              navigate(`/${item.link}`);
+            }}
+          >
+            {item.displayText}
+          </button>
+        ));
+
       case "LogOut":
         return buttonLogOut.map((item) => (
           <button
@@ -28,6 +68,8 @@ function Header() {
                 top: 0,
                 behavior: "smooth",
               });
+              setHeader(item.status);
+              console.log(item.status);
               navigate(`/${item.link}`);
             }}
           >
@@ -40,10 +82,15 @@ function Header() {
             key={item.displayText}
             className="m-2.5 rounded-sm border-2 border-solid border-black text-lg"
             onClick={() => {
+              if (item.displayText === "登出") {
+                logOut();
+              }
               window.scrollTo({
                 top: 0,
                 behavior: "smooth",
               });
+              setHeader(item.status);
+              console.log(item.status);
               navigate(`/${item.link}`);
             }}
           >
@@ -56,10 +103,15 @@ function Header() {
             key={item.displayText}
             className="m-2.5 rounded-sm border-2 border-solid border-black text-lg"
             onClick={() => {
+              if (item.displayText === "登出") {
+                logOut();
+              }
               window.scrollTo({
                 top: 0,
                 behavior: "smooth",
               });
+              setHeader(item.status);
+              console.log(item.status);
               navigate(`/${item.link}`);
             }}
           >
