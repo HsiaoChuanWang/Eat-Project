@@ -1,8 +1,10 @@
 import { GoogleMap } from "@react-google-maps/api";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import useSearchStore from "../../stores/searchStore";
 import "./_map.css";
 
-function MyGoogleMaps({ currentPosition, mapRef, map, setMap, onLoad, marks }) {
+function MyGoogleMaps({ currentPosition, mapRef, map, setMap, onLoad }) {
+  const searchArray = useSearchStore((state) => state.searchArray);
   const [redPin, setRedPin] = useState([]);
   //三、地圖加載時進行初始化
   const handleMapLoad = useCallback((map) => {
@@ -19,7 +21,7 @@ function MyGoogleMaps({ currentPosition, mapRef, map, setMap, onLoad, marks }) {
       zoomControl: true,
       mapTypeControl: false,
     }),
-    []
+    [],
   );
 
   //六、使用紅色Mark，標記出位置所有符合的位置
@@ -33,7 +35,7 @@ function MyGoogleMaps({ currentPosition, mapRef, map, setMap, onLoad, marks }) {
 
     const infoWindow = new window.google.maps.InfoWindow();
 
-    marks.map((markInfo, index) => {
+    searchArray.map((markInfo, index) => {
       const lat = markInfo.lat;
       const lng = markInfo.lng;
       const marker = new window.google.maps.Marker({
@@ -74,7 +76,7 @@ function MyGoogleMaps({ currentPosition, mapRef, map, setMap, onLoad, marks }) {
       //     infoWindow.close(map);
       //   });
     });
-  }, [marks]);
+  }, [searchArray]);
 
   //二、使用<GoogleMap></GoogleMap>來載入地圖
   return (
