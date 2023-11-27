@@ -1,12 +1,16 @@
 import { useLoadScript } from "@react-google-maps/api";
+import { Select } from "antd";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useCallback, useMemo, useRef, useState } from "react";
 import db from "../../firebase";
+import useSearchStore from "../../stores/searchStore";
 import MyGoogleMaps from "./MyGoogleMaps";
 
 const libraries = ["places"];
 
 function Search() {
+  const searchArray = useSearchStore((state) => state.searchArray);
+  const setSearchArray = useSearchStore((state) => state.setSearchArray);
   //一、將Google Map顯示於畫面
   //isLoaded為布林值，地圖準備好即進行渲染
   const { isLoaded } = useLoadScript({
@@ -33,12 +37,8 @@ function Search() {
   // map是google map的物件，設置state的變化去追蹤它的變化
   const [searchName, setSearchName] = useState("");
   const [searchPlace, setSearchPlace] = useState("");
-  const [restaurant, setRestaurant] = useState({});
-  const [searchLat, setSearchLat] = useState(0);
-  const [searchLng, setSearchLng] = useState(0);
   const [map, setMap] = useState(null);
   const [currentPosition, setCurrentPosition] = useState(defaultCenter);
-  const [marks, setMarks] = useState([]);
 
   const companyRef = collection(db, "company");
 
@@ -57,7 +57,7 @@ function Search() {
         lng: data.lng,
       });
     });
-    setMarks(dataList);
+    setSearchArray(dataList);
   }
 
   function handleRestaurant() {
@@ -70,20 +70,60 @@ function Search() {
     const querySnapshot = await getDocs(q);
 
     let dataList = [];
+    let isCenter = true;
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       dataList.push(data);
 
-      setCurrentPosition({
-        lat: data.lat,
-        lng: data.lng,
-      });
+      if (isCenter) {
+        setCurrentPosition({
+          lat: data.lat,
+          lng: data.lng,
+        });
+        isCenter = false;
+      }
     });
-    setMarks(dataList);
+    setSearchArray(dataList);
   }
 
   function handlePlace() {
     getPlace(searchPlace);
+  }
+
+  //取得所有種類
+  function handleCategory(e) {
+    getCategory(e);
+  }
+
+  async function getCategory(item) {
+    console.log(item);
+    console.log(typeof item);
+    // const categoryRef = collection(db, "category");
+    // const q = query(categoryRef, where("type", "==", item));
+    // const querySnapshot = await getDocs(q);
+
+    // let selectedCategory;
+    // querySnapshot.forEach((doc) => {
+    //   selectedCategory = doc.id;
+    // });
+
+    const qq = query(companyRef, where("category", "==", item));
+    const querySnapshotC = await getDocs(qq);
+
+    let dataList = [];
+    let isCenter = true;
+    querySnapshotC.forEach((doc) => {
+      const data = doc.data();
+      dataList.push(data);
+      if (isCenter) {
+        setCurrentPosition({
+          lat: data.lat,
+          lng: data.lng,
+        });
+        isCenter = false;
+      }
+    });
+    setSearchArray(dataList);
   }
 
   //二、提醒使用者正在載入，使用<GoogleMap></GoogleMap>來載入地圖
@@ -92,42 +132,101 @@ function Search() {
   return (
     <div>
       <div>
-        <MyGoogleMaps
-          currentPosition={currentPosition}
-          mapRef={mapRef}
-          onLoad={onLoad}
-          map={map}
-          setMap={setMap}
-          marks={marks}
-        />
-      </div>
-      <div>
         <input
+          className="border-2 border-solid border-black"
           value={searchName}
           placeholder="搜尋餐廳"
           onChange={(e) => setSearchName(e.target.value)}
         ></input>
-        <button onClick={handleRestaurant}>按我</button>
+        <button
+          className="m-2 border-2 border-solid border-black"
+          onClick={handleRestaurant}
+        >
+          按我
+        </button>
 
         <input
+          className="border-2 border-solid border-black"
           value={searchPlace}
           placeholder="搜尋地點"
           onChange={(e) => setSearchPlace(e.target.value)}
         ></input>
-        <button onClick={handlePlace}>按我</button>
-      </div>
+        <button
+          className="m-2 border-2 border-solid border-black"
+          onClick={handlePlace}
+        >
+          按我
+        </button>
 
-      {marks.map((mark, index) => {
-        return (
-          <div key={mark.name}>
-            <h2>
-              {index + 1}.{mark.name}
-            </h2>
-            <h4>{mark.phone}</h4>
-            <h4>{mark.address}</h4>
-          </div>
-        );
-      })}
+        <Select
+          name="category"
+          onChange={(e) => handleCategory(e)}
+          showSearch
+          style={{
+            width: 200,
+          }}
+          placeholder="點選類別"
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.label ?? "").includes(input)
+          }
+          options={[
+            {
+              value: "0",
+              label: "火鍋",
+            },
+            {
+              value: "1",
+              label: "燒烤",
+            },
+            {
+              value: "2",
+              label: "牛排",
+            },
+            {
+              value: "3",
+              label: "甜點",
+            },
+            {
+              value: "4",
+              label: "小吃",
+            },
+            {
+              value: "5",
+              label: "早餐",
+            },
+          ]}
+        />
+      </div>
+      <div className="flex">
+        <div>
+          {searchArray.map((info, index) => {
+            return (
+              <div key={info.name} className="mr-50 w-96 pl-20">
+                <h3>
+                  {index + 1}.{info.name}
+                </h3>
+                <p>
+                  {info.city}
+                  {info.district}
+                  {info.address}
+                </p>
+                <p>{info.phone}</p>
+                <br />
+              </div>
+            );
+          })}
+        </div>
+        <div className="pl-20">
+          <MyGoogleMaps
+            currentPosition={currentPosition}
+            mapRef={mapRef}
+            onLoad={onLoad}
+            map={map}
+            setMap={setMap}
+          />
+        </div>
+      </div>
     </div>
   );
 }
