@@ -55,19 +55,11 @@ function HomePage() {
   }
 
   async function getCategory(item) {
-    const categoryRef = collection(db, "category");
-    const q = query(categoryRef, where("type", "==", item));
-    const querySnapshot = await getDocs(q);
-
-    let selectedCategory;
-    querySnapshot.forEach((doc) => {
-      selectedCategory = doc.id;
-    });
-
-    const qq = query(companyRef, where("category", "==", selectedCategory));
+    const qq = query(companyRef, where("category", "==", item));
     const querySnapshotC = await getDocs(qq);
 
     let dataList = [];
+    let isCenter = true;
     querySnapshotC.forEach((doc) => {
       const data = doc.data();
       dataList.push(data);
@@ -97,13 +89,13 @@ function HomePage() {
       <img
         className="m-20 w-96"
         src={hotpot}
-        title="火鍋"
+        title="0"
         onClick={(e) => handleCategory(e)}
       />
       <img
         className="m-20 w-96"
         src={bbq}
-        title="燒烤"
+        title="1"
         onClick={(e) => handleCategory(e)}
       />
     </div>

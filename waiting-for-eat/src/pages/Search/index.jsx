@@ -98,14 +98,6 @@ function Search() {
   async function getCategory(item) {
     console.log(item);
     console.log(typeof item);
-    // const categoryRef = collection(db, "category");
-    // const q = query(categoryRef, where("type", "==", item));
-    // const querySnapshot = await getDocs(q);
-
-    // let selectedCategory;
-    // querySnapshot.forEach((doc) => {
-    //   selectedCategory = doc.id;
-    // });
 
     const qq = query(companyRef, where("category", "==", item));
     const querySnapshotC = await getDocs(qq);

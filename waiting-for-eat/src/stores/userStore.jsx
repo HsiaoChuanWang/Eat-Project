@@ -7,6 +7,18 @@ const useUserStore = create(
   immer((set, get) => ({
     isLogin: false,
 
+    setIsLogin: () => {
+      set((state) => {
+        state.isLogin = true;
+      });
+    },
+
+    setIsLogout: () => {
+      set((state) => {
+        state.isLogin = false;
+      });
+    },
+
     userInfo: {
       providerId: "",
       userId: "",

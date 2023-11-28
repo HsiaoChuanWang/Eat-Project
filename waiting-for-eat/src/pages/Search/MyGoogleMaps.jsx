@@ -36,6 +36,8 @@ function MyGoogleMaps({ currentPosition, mapRef, map, setMap, onLoad }) {
     const infoWindow = new window.google.maps.InfoWindow();
 
     searchArray.map((markInfo, index) => {
+      console.log(typeof markInfo.lat);
+      console.log(markInfo.lng);
       const lat = markInfo.lat;
       const lng = markInfo.lng;
       const marker = new window.google.maps.Marker({

@@ -22,6 +22,7 @@ function Login() {
     (state) => state.getCompanyFirestore,
   );
   const setHeader = useHeaderStore((state) => state.setHeader);
+  const setIsLogin = useUserStore((state) => state.setIsLogin);
 
   //native login
   const auth = getAuth();
@@ -33,7 +34,8 @@ function Login() {
         getUserInfo(user.providerId, user.uid);
         getUserFirestore();
         alert("登入成功");
-        // navigate("/");
+        setIsLogin();
+        navigate("/");
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -53,6 +55,8 @@ function Login() {
         getUserInfo(user.providerId, user.uid);
         getUserFirestore();
         alert("登入成功");
+        setIsLogin();
+        navigate("/");
       })
       .then(() => {})
       .catch((error) => {
