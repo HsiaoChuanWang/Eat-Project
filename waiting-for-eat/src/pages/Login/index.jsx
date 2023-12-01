@@ -1,5 +1,4 @@
 import {
-  GoogleAuthProvider,
   getAuth,
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -7,7 +6,6 @@ import {
 import { default as React, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { provider } from "../../firebase";
-import useHeaderStore from "../../stores/headerStore";
 import useUserStore from "../../stores/userStore";
 import googlelogo from "../SignUp/googleLogo.png";
 
@@ -15,13 +13,8 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const detailInfo = useUserStore((state) => state.detailInfo);
   const getUserInfo = useUserStore((state) => state.getUserInfo);
   const getUserFirestore = useUserStore((state) => state.getUserFirestore);
-  const getCompanyFirestore = useUserStore(
-    (state) => state.getCompanyFirestore,
-  );
-  const setHeader = useHeaderStore((state) => state.setHeader);
   const setIsLogin = useUserStore((state) => state.setIsLogin);
 
   //native login
@@ -49,7 +42,6 @@ function Login() {
   const googleLogin = async () => {
     signInWithPopup(auth, provider)
       .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
         const user = result.user;
         console.log("Google login successfully!");
         getUserInfo(user.providerId, user.uid);

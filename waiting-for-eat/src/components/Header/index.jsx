@@ -7,6 +7,7 @@ import logo from "./fakelogo.svg";
 function Header() {
   const navigate = useNavigate();
   const setIsLogout = useUserStore((state) => state.setIsLogout);
+  const userInfo = useUserStore((state) => state.userInfo);
   const situation = useHeaderStore((state) => state.situation);
   const setHeader = useHeaderStore((state) => state.setHeader);
   const auth = getAuth();
@@ -22,6 +23,8 @@ function Header() {
         console.log("LoginOut failed!", "=", error);
       });
   }
+
+  console.log(userInfo);
 
   const buttonSignUp = [
     { link: "", displayText: "回到首頁", status: "LogOut" },

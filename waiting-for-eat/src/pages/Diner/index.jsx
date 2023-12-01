@@ -1,9 +1,13 @@
 import React from "react";
+import StarRating from "./StarRating";
 
-//native登入
-
-function Boss() {
-  return <>我是食客專區</>;
+function Diner() {
+  return (
+    <>
+      我是食客專區，我還沒好...
+      <StarRating />
+    </>
+  );
 }
 
-export default Boss;
+export default Diner;

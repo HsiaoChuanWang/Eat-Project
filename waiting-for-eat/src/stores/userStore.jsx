@@ -17,6 +17,35 @@ const useUserStore = create(
       set((state) => {
         state.isLogin = false;
       });
+      set((state) => {
+        state.userInfo = {
+          providerId: "",
+          userId: "",
+        };
+      });
+      set((state) => {
+        state.detailInfo = {
+          userName: "",
+          address: "",
+          companyId: "",
+          gender: "",
+          phone: "",
+          picture: "",
+          status: "active",
+        };
+      });
+      set((state) => {
+        state.companyInfo = {
+          name: "",
+          city: "",
+          district: "",
+          address: "",
+          lat: "",
+          lng: "",
+          phone: "",
+          category: "",
+        };
+      });
     },
 
     userInfo: {

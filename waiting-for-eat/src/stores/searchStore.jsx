@@ -8,7 +8,6 @@ const useSearchStore = create(
     setSearchArray: (searchArray) => {
       set((state) => {
         state.searchArray = searchArray;
-        console.log(searchArray);
       });
     },
   })),

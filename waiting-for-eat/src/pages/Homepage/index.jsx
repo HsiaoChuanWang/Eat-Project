@@ -21,7 +21,10 @@ function HomePage() {
     let dataList = [];
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      dataList.push(data);
+      const dataId = doc.id;
+      const newData = { ...data, companyId: dataId };
+
+      dataList.push(newData);
     });
     setSearchArray(dataList);
     navigate(`/search`);
@@ -39,7 +42,10 @@ function HomePage() {
     let dataList = [];
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      dataList.push(data);
+      const dataId = doc.id;
+      const newData = { ...data, companyId: dataId };
+
+      dataList.push(newData);
     });
     setSearchArray(dataList);
     navigate(`/search`);
@@ -59,10 +65,12 @@ function HomePage() {
     const querySnapshotC = await getDocs(qq);
 
     let dataList = [];
-    let isCenter = true;
     querySnapshotC.forEach((doc) => {
       const data = doc.data();
-      dataList.push(data);
+      const dataId = doc.id;
+      const newData = { ...data, companyId: dataId };
+
+      dataList.push(newData);
     });
     setSearchArray(dataList);
     navigate(`/search`);
