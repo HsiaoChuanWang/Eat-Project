@@ -2,15 +2,18 @@ import { useLoadScript } from "@react-google-maps/api";
 import { Select } from "antd";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useCallback, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import db from "../../firebase";
 import useSearchStore from "../../stores/searchStore";
 import MyGoogleMaps from "./MyGoogleMaps";
+import tasty from "./tasty.jpg";
 
 const libraries = ["places"];
 
 function Search() {
   const searchArray = useSearchStore((state) => state.searchArray);
   const setSearchArray = useSearchStore((state) => state.setSearchArray);
+  const navigation = useNavigate();
   //一、將Google Map顯示於畫面
   //isLoaded為布林值，地圖準備好即進行渲染
   const { isLoaded } = useLoadScript({
@@ -50,7 +53,10 @@ function Search() {
     let dataList = [];
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      dataList.push(data);
+      const dataId = doc.id;
+      const newData = { ...data, companyId: dataId };
+
+      dataList.push(newData);
 
       setCurrentPosition({
         lat: data.lat,
@@ -73,7 +79,10 @@ function Search() {
     let isCenter = true;
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      dataList.push(data);
+      const dataId = doc.id;
+      const newData = { ...data, companyId: dataId };
+
+      dataList.push(newData);
 
       if (isCenter) {
         setCurrentPosition({
@@ -98,14 +107,6 @@ function Search() {
   async function getCategory(item) {
     console.log(item);
     console.log(typeof item);
-    // const categoryRef = collection(db, "category");
-    // const q = query(categoryRef, where("type", "==", item));
-    // const querySnapshot = await getDocs(q);
-
-    // let selectedCategory;
-    // querySnapshot.forEach((doc) => {
-    //   selectedCategory = doc.id;
-    // });
 
     const qq = query(companyRef, where("category", "==", item));
     const querySnapshotC = await getDocs(qq);
@@ -114,7 +115,10 @@ function Search() {
     let isCenter = true;
     querySnapshotC.forEach((doc) => {
       const data = doc.data();
-      dataList.push(data);
+      const dataId = doc.id;
+      const newData = { ...data, companyId: dataId };
+
+      dataList.push(newData);
       if (isCenter) {
         setCurrentPosition({
           lat: data.lat,
@@ -202,17 +206,32 @@ function Search() {
         <div>
           {searchArray.map((info, index) => {
             return (
-              <div key={info.name} className="mr-50 w-96 pl-20">
-                <h3>
-                  {index + 1}.{info.name}
-                </h3>
-                <p>
-                  {info.city}
-                  {info.district}
-                  {info.address}
-                </p>
-                <p>{info.phone}</p>
-                <br />
+              <div key={info.companyId} className="mr-20 flex pb-10 pl-10">
+                <div
+                  className="w-64"
+                  onClick={() => {
+                    navigation(`/restaurant/${info.companyId}`);
+                  }}
+                >
+                  <img src={info.picture ? info.picture : tasty} />
+                </div>
+
+                <div className="w-64">
+                  <h3
+                    onClick={() => {
+                      navigation(`/restaurant/${info.companyId}`);
+                    }}
+                  >
+                    {index + 1}.{info.name}
+                  </h3>
+                  <p>
+                    {info.city}
+                    {info.district}
+                    {info.address}
+                  </p>
+                  <p>{info.phone}</p>
+                  <br />
+                </div>
               </div>
             );
           })}

@@ -45,7 +45,7 @@ function SignUp() {
 
         <h2
           className={`mx-28 my-8  text-4xl  ${
-            active === "StepThree" && "bg-red-200"
+            active === ("StepThreeDiner" || "StepThreeBoss") && "bg-red-200"
           }`}
         >
           3、填寫詳細資料
@@ -53,7 +53,7 @@ function SignUp() {
 
         <h2
           className={`mx-28 my-8  text-4xl  ${
-            active === ("StepFourDiner" || "StepFourBoss") && "bg-red-200"
+            active === "StepFour" && "bg-red-200"
           }`}
         >
           4、完成註冊

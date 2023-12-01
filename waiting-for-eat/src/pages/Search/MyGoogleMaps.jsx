@@ -34,7 +34,6 @@ function MyGoogleMaps({ currentPosition, mapRef, map, setMap, onLoad }) {
     }
 
     const infoWindow = new window.google.maps.InfoWindow();
-
     searchArray.map((markInfo, index) => {
       const lat = markInfo.lat;
       const lng = markInfo.lng;
@@ -76,7 +75,7 @@ function MyGoogleMaps({ currentPosition, mapRef, map, setMap, onLoad }) {
       //     infoWindow.close(map);
       //   });
     });
-  }, [searchArray]);
+  }, [searchArray, map]);
 
   //二、使用<GoogleMap></GoogleMap>來載入地圖
   return (

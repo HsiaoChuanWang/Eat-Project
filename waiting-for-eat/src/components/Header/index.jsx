@@ -1,10 +1,13 @@
 import { getAuth, signOut } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useHeaderStore from "../../stores/headerStore";
+import useUserStore from "../../stores/userStore";
 import logo from "./fakelogo.svg";
 
 function Header() {
   const navigate = useNavigate();
+  const setIsLogout = useUserStore((state) => state.setIsLogout);
+  const userInfo = useUserStore((state) => state.userInfo);
   const situation = useHeaderStore((state) => state.situation);
   const setHeader = useHeaderStore((state) => state.setHeader);
   const auth = getAuth();
@@ -12,6 +15,7 @@ function Header() {
   function logOut() {
     signOut(auth)
       .then(() => {
+        setIsLogout();
         alert("已登出");
         console.log("LoginOut successfully!");
       })
@@ -20,7 +24,11 @@ function Header() {
       });
   }
 
-  const buttonSignUp = [{ link: "", displayText: "首頁", status: "LogOut" }];
+  console.log(userInfo);
+
+  const buttonSignUp = [
+    { link: "", displayText: "回到首頁", status: "LogOut" },
+  ];
 
   const buttonLogOut = [
     { link: "login", displayText: "登入", status: "SignUp" },
@@ -123,9 +131,9 @@ function Header() {
 
   return (
     <div className="flex h-24 items-center justify-between shadow-[0_0_2px_1px_rgba(0,0,0,0.16)]">
-      <div>
+      <Link to="/">
         <img src={logo} className="m-8 h-20 w-auto" />
-      </div>
+      </Link>
 
       <div className="m-16">{renderSwitch("LogOut")}</div>
     </div>

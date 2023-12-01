@@ -11,6 +11,7 @@ function App() {
   const detailInfo = useUserStore((state) => state.detailInfo);
   const getUserInfo = useUserStore((state) => state.getUserInfo);
   const getUserFirestore = useUserStore((state) => state.getUserFirestore);
+  const isLogin = useUserStore((state) => state.isLogin);
   const getCompanyFirestore = useUserStore(
     (state) => state.getCompanyFirestore,
   );
@@ -23,18 +24,24 @@ function App() {
         console.log("登入中");
         getUserInfo(user.providerId, user.uid);
         getUserFirestore();
+        if (detailInfo.companyId === "") {
+          setHeader("DinerLogIn");
+        } else {
+          setHeader("BossLogIn");
+          getCompanyFirestore();
+        }
       } else {
         console.log("已登出");
+        setHeader("LogOut");
       }
     });
-  }, []);
+  }, [isLogin]);
 
   useEffect(() => {
     if (detailInfo.companyId === "") {
       setHeader("DinerLogIn");
     } else {
       setHeader("BossLogIn");
-      console.log("getCompanyFirestore");
       getCompanyFirestore();
     }
   }, [detailInfo.companyId]);
