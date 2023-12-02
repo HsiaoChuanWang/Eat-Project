@@ -3,7 +3,7 @@ import FullCalendar from "@fullcalendar/react";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import { useRef } from "react";
 
-export default function FullCalendarTimeLineView() {
+function Schedule({ setContent }) {
   const myRef = useRef();
   function MyAddEvent(e) {
     console.log(e.resource.id);
@@ -85,3 +85,5 @@ export default function FullCalendarTimeLineView() {
     />
   );
 }
+
+export default Schedule;

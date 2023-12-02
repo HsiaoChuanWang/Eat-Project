@@ -44,6 +44,8 @@ const useUserStore = create(
           lng: "",
           phone: "",
           category: "",
+          picture: "",
+          menu: [],
         };
       });
     },
@@ -72,6 +74,8 @@ const useUserStore = create(
       lng: "",
       phone: "",
       category: "",
+      picture: "",
+      menu: [],
     },
 
     getUserInfo: (providerId, userId) => {
@@ -96,23 +100,18 @@ const useUserStore = create(
       sendfirestore(detailInfo);
     },
 
-    getUserFirestore: () => {
-      const userId = get().userInfo.userId;
-
+    getUserFirestore: (userId) => {
       async function getfirestore() {
         const docRef = doc(db, "user", userId);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          //   console.log("Document data:", docSnap.data());
           const result = docSnap.data();
-          //   console.log(result);
           set((state) => {
             state.detailInfo = result;
           });
         } else {
-          // docSnap.data() will be undefined in this case
-          console.log("No such document!");
+          console.log("No such userInfo document!");
         }
       }
       getfirestore();
@@ -126,7 +125,6 @@ const useUserStore = create(
 
     sendCompanyFirestore: () => {
       const companyInfo = get().companyInfo;
-      //   const detailInfo = get().detailInfo;
       const sendUserFirestore = get().sendUserFirestore;
       console.log("1");
 
@@ -149,14 +147,11 @@ const useUserStore = create(
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          //   console.log("Document data:", docSnap.data());
           const result = docSnap.data();
-          //   console.log(result);
           set((state) => {
             state.companyInfo = result;
           });
         } else {
-          // docSnap.data() will be undefined in this case
           console.log("No such document!");
         }
       }

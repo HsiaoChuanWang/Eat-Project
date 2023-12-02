@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css";
 import Boss from "./pages/Boss";
-import Calendar from "./pages/Calendar";
 import Diner from "./pages/Diner";
 import Homepage from "./pages/Homepage";
 import Login from "./pages/Login";
@@ -27,11 +26,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/search" element={<Search />} />
           <Route path="/restaurant/:companyId" element={<Restaurant />} />
           <Route path="/reserve/:companyId" element={<Reserve />} />
-          <Route path="/diner" element={<Diner />} />
+          <Route path="/diner/:userId" element={<Diner />} />
           <Route path="/editor" element={<Editor />} />
           <Route path="/post/:postId" element={<Post />} />
-          <Route path="/boss" element={<Boss />} />
-          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/boss/:companyId" element={<Boss />} />
           <Route path="/test" element={<Test />} />
         </Route>
       </Routes>

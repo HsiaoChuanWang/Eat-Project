@@ -1,50 +1,101 @@
-import { doc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useState } from "react";
-import db, { storage } from "../../firebase";
 import useUserStore from "../../stores/userStore";
+import BossInfo from "./BossInfo";
+import BossInfoEdit from "./BossInfoEdit";
+import OpenTime from "./OpenTime";
+import Photo from "./Photo";
+import PhotoUpload from "./PhotoUpload";
+import Schedule from "./Schedule";
+import Table from "./Table";
+import TableSet from "./TableSet";
 
 function Boss() {
-  const [mainPicture, setMainpicture] = useState("");
   const detailInfo = useUserStore((state) => state.detailInfo);
-  async function updateMainPicture(url) {
-    const docId = detailInfo.companyId;
-    const companyRef = doc(db, "company", docId);
+  const [content, setContent] = useState("BossInfo");
 
-    await updateDoc(companyRef, {
-      picture: url,
-    });
-  }
-
-  async function handlePicture(picture) {
-    const storageRef = ref(storage, detailInfo.companyId);
-    await uploadBytes(storageRef, picture);
-    const downloadURL = await getDownloadURL(storageRef);
-    setMainpicture(downloadURL);
-  }
-
-  const handleData = (e) => {
-    const file = e.target.files[0];
-    handlePicture(file);
-  };
-
-  const handleClick = () => {
-    updateMainPicture(mainPicture);
+  const switchContent = () => {
+    switch (content) {
+      case "BossInfo":
+        return <BossInfo setContent={setContent} />;
+      case "BossInfoEdit":
+        return <BossInfoEdit setContent={setContent} />;
+      case "Photo":
+        return <Photo setContent={setContent} />;
+      case "PhotoUpload":
+        return <PhotoUpload setContent={setContent} />;
+      case "OpenTime":
+        return <OpenTime setContent={setContent} />;
+      case "Table":
+        return <Table setContent={setContent} />;
+      case "TableSet":
+        return <TableSet setContent={setContent} />;
+      case "Schedule":
+        return <Schedule setContent={setContent} />;
+    }
   };
 
   return (
     <>
-      <div>我是業者專區</div>
-      <label>上傳照片</label>
-      <input
-        type="file"
-        accept="image/*"
-        name="picture"
-        onChange={(e) => handleData(e)}
-      />
-      <button onClick={handleClick}>上傳封面照片</button>
+      <div className="flex">
+        <img src={detailInfo.picture} className="w-20"></img>
+        <div>{`${detailInfo.userName} ，您好`}</div>
+      </div>
 
-      {/* <h2>上傳菜單照片</h2> */}
+      <div className="flex">
+        <div className="w-1/5 bg-blue-200">
+          <div className="my-20 flex h-12 w-full justify-center bg-red-200">
+            <button
+              onClick={() => {
+                setContent("BossInfo");
+              }}
+            >
+              業者資訊
+            </button>
+          </div>
+
+          <div className="my-20 flex h-12 w-full justify-center bg-red-200">
+            <button
+              onClick={() => {
+                setContent("Photo");
+              }}
+            >
+              編輯照片
+            </button>
+          </div>
+
+          <div className="my-20 flex h-12 w-full justify-center bg-red-200">
+            <button
+              onClick={() => {
+                setContent("OpenTime");
+              }}
+            >
+              營業時間設定
+            </button>
+          </div>
+
+          <div className="my-20 flex h-12 w-full justify-center bg-red-200">
+            <button
+              onClick={() => {
+                setContent("Table");
+              }}
+            >
+              桌位設定
+            </button>
+          </div>
+
+          <div className="my-20 flex h-12 w-full justify-center bg-red-200">
+            <button
+              onClick={() => {
+                setContent("Schedule");
+              }}
+            >
+              預約現況
+            </button>
+          </div>
+        </div>
+
+        <div className="px-20">{switchContent()}</div>
+      </div>
     </>
   );
 }

@@ -123,7 +123,7 @@ function StepThreeBoss({ setActive }) {
       checkRef.current = false;
       await getLocation();
       await getDetailInfo(detail);
-      setActive("StepFour");
+      setActive("StepFourBoss");
     } else {
       alert("請填寫完整資訊");
     }

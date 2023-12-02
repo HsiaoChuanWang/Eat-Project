@@ -23,7 +23,7 @@ function App() {
         const user = auth.currentUser;
         console.log("登入中");
         getUserInfo(user.providerId, user.uid);
-        getUserFirestore();
+        getUserFirestore(user.uid);
         if (detailInfo.companyId === "") {
           setHeader("DinerLogIn");
         } else {
