@@ -1,0 +1,7 @@
+.ant-menu-light .ant-menu-submenu-selected > .ant-menu-submenu-title {
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.ant-menu-light .ant-menu-item-selected {
+  color: rgba(0, 0, 0, 0.88);
+}

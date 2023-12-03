@@ -84,7 +84,10 @@ function OpenTime() {
         <h1 className="mx-4">{item.start}</h1>
         <BsDashLg className="mt-2" />
         <h1 className="mx-4">{item.end}</h1>
-        <FaTrashCan className="mt-4" onClick={() => handleList(item.timeId)} />
+        <FaTrashCan
+          className="mt-4"
+          onClick={() => handleDelete(item.timeId)}
+        />
       </div>
     );
   });
@@ -95,7 +98,10 @@ function OpenTime() {
         <h1 className="mx-4">{item.start}</h1>
         <BsDashLg className="mt-2" />
         <h1 className="mx-4">{item.end}</h1>
-        <FaTrashCan className="mt-4" onClick={() => handleList(item.timeId)} />
+        <FaTrashCan
+          className="mt-4"
+          onClick={() => handleDelete(item.timeId)}
+        />
       </div>
     );
   });
@@ -106,7 +112,10 @@ function OpenTime() {
         <h1 className="mx-4">{item.start}</h1>
         <BsDashLg className="mt-2" />
         <h1 className="mx-4">{item.end}</h1>
-        <FaTrashCan className="mt-4" onClick={() => handleList(item.timeId)} />
+        <FaTrashCan
+          className="mt-4"
+          onClick={() => handleDelete(item.timeId)}
+        />
       </div>
     );
   });
@@ -117,7 +126,10 @@ function OpenTime() {
         <h1 className="mx-4">{item.start}</h1>
         <BsDashLg className="mt-2" />
         <h1 className="mx-4">{item.end}</h1>
-        <FaTrashCan className="mt-4" onClick={() => handleList(item.timeId)} />
+        <FaTrashCan
+          className="mt-4"
+          onClick={() => handleDelete(item.timeId)}
+        />
       </div>
     );
   });
@@ -128,7 +140,10 @@ function OpenTime() {
         <h1 className="mx-4">{item.start}</h1>
         <BsDashLg className="mt-2" />
         <h1 className="mx-4">{item.end}</h1>
-        <FaTrashCan className="mt-4" onClick={() => handleList(item.timeId)} />
+        <FaTrashCan
+          className="mt-4"
+          onClick={() => handleDelete(item.timeId)}
+        />
       </div>
     );
   });
@@ -139,7 +154,10 @@ function OpenTime() {
         <h1 className="mx-4">{item.start}</h1>
         <BsDashLg className="mt-2" />
         <h1 className="mx-4">{item.end}</h1>
-        <FaTrashCan className="mt-4" onClick={() => handleList(item.timeId)} />
+        <FaTrashCan
+          className="mt-4"
+          onClick={() => handleDelete(item.timeId)}
+        />
       </div>
     );
   });
@@ -150,12 +168,15 @@ function OpenTime() {
         <h1 className="mx-4">{item.start}</h1>
         <BsDashLg className="mt-2" />
         <h1 className="mx-4">{item.end}</h1>
-        <FaTrashCan className="mt-4" onClick={() => handleList(item.timeId)} />
+        <FaTrashCan
+          className="mt-4"
+          onClick={() => handleDelete(item.timeId)}
+        />
       </div>
     );
   });
 
-  async function handleList(timeId) {
+  async function handleDelete(timeId) {
     await deleteDoc(doc(openTimeRef, timeId));
   }
 
@@ -179,12 +200,12 @@ function OpenTime() {
             rules={[
               {
                 required: true,
-                message: "請點選類別",
+                message: "請點選時段",
               },
             ]}
           >
             <Select
-              name="category"
+              name="week"
               onChange={(e) => setAddTime({ ...addTime, day: e })}
               showSearch
               style={{

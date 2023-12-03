@@ -7,7 +7,6 @@ import Photo from "./Photo";
 import PhotoUpload from "./PhotoUpload";
 import Schedule from "./Schedule";
 import Table from "./Table";
-import TableSet from "./TableSet";
 
 function Boss() {
   const detailInfo = useUserStore((state) => state.detailInfo);
@@ -27,8 +26,6 @@ function Boss() {
         return <OpenTime setContent={setContent} />;
       case "Table":
         return <Table setContent={setContent} />;
-      case "TableSet":
-        return <TableSet setContent={setContent} />;
       case "Schedule":
         return <Schedule setContent={setContent} />;
     }
