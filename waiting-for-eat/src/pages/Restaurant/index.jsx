@@ -143,7 +143,7 @@ function Restaurant() {
       <div
         className="fixed bottom-24 flex w-full justify-center"
         onClick={() => {
-          navigation(`/reserve/${data.companyId}`);
+          navigation(`/reserve/${companyId}`);
         }}
       >
         <button className=" w-1/2 border-2 border-solid border-black bg-orange-300 text-center text-2xl">

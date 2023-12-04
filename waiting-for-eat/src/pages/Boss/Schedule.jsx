@@ -1,10 +1,148 @@
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
-import { useRef } from "react";
+import { DatePicker } from "antd";
+import dateFormat from "dateformat";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { default as React, useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import db from "../../firebase";
+import "./table.css";
 
-function Schedule({ setContent }) {
+function Schedule() {
+  const [editable, setEditable] = useState(false);
   const myRef = useRef();
+  const { companyId } = useParams();
+  const [tables, setTables] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const companyRef = collection(db, "company");
+  const tableRef = query(collection(companyRef, companyId, "table"));
+  const orderRef = query(collection(db, "order"));
+  const orderq = query(orderRef, where("companyId", "==", companyId));
+
+  async function getUserInfo(userId) {
+    const docRef = doc(db, "user", userId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const resultUser = docSnap.data();
+      return resultUser;
+    } else {
+      console.log("No such comment userInfo document!");
+    }
+  }
+
+  useEffect(() => {
+    getDocs(tableRef).then((result) => {
+      let seats = [];
+      result.forEach((doc) => {
+        const data = doc.data();
+        const dataId = doc.id;
+        const combine = { ...data, tableId: dataId };
+        seats.push(combine);
+      });
+      setTables(seats);
+    });
+
+    getDocs(orderq)
+      .then((result) => {
+        let orderList = [];
+        result.forEach((doc) => {
+          const data = doc.data();
+          const dataId = doc.id;
+          const combine = { ...data, orderId: dataId };
+          orderList.push(combine);
+        });
+        return orderList;
+      })
+      .then((orderList) => {
+        let combineOrder = [];
+        orderList.forEach((order) => {
+          getUserInfo(order.userId)
+            .then((data) => {
+              const newData = {
+                ...order,
+                userName: data.userName,
+                phone: data.phone,
+              };
+              combineOrder.push(newData);
+            })
+            .then(() => {
+              setOrders(combineOrder);
+            });
+        });
+      });
+
+    onSnapshot(tableRef, (querySnapshot) => {
+      let seats = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const dataId = doc.id;
+        const combine = { ...data, tableId: dataId };
+        seats.push(combine);
+      });
+      setTables(seats);
+    });
+
+    onSnapshot(orderq, (querySnapshot) => {
+      let orderList = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const dataId = doc.id;
+        const combine = { ...data, tableId: dataId };
+        orderList.push(combine);
+      });
+      setOrders(orderList);
+    });
+  }, []);
+  console.log(orders);
+
+  console.log(tables);
+
+  let resources = [];
+  tables.map((table) => {
+    resources.push({
+      id: table.number,
+      title: table.number + " (" + table.people + "人桌)",
+    });
+  });
+  resources = resources.sort((firstItem, secondItem) =>
+    firstItem.id > secondItem.id ? 1 : -1,
+  );
+  let events = [];
+  console.log("orders");
+  console.log(orders);
+  orders.map((order) => {
+    order.tableNumber.map((orderTableNumber) => {
+      events.push({
+        title:
+          "Name: " +
+          order.userName +
+          "\nTel: " +
+          order.phone +
+          "\n備註: " +
+          order.remark +
+          "$" +
+          order.people,
+        start: new Date(order.date + " " + order.start),
+        end: new Date(order.date + " " + order.end),
+        id: order.orderId,
+        resourceId: orderTableNumber,
+        display: "auto",
+        color: "#ff9f89",
+        //   constraints: "businessHours",
+      });
+    });
+  });
+  console.log(events);
   function MyAddEvent(e) {
     console.log(e.resource.id);
     var event1 = {
@@ -22,67 +160,109 @@ function Schedule({ setContent }) {
     console.log(info.view);
     console.log(info);
     console.log(info.el.fcSeg);
-    alert(info.event.start + "-" + info.event.end);
+    const startDay = dateFormat(info.event.start, "yyyy/mm/dd");
+    const startTime = dateFormat(info.event.start, "HH:ss");
+    const endDay = dateFormat(info.event.end, "yyyy/mm/dd");
+    const endTime = dateFormat(info.event.end, "HH:ss");
+    alert(startDay + " " + startTime + " - " + endDay + " " + endTime);
   }
-  function MyDropEvent(e) {
-    console.log(e.event.start);
-    console.log(e.event.end);
+  function MyDropEvent(info) {
+    const startDay = dateFormat(info.event.start, "yyyy/mm/dd");
+    const startTime = dateFormat(info.event.start, "HH:ss");
+    const endDay = dateFormat(info.event.end, "yyyy/mm/dd");
+    const endTime = dateFormat(info.event.end, "HH:ss");
+    alert(startDay + " " + startTime + " - " + endDay + " " + endTime);
   }
-  return (
-    <FullCalendar
-      //   themeSystem="asd"
 
-      ref={myRef}
-      schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
-      plugins={[resourceTimelinePlugin, interactionPlugin]}
-      initialView="resourceTimeline"
-      //   selectable={true}
-      editable={true}
-      events={[
-        {
-          // this object will be "parsed" into an Event Object
-          title: "The Title", // a property!
-          start: "2023-11-21T09:00:00+08:00", // a property!
-          end: "2023-11-21T10:00:00+08:00", // a property! ** see important note below about 'end' **
-          id: "a",
-          resourceId: "a",
-          display: "auto",
-          title: "tetet",
-          color: "#ff9f89",
-        },
-      ]}
-      eventDrop={MyDropEvent}
-      dateClick={MyAddEvent}
-      eventClick={MyEventClick}
-      resources={[
-        { id: "a", building: "asd", title: "Auditorium A" },
-        { id: "b", building: "asd", title: "Auditorium B" },
-        { id: "c", building: "asd", title: "Auditorium C" },
-        { id: "d", building: "asd", title: "Auditorium D" },
-        { id: "e", building: "asd", title: "Auditorium E" },
-        { id: "f", building: "asd", title: "Auditorium F" },
-        { id: "g", building: "564 Pacific", title: "Auditorium G" },
-        { id: "h", building: "564 Pacific", title: "Auditorium H" },
-        { id: "i", building: "564 Pacific", title: "Auditorium I" },
-        { id: "j", building: "564 Pacific", title: "Auditorium J" },
-        { id: "k", building: "564 Pacific", title: "Auditorium K" },
-        { id: "l", building: "564 Pacific", title: "Auditorium L" },
-        { id: "m", building: "564 Pacific", title: "Auditorium M" },
-        { id: "n", building: "564 Pacific", title: "Auditorium N" },
-        { id: "o", building: "101 Main St", title: "Auditorium O" },
-        { id: "p", building: "101 Main St", title: "Auditorium P" },
-        { id: "q", building: "101 Main St", title: "Auditorium Q" },
-        { id: "r", building: "101 Main St", title: "Auditorium R" },
-        { id: "s", building: "101 Main St", title: "Auditorium S" },
-        { id: "t", building: "101 Main St", title: "Auditorium T" },
-        { id: "u", building: "101 Main St", title: "Auditorium U" },
-        { id: "v", building: "101 Main St", title: "Auditorium V" },
-        { id: "w", building: "101 Main St", title: "Auditorium W" },
-        { id: "x", building: "101 Main St", title: "Auditorium X" },
-        { id: "y", building: "101 Main St", title: "Auditorium Y" },
-        { id: "z", building: "101 Main St", title: "Auditorium Z" },
-      ]}
-    />
+  function changeStartDate(date, dateString) {
+    if (date != null) myRef.current.getApi().gotoDate(dateString);
+  }
+  function myClick(e) {
+    console.log(e);
+  }
+  function eventContent(arg) {
+    let stringArray = arg.event.title.split("$");
+    let titleArray = stringArray[0].split("\n");
+    let name = titleArray[0];
+    let tel = titleArray[1];
+    let remark = titleArray[2];
+    let people = stringArray[1];
+
+    return (
+      <div className="flex justify-between">
+        <div>
+          {name}
+          <br />
+          {tel}
+          <br />
+          {remark}
+        </div>
+        <div>{people}人</div>
+
+        <div className="flex">
+          <button
+            onClick={() => {
+              console.log("test");
+            }}
+          >
+            asd
+          </button>
+          <button
+            onClick={() => {
+              console.log("test");
+            }}
+          >
+            asd
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div>
+        <button
+          onClick={() => {
+            setEditable(true);
+          }}
+          className="absolute right-0 border-2 border-solid border-black"
+        >
+          編輯
+        </button>
+
+        <button
+          onClick={() => {
+            setEditable(false);
+          }}
+          className="absolute right-16 border-2 border-solid border-black"
+        >
+          保存
+        </button>
+      </div>
+      <div className="pt-20">
+        <DatePicker onChange={changeStartDate} />
+        <FullCalendar
+          //   themeSystem="asd"
+          resourceAreaWidth={150}
+          contentHeight={"auto"}
+          slotMinWidth={50}
+          height={100}
+          ref={myRef}
+          schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
+          plugins={[resourceTimelinePlugin, interactionPlugin]}
+          initialView="resourceTimeline"
+          //   selectable={true}
+          editable={editable}
+          events={events}
+          eventContent={eventContent}
+          eventDrop={MyDropEvent}
+          //   dateClick={MyAddEvent}
+          //   eventClick={MyEventClick}
+          resources={resources}
+        />
+      </div>
+    </div>
   );
 }
 

@@ -120,14 +120,11 @@ function Table() {
 
   async function handleAddTable() {
     if (!Object.values(addTable).includes("")) {
-      console.log(addTable);
       await addDoc(tableRef, addTable);
     } else {
       alert("請填寫完整資訊");
     }
   }
-
-  console.log(addTable);
 
   return (
     <>

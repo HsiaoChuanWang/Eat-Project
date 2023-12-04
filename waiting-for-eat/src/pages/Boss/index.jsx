@@ -23,11 +23,11 @@ function Boss() {
       case "PhotoUpload":
         return <PhotoUpload setContent={setContent} />;
       case "OpenTime":
-        return <OpenTime setContent={setContent} />;
+        return <OpenTime />;
       case "Table":
-        return <Table setContent={setContent} />;
+        return <Table />;
       case "Schedule":
-        return <Schedule setContent={setContent} />;
+        return <Schedule />;
     }
   };
 
@@ -91,7 +91,7 @@ function Boss() {
           </div>
         </div>
 
-        <div className="px-20">{switchContent()}</div>
+        <div className=" w-full px-6">{switchContent()}</div>
       </div>
     </>
   );
