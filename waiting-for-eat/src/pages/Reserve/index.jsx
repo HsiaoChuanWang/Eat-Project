@@ -1,10 +1,10 @@
 import { Button, DatePicker, Form, Input } from "antd";
+import dayjs from "dayjs";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { default as React, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import db from "../../firebase";
 import useUserStore from "../../stores/userStore";
-
 function Reserve() {
   const [userData, setUserData] = useState({});
   const [openTime, setOpenTime] = useState([]);
@@ -59,51 +59,61 @@ function Reserve() {
     }
   }, [userInfo.userId]);
 
+  //不能選今天之前的日期
+  const disabledDate = (current) => {
+    return current && current <= dayjs().subtract(1, "day").endOf("day");
+  };
+
   async function handleSend() {
-    console.log(send);
     if (!Object.values(send).includes("")) {
       checkRef.current = false;
+
+      //以orderq找出這間公司其指定時間已經被訂位的所有訂單
       let hasOrderArray = orders.filter((p) => p.start == send.start);
       let hasOrderTableNumberArray = [];
 
+      //一個訂單可能有多個桌號，取出指定時間已經被訂位的桌號
       hasOrderArray.map((p) =>
         p.tableNumber.map((p) => hasOrderTableNumberArray.push(p)),
       );
-      console.log(hasOrderTableNumberArray);
 
       let canOrderArray = [];
       let orderTable = null;
 
+      //確認可以訂的桌位
       tables.map((table) => {
         const hasOrder = hasOrderTableNumberArray.find(
           (p) => p == table.number,
         );
-        console.log("hasOrder");
-        console.log(table);
-        console.log(hasOrder);
         if (hasOrder == undefined) canOrderArray.push(table);
-      });
+      }); //沒有被訂的桌位就會undefined
       canOrderArray = canOrderArray.sort((firstItem, secondItem) =>
         firstItem.people > secondItem.people ? 1 : -1,
-      );
-      console.log(canOrderArray);
-      console.log(orderTable);
+      ); //將table可容納的人數從小到大排列，資料中有id、number、people
+
+      //人數剛好的桌子就分派給他
       orderTable = canOrderArray.find(
         (p) => parseInt(p.people) >= parseInt(send.people),
       );
-      console.log(orderTable);
+
+      //如果沒有一個桌子的人數可以容納他定的人數，要訂兩張
+      let tableNumbers = []; //最終桌號
       if (orderTable != null) {
-        send.tableNumber = orderTable.number;
+        tableNumbers.push(orderTable.number);
       } else {
         let canOrderCount = [];
-        let peopleCount = 0;
+        let peopleCount = 0; //試著塞桌子後的總人數
         let orderList = [];
+
+        //從桌位人數最小的開始塞，得到canOrderCount
         canOrderArray.map((canOrder) => {
           if (parseInt(send.people) > peopleCount) {
             canOrderCount.push(canOrder);
             peopleCount += parseInt(canOrder.people);
           }
         });
+
+        //將canOrderCount從桌位人數大到小再排一次
         peopleCount = 0;
         canOrderCount.sort((firstItem, secondItem) =>
           firstItem.people < secondItem.people ? 1 : -1,
@@ -114,24 +124,28 @@ function Reserve() {
             peopleCount += parseInt(canOrder.people);
           }
         });
-        console.log(orderList);
-        let tableNumbers = [];
+
+        if (parseInt(send.people) > peopleCount) {
+          alert("座位不足");
+          return false;
+        }
+
+        //最終桌號
         orderList.forEach((table) => {
           const number = table.number;
           tableNumbers.push(number);
         });
-        console.log(tableNumbers);
-        setSend({ ...send, tableNumber: tableNumbers });
       }
-      console.log(send);
+      send.tableNumber = tableNumbers;
     } else {
       alert("請填寫完整資訊");
     }
   }
-  console.log(send);
+  openTime.sort((firstItem, secondItem) =>
+    firstItem.start > secondItem.start ? 1 : -1,
+  );
 
   const timeList = openTime.map((time) => {
-    // console.log(time);
     let week = -1;
     switch (time.day) {
       case "星期日":
@@ -247,7 +261,7 @@ function Reserve() {
       <div className="mx-6 flex">
         <h1>日期</h1>
         <h1 className="mx-6">|</h1>
-        <DatePicker onChange={changeDate} />
+        <DatePicker disabledDate={disabledDate} onChange={changeDate} />
       </div>
 
       <div className="mx-6 flex">
