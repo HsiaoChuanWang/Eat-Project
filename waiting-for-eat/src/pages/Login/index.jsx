@@ -25,7 +25,7 @@ function Login() {
         const user = userCredential.user;
         console.log("Login successfully!");
         getUserInfo(user.providerId, user.uid);
-        getUserFirestore();
+        getUserFirestore(user.uid);
         alert("登入成功");
         setIsLogin();
         navigate("/");
@@ -45,7 +45,7 @@ function Login() {
         const user = result.user;
         console.log("Google login successfully!");
         getUserInfo(user.providerId, user.uid);
-        getUserFirestore();
+        getUserFirestore(user.uid);
         alert("登入成功");
         setIsLogin();
         navigate("/");

@@ -53,7 +53,7 @@ function StepThreeDiner({ setActive }) {
       checkRef.current = false;
       await getDetailInfo(detail);
       await sendUserFirestore();
-      setActive("StepFour");
+      setActive("StepFourDiner");
     } else {
       alert("請填寫完整資訊");
     }

@@ -24,8 +24,6 @@ function Header() {
       });
   }
 
-  console.log(userInfo);
-
   const buttonSignUp = [
     { link: "", displayText: "回到首頁", status: "LogOut" },
   ];

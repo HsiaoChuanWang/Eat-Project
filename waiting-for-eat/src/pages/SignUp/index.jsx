@@ -1,5 +1,6 @@
 import { useState } from "react";
-import StepFour from "./StepFour";
+import StepFourBoss from "./StepFourBoss";
+import StepFourDiner from "./StepFourDiner";
 import StepOne from "./StepOne";
 import StepThreeBoss from "./StepThreeBoss";
 import StepThreeDiner from "./StepThreeDiner";
@@ -19,8 +20,10 @@ function SignUp() {
         return <StepThreeDiner setActive={setActive} />;
       case "StepThreeBoss":
         return <StepThreeBoss setActive={setActive} />;
-      case "StepFour":
-        return <StepFour />;
+      case "StepFourDiner":
+        return <StepFourDiner />;
+      case "StepFourBoss":
+        return <StepFourBoss />;
     }
   };
 
@@ -40,7 +43,7 @@ function SignUp() {
             active === "StepTwo" && "bg-red-200"
           }`}
         >
-          2、註冊帳號
+          2、完成註冊
         </h2>
 
         <h2
@@ -53,10 +56,10 @@ function SignUp() {
 
         <h2
           className={`mx-28 my-8  text-4xl  ${
-            active === "StepFour" && "bg-red-200"
+            active === ("StepFourDiner" || "StepFourBoss") && "bg-red-200"
           }`}
         >
-          4、完成註冊
+          4、歡迎您加入"吃痴等待"
         </h2>
       </div>
 
