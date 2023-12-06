@@ -1,7 +1,7 @@
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import db from "../../firebase";
-import { useNavigate, useParams } from "react-router-dom";
 
 function Post() {
   const { postId } = useParams();
@@ -22,8 +22,10 @@ function Post() {
     getHtml();
   }, []);
 
+  console.log(post);
+
   return (
-    <div>
+    <div className="p-20">
       <h2 className="text-2xl font-bold">{post.title}</h2>
       <br />
       {/* <h2>{post.createdDate}</h2> */}

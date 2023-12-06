@@ -125,11 +125,11 @@ function Schedule() {
     order.tableNumber.map((orderTableNumber) => {
       events.push({
         title:
-          "Name: " +
+          "Name : " +
           order.userName +
-          "\nTel: " +
+          "\nTel : " +
           order.phone +
-          "\n備註: " +
+          "\n備註 : " +
           order.remark +
           "$" +
           order.people,
@@ -211,23 +211,31 @@ function Schedule() {
           <br />
           {remark}
         </div>
-        <div>{people}人</div>
 
-        <div className="flex">
-          <button
-            onClick={() => {
-              console.log("test");
-            }}
-          >
-            asd
-          </button>
-          <button
-            onClick={() => {
-              console.log("test");
-            }}
-          >
-            asd
-          </button>
+        <div className="py-8">{people}人</div>
+
+        <div>
+          <div>
+            <button
+              className="my-1 h-8 border-2 border-solid border-black"
+              onClick={() => {
+                console.log("test");
+              }}
+            >
+              保留
+            </button>
+          </div>
+
+          <div>
+            <button
+              className="h-8 border-2 border-solid border-black"
+              onClick={() => {
+                console.log("test");
+              }}
+            >
+              取消
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -260,7 +268,7 @@ function Schedule() {
           //   themeSystem="asd"
           resourceAreaWidth={150}
           contentHeight={"auto"}
-          slotMinWidth={150} //欄位寬度
+          slotMinWidth={100} //欄位寬度
           height={100}
           ref={myRef}
           schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"

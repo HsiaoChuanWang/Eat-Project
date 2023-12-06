@@ -1,20 +1,20 @@
+import { Form, Input } from "antd";
 import { EditorState, convertToRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
-import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { useNavigate, useParams } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 import db from "../../firebase";
-
-//上傳照片，拿回URL
-async function uploadPicture(picture) {
-  const storage = getStorage();
-  const storageRef = ref(storage, "666"); //666是傳上去的檔案名
-  await uploadBytes(storageRef, picture); //picture是要上傳上去的img路徑
-  const downloadURL = await getDownloadURL(storageRef); //downloadURL是回傳的url
-  return { data: { link: downloadURL } };
-}
 
 //解決因為圖片死去的問題
 function myBlockRenderer(contentBlock) {
@@ -33,7 +33,6 @@ function myBlockRenderer(contentBlock) {
 }
 
 function Media(props) {
-  console.log(props);
   const { block, contentState } = props;
   const data = contentState.getEntity(block.getEntityAt(0)).getData();
   const emptyHtml = " ";
@@ -52,22 +51,34 @@ function Media(props) {
   );
 }
 
-//送出html到firestore
-async function handleSend({ editorState }) {
-  const uploadHtml = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-  console.log(uploadHtml);
-  const postRef = doc(db, "post", "kR0VeTSdZfz0pLBAnF0y");
-  await updateDoc(postRef, {
-    content: uploadHtml,
-    createdDate: serverTimestamp(),
-  });
-}
-
 function TextEditor() {
+  const navigate = useNavigate();
+  const { orderId } = useParams();
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [title, setTitle] = useState("");
+  const [mainPicture, setMainPicture] = useState("");
+  const [orderData, setOrderData] = useState({});
+
+  const uuid = uuidv4();
+  useEffect(() => {
+    const orderRef = doc(db, "order", orderId);
+    getDoc(orderRef).then((result) => {
+      const data = result.data();
+      setOrderData(data);
+    });
+  }, []);
 
   function onEditorStateChange(e) {
     setEditorState(e);
+  }
+
+  //上傳食記中照片，拿回URL
+  async function uploadPicture(picture) {
+    const storage = getStorage();
+    const storageRef = ref(storage, uuid);
+    await uploadBytes(storageRef, picture);
+    const downloadURL = await getDownloadURL(storageRef);
+    return { data: { link: downloadURL } };
   }
 
   function _uploadImageCallBack(file) {
@@ -75,64 +86,124 @@ function TextEditor() {
     return pictureURL;
   }
 
+  //上傳main照片
+  async function handleMainPicture(picture) {
+    const storage = getStorage();
+    const storageRef = ref(storage, uuid);
+    await uploadBytes(storageRef, picture);
+    const downloadURL = await getDownloadURL(storageRef);
+    setMainPicture(downloadURL);
+  }
+
+  //送出html到firestore
+  async function handleSend() {
+    const uploadHtml = draftToHtml(
+      convertToRaw(editorState.getCurrentContent()),
+    );
+
+    await addDoc(collection(db, "post"), {
+      title: title,
+      mainPicture: mainPicture,
+      content: uploadHtml,
+      createTime: serverTimestamp(),
+      orderId: orderId,
+      userId: orderData.userId,
+      companyId: orderData.companyId,
+    });
+  }
+
   return (
-    <div>
-      <Editor
-        editorState={editorState}
-        toolbarClassName="toolbarClassName"
-        wrapperClassName="wrapperClassName"
-        editorClassName="editorClassName"
-        onEditorStateChange={onEditorStateChange}
-        customBlockRenderFunc={myBlockRenderer}
-        toolbar={{
-          options: [
-            "inline",
-            "blockType",
-            "fontSize",
-            "textAlign",
-            "history",
-            "colorPicker",
-            "emoji",
-            "image",
-            "remove",
-          ],
-          inline: {
-            options: ["bold", "italic", "underline", "strikethrough"],
-            bold: { className: "demo-option-custom" },
-            italic: { className: "demo-option-custom" },
-            underline: { className: "demo-option-custom" },
-            strikethrough: { className: "demo-option-custom" },
-            monospace: { className: "demo-option-custom" },
-            superscript: { className: "demo-option-custom" },
-            subscript: { className: "demo-option-custom" },
-          },
-          blockType: {
-            options: ["Normal", "H1", "H2", "H3", "H4", "H5", "H6"],
-            className: "demo-option-custom-wide",
-            dropdownClassName: "demo-dropdown-custom",
-          },
-          fontSize: { className: "demo-option-custom-medium" },
-          image: {
-            urlEnabled: true,
-            uploadEnabled: true,
-            alignmentEnabled: false, // 是否顯示圖片排列置中與否，相當於text-align
-            uploadCallback: _uploadImageCallBack,
-            previewImage: true,
-            inputAccept: "image/gif,image/jpeg,image/jpg,image/png,image/svg",
-            alt: { present: false, mandatory: false, previewImage: true },
-            defaultSize: {
-              height: "auto",
-              width: "200px",
+    <div className="relative p-20">
+      <div>
+        <Form>
+          <Form.Item
+            label="標題"
+            rules={[
+              {
+                message: "請輸入標題!",
+              },
+            ]}
+          >
+            <Input
+              name="title"
+              onChange={(e) => setTitle(e.target.value)}
+              value={title}
+            />
+          </Form.Item>
+
+          <Form.Item label="上傳封面照片" className="w-96">
+            <Input
+              type="file"
+              accept="image/*"
+              name="picture"
+              onChange={(e) => handleMainPicture(e.target.files[0])}
+            />
+          </Form.Item>
+        </Form>
+      </div>
+
+      <div className="min-h-[400px] border-2 border-solid border-black">
+        <Editor
+          editorState={editorState}
+          toolbarClassName="toolbarClassName"
+          wrapperClassName="wrapperClassName"
+          editorClassName="editorClassName"
+          onEditorStateChange={onEditorStateChange}
+          customBlockRenderFunc={myBlockRenderer}
+          toolbar={{
+            options: [
+              "inline",
+              "blockType",
+              "fontSize",
+              "textAlign",
+              "history",
+              "colorPicker",
+              "emoji",
+              "image",
+              "remove",
+            ],
+            inline: {
+              options: ["bold", "italic", "underline", "strikethrough"],
+              bold: { className: "demo-option-custom" },
+              italic: { className: "demo-option-custom" },
+              underline: { className: "demo-option-custom" },
+              strikethrough: { className: "demo-option-custom" },
+              monospace: { className: "demo-option-custom" },
+              superscript: { className: "demo-option-custom" },
+              subscript: { className: "demo-option-custom" },
             },
-          },
+            blockType: {
+              options: ["Normal", "H1", "H2", "H3", "H4", "H5", "H6"],
+              className: "demo-option-custom-wide",
+              dropdownClassName: "demo-dropdown-custom",
+            },
+            fontSize: { className: "demo-option-custom-medium" },
+            image: {
+              urlEnabled: true,
+              uploadEnabled: true,
+              alignmentEnabled: false, // 是否顯示圖片排列置中與否，相當於text-align
+              uploadCallback: _uploadImageCallBack,
+              previewImage: true,
+              inputAccept: "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+              alt: { present: false, mandatory: false, previewImage: true },
+              defaultSize: {
+                height: "auto",
+                width: "200px",
+              },
+            },
+          }}
+        />
+      </div>
+
+      <button
+        className="absolute bottom-2 right-20 border-2 border-solid border-black"
+        onClick={() => {
+          handleSend();
+          navigate(`/diner/${orderData.userId}`);
         }}
-      />
-      <button onClick={() => handleSend({ editorState })}>送出</button>
-      {/* <textarea
-        style={{ height: 400 + "px" }}
-        disabled
-        value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-      /> */}
+      >
+        保存
+      </button>
     </div>
   );
 }

@@ -2,10 +2,12 @@ import { Button, DatePicker, Form, Input } from "antd";
 import dayjs from "dayjs";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { default as React, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
 import useUserStore from "../../stores/userStore";
+
 function Reserve() {
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({});
   const [openTime, setOpenTime] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -137,6 +139,12 @@ function Reserve() {
         });
       }
       send.tableNumber = tableNumbers;
+
+      console.log(tables);
+      alert(
+        `您預定到的桌號為${send.tableNumber}，分別為6人桌及4人桌，若對座位有疑問，請洽電!`,
+      );
+      navigate(`/restaurant/${companyId}`);
     } else {
       alert("請填寫完整資訊");
     }
@@ -269,6 +277,15 @@ function Reserve() {
         <h1 className="mx-6">|</h1>
         {timeList}
       </div>
+      {/* 
+      <div className="mx-6 flex">
+        <h1>桌號</h1>
+        <h1 className="mx-6">|</h1>
+        {send.tableNumber?.send.tableNumber.map((number) => {
+          return <div key={number} className="border-black border-2 border-solid">{number}</div>;
+        })}
+      </div> */}
+
       <div className="mx-6 flex">
         <h1>備註</h1>
         <h1 className="mx-6">|</h1>

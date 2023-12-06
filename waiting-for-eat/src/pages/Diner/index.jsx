@@ -4,7 +4,6 @@ import DinerInfo from "./DinerInfo";
 import DinerInfoEdit from "./DinerInfoEdit";
 import DislikeShop from "./DislikeShop";
 import EatenShop from "./EatenShop";
-import LikePost from "./LikePost";
 import LikeShop from "./LikeShop";
 import Posted from "./Posted";
 import PostedEdit from "./PostedEdit";
@@ -32,8 +31,6 @@ function Diner() {
         return <Posted setContent={setContent} />;
       case "PostedEdit":
         return <PostedEdit setContent={setContent} />;
-      case "LikePost":
-        return <LikePost />;
     }
   };
 
@@ -103,16 +100,6 @@ function Diner() {
               }}
             >
               我的食記
-            </button>
-          </div>
-
-          <div className="my-16 flex h-12 w-full justify-center bg-red-200">
-            <button
-              onClick={() => {
-                setContent("LikePost");
-              }}
-            >
-              收藏的食記
             </button>
           </div>
         </div>

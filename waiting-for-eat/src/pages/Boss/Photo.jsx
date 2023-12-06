@@ -40,14 +40,14 @@ function Photo({ setContent }) {
         onClick={() => {
           setContent("PhotoUpload");
         }}
-        className="absolute right-0 border-2 border-solid border-black"
+        className="absolute right-16 border-2 border-solid border-black"
       >
         編輯
       </button>
       <div>
         <h1 className="text-2xl font-bold">封面照片</h1>
         <div>
-          <img src={companyInfo.picture} />
+          <img className="w-96" src={companyInfo.picture} />
         </div>
 
         <h1 className="mt-6 text-2xl font-bold">菜單照片</h1>

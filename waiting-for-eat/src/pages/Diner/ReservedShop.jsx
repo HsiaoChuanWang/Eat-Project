@@ -18,7 +18,6 @@ function ReservedShop() {
   const { userId } = useParams();
   const [orders, setOrders] = useState([]);
   const [combineData, setCombineData] = useState([]);
-  const orderRef = collection(db, "order");
   const orderq = query(
     collection(db, "order"),
     where("userId", "==", userId),
@@ -38,11 +37,10 @@ function ReservedShop() {
   }
 
   useEffect(() => {
-    onSnapshot(orderq, (result) => {
+    const orderSnap = onSnapshot(orderq, (result) => {
       let orderList = [];
       result.forEach((doc) => {
         const data = doc.data();
-        console.log(data);
         const dataId = doc.id;
         const combine = { ...data, orderId: dataId };
         orderList.push(combine);
@@ -61,6 +59,8 @@ function ReservedShop() {
           });
       });
     });
+
+    return orderSnap;
   }, []);
 
   async function handleDelete(orderId) {

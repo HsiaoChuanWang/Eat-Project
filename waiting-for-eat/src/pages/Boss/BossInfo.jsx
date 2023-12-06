@@ -35,7 +35,7 @@ function BossInfo({ setContent }) {
         onClick={() => {
           setContent("BossInfoEdit");
         }}
-        className="absolute right-0 border-2 border-solid border-black"
+        className="absolute right-12 border-2 border-solid border-black"
       >
         編輯
       </button>

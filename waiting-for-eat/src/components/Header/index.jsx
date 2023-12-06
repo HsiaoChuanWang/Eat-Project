@@ -9,6 +9,7 @@ function Header() {
   const navigate = useNavigate();
   const setIsLogout = useUserStore((state) => state.setIsLogout);
   const userInfo = useUserStore((state) => state.userInfo);
+  const detailInfo = useUserStore((state) => state.detailInfo);
   const situation = useHeaderStore((state) => state.situation);
   const setHeader = useHeaderStore((state) => state.setHeader);
   const auth = getAuth();
@@ -50,7 +51,11 @@ function Header() {
   ];
 
   const buttonBoss = [
-    { link: "boss", displayText: "業者專區", status: "BossLogIn" },
+    {
+      link: `boss/${detailInfo.companyId}`,
+      displayText: "業者專區",
+      status: "BossLogIn",
+    },
     { link: "", displayText: "登出", status: "LogOut" },
   ];
 
