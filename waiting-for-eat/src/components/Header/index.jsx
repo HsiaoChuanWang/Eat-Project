@@ -1,4 +1,5 @@
 import { getAuth, signOut } from "firebase/auth";
+// import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useHeaderStore from "../../stores/headerStore";
 import useUserStore from "../../stores/userStore";
@@ -8,9 +9,16 @@ function Header() {
   const navigate = useNavigate();
   const setIsLogout = useUserStore((state) => state.setIsLogout);
   const userInfo = useUserStore((state) => state.userInfo);
+  const detailInfo = useUserStore((state) => state.detailInfo);
   const situation = useHeaderStore((state) => state.situation);
   const setHeader = useHeaderStore((state) => state.setHeader);
   const auth = getAuth();
+
+  //   useEffect(() => {
+  //     if (userInfo.userId != "") {
+
+  //     }
+  //   }, [userInfo.userId]);
 
   function logOut() {
     signOut(auth)
@@ -34,12 +42,20 @@ function Header() {
   ];
 
   const buttonDiner = [
-    { link: "diner", displayText: "食客專區", status: "DinerLogIn" },
+    {
+      link: `diner/${userInfo.userId}`,
+      displayText: "食客專區",
+      status: "DinerLogIn",
+    },
     { link: "", displayText: "登出", status: "LogOut" },
   ];
 
   const buttonBoss = [
-    { link: "boss", displayText: "業者專區", status: "BossLogIn" },
+    {
+      link: `boss/${detailInfo.companyId}`,
+      displayText: "業者專區",
+      status: "BossLogIn",
+    },
     { link: "", displayText: "登出", status: "LogOut" },
   ];
 

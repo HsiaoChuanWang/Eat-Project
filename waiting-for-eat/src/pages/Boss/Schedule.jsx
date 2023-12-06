@@ -10,12 +10,13 @@ import {
   getDocs,
   onSnapshot,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { default as React, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import db from "../../firebase";
-import "./table.css";
+import "./schedule.css";
 
 function Schedule() {
   const [editable, setEditable] = useState(false);
@@ -41,16 +42,16 @@ function Schedule() {
   }
 
   useEffect(() => {
-    getDocs(tableRef).then((result) => {
-      let seats = [];
-      result.forEach((doc) => {
-        const data = doc.data();
-        const dataId = doc.id;
-        const combine = { ...data, tableId: dataId };
-        seats.push(combine);
-      });
-      setTables(seats);
-    });
+    // getDocs(tableRef).then((result) => {
+    //   let seats = [];
+    //   result.forEach((doc) => {
+    //     const data = doc.data();
+    //     const dataId = doc.id;
+    //     const combine = { ...data, tableId: dataId };
+    //     seats.push(combine);
+    //   });
+    //   setTables(seats);
+    // });
 
     getDocs(orderq)
       .then((result) => {
@@ -103,10 +104,8 @@ function Schedule() {
       setOrders(orderList);
     });
   }, []);
-  console.log(orders);
 
-  console.log(tables);
-
+  //左邊列表
   let resources = [];
   tables.map((table) => {
     resources.push({
@@ -117,6 +116,8 @@ function Schedule() {
   resources = resources.sort((firstItem, secondItem) =>
     firstItem.id > secondItem.id ? 1 : -1,
   );
+
+  //新增事件，一筆訂單可能有兩個以上的桌號
   let events = [];
   console.log("orders");
   console.log(orders);
@@ -124,62 +125,75 @@ function Schedule() {
     order.tableNumber.map((orderTableNumber) => {
       events.push({
         title:
-          "Name: " +
+          "Name : " +
           order.userName +
-          "\nTel: " +
+          "\nTel : " +
           order.phone +
-          "\n備註: " +
+          "\n備註 : " +
           order.remark +
           "$" +
           order.people,
         start: new Date(order.date + " " + order.start),
         end: new Date(order.date + " " + order.end),
-        id: order.orderId,
+        id: order.orderId + orderTableNumber,
         resourceId: orderTableNumber,
         display: "auto",
         color: "#ff9f89",
-        //   constraints: "businessHours",
+        //   constraints: "businessHours",//限制時段
       });
     });
   });
+
   console.log(events);
-  function MyAddEvent(e) {
-    console.log(e.resource.id);
-    var event1 = {
-      title: "MyEvent",
-      start: e.date,
-      id: "a",
-      resourceId: e.resource.id,
-      display: "auto",
-      title: "Auditorium A",
-      color: "#ff9f89",
-    };
-    myRef.current.getApi().addEvent(event1);
+
+  //拖曳事件
+  //更新
+  async function updateOrder(orderId, tableNumber, startTime, endTime) {
+    const OrderRef = doc(db, "order", orderId);
+    await updateDoc(OrderRef, {
+      tableNumber: tableNumber,
+      start: startTime,
+      end: endTime,
+    });
   }
-  function MyEventClick(info) {
-    console.log(info.view);
-    console.log(info);
-    console.log(info.el.fcSeg);
-    const startDay = dateFormat(info.event.start, "yyyy/mm/dd");
-    const startTime = dateFormat(info.event.start, "HH:ss");
-    const endDay = dateFormat(info.event.end, "yyyy/mm/dd");
-    const endTime = dateFormat(info.event.end, "HH:ss");
-    alert(startDay + " " + startTime + " - " + endDay + " " + endTime);
+  //取得指定order資料
+  async function getOrder(orderId) {
+    const docRef = doc(db, "order", orderId);
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+    const oldTableNumber = data.tableNumber;
   }
+
   function MyDropEvent(info) {
     const startDay = dateFormat(info.event.start, "yyyy/mm/dd");
     const startTime = dateFormat(info.event.start, "HH:ss");
     const endDay = dateFormat(info.event.end, "yyyy/mm/dd");
     const endTime = dateFormat(info.event.end, "HH:ss");
-    alert(startDay + " " + startTime + " - " + endDay + " " + endTime);
+    const orderId = info.event.id;
+    const tableNumber = info.event._def.resourceIds[0];
+
+    alert(
+      "ID: " +
+        orderId +
+        "\n桌號: " +
+        tableNumber +
+        "\n開始: " +
+        startDay +
+        " " +
+        startTime +
+        "\n結束: " +
+        endDay +
+        " " +
+        endTime,
+    );
   }
 
+  //datePicker選用時間
   function changeStartDate(date, dateString) {
     if (date != null) myRef.current.getApi().gotoDate(dateString);
   }
-  function myClick(e) {
-    console.log(e);
-  }
+
+  //自製event的格式
   function eventContent(arg) {
     let stringArray = arg.event.title.split("$");
     let titleArray = stringArray[0].split("\n");
@@ -197,23 +211,31 @@ function Schedule() {
           <br />
           {remark}
         </div>
-        <div>{people}人</div>
 
-        <div className="flex">
-          <button
-            onClick={() => {
-              console.log("test");
-            }}
-          >
-            asd
-          </button>
-          <button
-            onClick={() => {
-              console.log("test");
-            }}
-          >
-            asd
-          </button>
+        <div className="py-8">{people}人</div>
+
+        <div>
+          <div>
+            <button
+              className="my-1 h-8 border-2 border-solid border-black"
+              onClick={() => {
+                console.log("test");
+              }}
+            >
+              保留
+            </button>
+          </div>
+
+          <div>
+            <button
+              className="h-8 border-2 border-solid border-black"
+              onClick={() => {
+                console.log("test");
+              }}
+            >
+              取消
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -246,7 +268,7 @@ function Schedule() {
           //   themeSystem="asd"
           resourceAreaWidth={150}
           contentHeight={"auto"}
-          slotMinWidth={50}
+          slotMinWidth={100} //欄位寬度
           height={100}
           ref={myRef}
           schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
@@ -260,6 +282,7 @@ function Schedule() {
           //   dateClick={MyAddEvent}
           //   eventClick={MyEventClick}
           resources={resources}
+          resourceAreaHeaderContent={"桌位/時間"} //title名
         />
       </div>
     </div>
@@ -267,3 +290,28 @@ function Schedule() {
 }
 
 export default Schedule;
+
+//   function MyAddEvent(e) {
+//     console.log(e.resource.id);
+//     var event1 = {
+//       title: "MyEvent",
+//       start: e.date,
+//       id: "a",
+//       resourceId: e.resource.id,
+//       display: "auto",
+//       title: "Auditorium A",
+//       color: "#ff9f89",
+//     };
+//     myRef.current.getApi().addEvent(event1);
+//   }
+
+//   function MyEventClick(info) {
+//     console.log(info.view);
+//     console.log(info);
+//     console.log(info.el.fcSeg);
+//     const startDay = dateFormat(info.event.start, "yyyy/mm/dd");
+//     const startTime = dateFormat(info.event.start, "HH:ss");
+//     const endDay = dateFormat(info.event.end, "yyyy/mm/dd");
+//     const endTime = dateFormat(info.event.end, "HH:ss");
+//     alert(startDay + " " + startTime + " - " + endDay + " " + endTime);
+//   }

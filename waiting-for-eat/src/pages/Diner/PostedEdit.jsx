@@ -1,14 +1,15 @@
 import { Form, Input } from "antd";
-import { EditorState, convertToRaw } from "draft-js";
+import { ContentState, EditorState, convertToRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import {
-  addDoc,
-  collection,
   doc,
   getDoc,
+  onSnapshot,
   serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import htmlToDraft from "html-to-draftjs";
 import React, { useEffect, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -51,26 +52,53 @@ function Media(props) {
   );
 }
 
-function TextEditor() {
+function PostedEdit() {
   const navigate = useNavigate();
-  const { orderId } = useParams();
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [updateData, setUpdateData] = useState({});
   const [title, setTitle] = useState("");
   const [mainPicture, setMainPicture] = useState("");
-  const [orderData, setOrderData] = useState({});
-
+  const [post, setPost] = useState([]);
+  const { postId } = useParams();
   const uuid = uuidv4();
-  useEffect(() => {
-    const orderRef = doc(db, "order", orderId);
-    getDoc(orderRef).then((result) => {
-      const data = result.data();
-      setOrderData(data);
-    });
-  }, []);
 
   function onEditorStateChange(e) {
     setEditorState(e);
   }
+
+  async function getCompanyInfo(companyId) {
+    const docRef = doc(db, "company", companyId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const resultUser = docSnap.data();
+      return resultUser;
+    } else {
+      console.log("No such comment companyInfo document!");
+    }
+  }
+
+  useEffect(() => {
+    let postData;
+    const postSnap = onSnapshot(doc(db, "post", postId), (doc) => {
+      postData = doc.data();
+      getCompanyInfo(postData.companyId).then((result) => {
+        const data = Object.assign(postData, result);
+        setPost(data);
+        const blocksFromHtml = htmlToDraft(data.content);
+        const { contentBlocks, entityMap } = blocksFromHtml;
+        const contentState = ContentState.createFromBlockArray(
+          contentBlocks,
+          entityMap,
+        );
+        const editorState = EditorState.createWithContent(contentState);
+        setEditorState(editorState);
+        setTitle(data.title);
+      });
+    });
+
+    return postSnap;
+  }, []);
 
   //上傳食記中照片，拿回URL
   async function uploadPicture(picture) {
@@ -96,24 +124,29 @@ function TextEditor() {
   }
 
   //送出html到firestore
-  async function handleSend() {
+  async function handleSend(postId) {
+    console.log(postId);
     const uploadHtml = draftToHtml(
       convertToRaw(editorState.getCurrentContent()),
     );
 
-    await addDoc(collection(db, "post"), {
+    const postRef = doc(db, "post", postId);
+    await updateDoc(postRef, {
       title: title,
-      mainPicture: mainPicture,
       content: uploadHtml,
       createTime: serverTimestamp(),
-      orderId: orderId,
-      userId: orderData.userId,
-      companyId: orderData.companyId,
     });
+
+    if (mainPicture !== "") {
+      await updateDoc(postRef, {
+        mainPicture: mainPicture,
+      });
+    }
   }
 
   return (
     <div className="relative p-20">
+      <h1 className="text-2xl text-red-600">請直接填寫需要更改的地方</h1>
       <div>
         <Form>
           <Form.Item
@@ -126,12 +159,17 @@ function TextEditor() {
           >
             <Input
               name="title"
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
               value={title}
             />
           </Form.Item>
+          <div>
+            <img src={post.mainPicture}></img>
+          </div>
 
-          <Form.Item label="上傳封面照片" className="w-96">
+          <Form.Item label="更改封面照片" className="w-96">
             <Input
               type="file"
               accept="image/*"
@@ -198,8 +236,8 @@ function TextEditor() {
       <button
         className="absolute bottom-2 right-20 border-2 border-solid border-black"
         onClick={() => {
-          handleSend();
-          navigate(`/diner/${orderData.userId}`);
+          handleSend(postId);
+          navigate(`/diner/${post.userId}`);
         }}
       >
         保存
@@ -208,4 +246,4 @@ function TextEditor() {
   );
 }
 
-export default TextEditor;
+export default PostedEdit;

@@ -74,7 +74,7 @@ function Restaurant() {
               combinePosts.push(newData);
             })
             .then(() => {
-              setPost(combinePosts);
+              setPost([...combinePosts]);
             });
         });
       });
@@ -82,18 +82,26 @@ function Restaurant() {
 
   const posts = post.map((item) => {
     return (
-      <div key={item.userId} className="border-2 border-solid border-black">
+      <div
+        key={item.userId}
+        className="my-4 border-2 border-solid border-black px-4"
+      >
         <h2>{dateFormat(item.createTime.toDate(), "yyyy/mm/dd HH:MM")}</h2>
         <div
           onClick={() => {
             navigation(`/post/${item.postId}`);
           }}
         >
-          <h2 className="text-2xl">{item.title}</h2>
-        </div>
-        <div className="flex">
-          <img src={item.picture} className="w-20" />
-          <h2>{item.userName}</h2>
+          <div className="flex items-center">
+            <img src={item.picture} className="w-20" />
+            <h2>{item.userName}</h2>
+          </div>
+
+          <div className="flex">
+            <p className="my-6  text-xl">標題</p>
+            <p className="mx-4  my-6 text-xl">|</p>
+            <p className="my-6  text-xl">{item.title}</p>
+          </div>
         </div>
       </div>
     );
@@ -101,40 +109,48 @@ function Restaurant() {
 
   return (
     <div>
-      <div className="mb-48 flex">
+      <div className="m-8 mb-48 flex">
         <div className="w-1/2">
-          <h1 className="text-4xl">餐廳資訊</h1>
-          <div className="flex">
-            <Like />
+          <div className="border-2 border-solid border-black px-2">
+            <h1 className="text-4xl">餐廳資訊</h1>
+            <div className="flex">
+              <Like />
+            </div>
+
+            <img src={data.picture} />
+            <h2>{data.name}</h2>
+            <h4>
+              {data.city}
+              {data.district}
+              {data.address}
+            </h4>
+            <h2>{data.phone}</h2>
           </div>
 
-          <img src={data.picture} />
-          <h2>{data.name}</h2>
-          <h4>
-            {data.city}
-            {data.district}
-            {data.address}
-          </h4>
-          <h2>{data.phone}</h2>
-          <br />
-          <h4 className="text-4xl">評論們</h4>
-          <Comment />
-          <div className="p-20"></div>
-          <h3 className="text-4xl">菜單</h3>
-          <div className=" w-1/2">
-            {data.menu ? (
-              data.menu.map((picture, index) => (
-                <img src={picture} className="w-96" key={index} />
-              ))
-            ) : (
-              <h4>暫無上傳菜單</h4>
-            )}
+          <div className="my-4 border-2 border-solid border-black px-2">
+            <h4 className="text-4xl">評論們</h4>
+            <Comment />
           </div>
-          <br />
-          <h1 className="text-4xl">現熱活動</h1>
-          <h4>{data.description}</h4>
+
+          <div className="my-4 border-2 border-solid border-black px-2">
+            <h3 className="text-4xl">菜單</h3>
+            <div className=" flex  w-48 p-4">
+              {data.menu ? (
+                data.menu.map((picture, index) => (
+                  <img className="px-2" src={picture} key={index} />
+                ))
+              ) : (
+                <h4>暫無上傳菜單</h4>
+              )}
+            </div>
+          </div>
+
+          <div className="my-4 border-2 border-solid border-black px-2">
+            <h1 className="text-4xl">現熱活動</h1>
+            <h4>{data.description}</h4>
+          </div>
         </div>
-        <div className="w-1/2 p-20">
+        <div className="mx-2 w-1/2 border-2 border-solid border-black  px-2">
           <h2 className="text-4xl">相關食記</h2>
           {posts}
         </div>

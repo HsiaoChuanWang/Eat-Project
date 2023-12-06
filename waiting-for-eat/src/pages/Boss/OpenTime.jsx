@@ -14,7 +14,6 @@ import { FaTrashCan } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
 import db from "../../firebase";
 import "./openTime.css";
-
 function OpenTime() {
   const { companyId } = useParams();
   const [openTime, setOpenTime] = useState([]);
@@ -91,7 +90,6 @@ function OpenTime() {
       </div>
     );
   });
-
   const TueList = Tue.map((item) => {
     return (
       <div key={item.timeId} className="flex items-baseline">
@@ -262,9 +260,9 @@ function OpenTime() {
           >
             <TimePicker
               format={format}
-              onChange={(e) =>
-                setAddTime({ ...addTime, start: `${e.$H}:${e.$m}` })
-              }
+              onChange={(e) => {
+                setAddTime({ ...addTime, start: e.format("HH:mm") });
+              }}
             />
           </Form.Item>
 
@@ -282,7 +280,7 @@ function OpenTime() {
             <TimePicker
               format={format}
               onChange={(e) =>
-                setAddTime({ ...addTime, end: `${e.$H}:${e.$m}` })
+                setAddTime({ ...addTime, end: e.format("HH:mm") })
               }
             />
           </Form.Item>

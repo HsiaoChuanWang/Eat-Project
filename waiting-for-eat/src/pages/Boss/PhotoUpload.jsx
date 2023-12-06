@@ -3,11 +3,14 @@ import { Button, Form, Upload } from "antd";
 import { doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { default as React, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import db, { storage } from "../../firebase";
 import useUserStore from "../../stores/userStore";
 
 function PhotoUpload({ setContent }) {
+  const { companyId } = useParams();
+  const navigate = useNavigate();
   const [mainPicture, setMainpicture] = useState("");
   const [mainPictures, setMainpictures] = useState([]);
 
@@ -95,6 +98,8 @@ function PhotoUpload({ setContent }) {
     await updateDoc(companyRef, {
       menu: urls,
     });
+    setContent("Photo");
+    navigate(`/boss/${companyId}`);
   }
 
   const handleMenu = () => {
@@ -107,6 +112,8 @@ function PhotoUpload({ setContent }) {
         .then(() => {
           uploadMenu(menuUrls);
         });
+      setContent("Photo");
+      navigate(`/boss/${companyId}`);
     });
   };
 

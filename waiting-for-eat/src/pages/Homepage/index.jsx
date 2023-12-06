@@ -5,6 +5,7 @@ import db from "../../firebase";
 import useSearchStore from "../../stores/searchStore";
 import bbq from "./bbq.jpg";
 import hotpot from "./hotpot.jpg";
+import smalleat from "./smalleat.jpg";
 
 function HomePage() {
   const setSearchArray = useSearchStore((state) => state.setSearchArray);
@@ -78,34 +79,56 @@ function HomePage() {
 
   return (
     <div>
-      <div>
-        <input
-          value={searchName}
-          placeholder="搜尋餐廳"
-          onChange={(e) => setSearchName(e.target.value)}
-        ></input>
-        <button onClick={handleRestaurant}>按我</button>
+      <div className=" flex h-96 w-full justify-center bg-slate-200 py-48">
+        <div>
+          <input
+            className=" border-2 border-solid border-black"
+            value={searchName}
+            placeholder="搜尋餐廳"
+            onChange={(e) => setSearchName(e.target.value)}
+          ></input>
+          <button
+            className="mr-4 border-2 border-solid border-black"
+            onClick={handleRestaurant}
+          >
+            按我
+          </button>
 
-        <input
-          value={searchPlace}
-          placeholder="搜尋地點"
-          onChange={(e) => setSearchPlace(e.target.value)}
-        ></input>
-        <button onClick={handlePlace}>按我</button>
+          <input
+            className="border-2 border-solid border-black"
+            value={searchPlace}
+            placeholder="搜尋地點"
+            onChange={(e) => setSearchPlace(e.target.value)}
+          ></input>
+          <button
+            className="border-2 border-solid border-black"
+            onClick={handlePlace}
+          >
+            按我
+          </button>
+        </div>
       </div>
 
-      <img
-        className="m-20 w-96"
-        src={hotpot}
-        title="0"
-        onClick={(e) => handleCategory(e)}
-      />
-      <img
-        className="m-20 w-96"
-        src={bbq}
-        title="1"
-        onClick={(e) => handleCategory(e)}
-      />
+      <div className="flex justify-center">
+        <img
+          className="m-20 w-96"
+          src={hotpot}
+          title="0"
+          onClick={(e) => handleCategory(e)}
+        />
+        <img
+          className="m-20 w-96"
+          src={bbq}
+          title="1"
+          onClick={(e) => handleCategory(e)}
+        />
+        <img
+          className="m-20 w-96"
+          src={smalleat}
+          title="4"
+          onClick={(e) => handleCategory(e)}
+        />
+      </div>
     </div>
   );
 }

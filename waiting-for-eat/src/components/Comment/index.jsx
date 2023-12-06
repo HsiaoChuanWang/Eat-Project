@@ -77,7 +77,7 @@ function Comment() {
 
   return (
     <div className="w-full">
-      <div className=" p-20">{comments}</div>
+      <div className=" p-2">{comments}</div>
     </div>
   );
 }
