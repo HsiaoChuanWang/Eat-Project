@@ -1,12 +1,15 @@
 import { getAuth, signOut } from "firebase/auth";
-// import { useEffect } from "react";
+import { doc, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import db from "../../firebase";
 import useHeaderStore from "../../stores/headerStore";
 import useUserStore from "../../stores/userStore";
 import logo from "./fakelogo.svg";
 
 function Header() {
   const navigate = useNavigate();
+  const [userData, setUserData] = useState({});
   const setIsLogout = useUserStore((state) => state.setIsLogout);
   const userInfo = useUserStore((state) => state.userInfo);
   const detailInfo = useUserStore((state) => state.detailInfo);
@@ -14,11 +17,15 @@ function Header() {
   const setHeader = useHeaderStore((state) => state.setHeader);
   const auth = getAuth();
 
-  //   useEffect(() => {
-  //     if (userInfo.userId != "") {
-
-  //     }
-  //   }, [userInfo.userId]);
+  useEffect(() => {
+    if (userInfo.userId) {
+      const userSnap = onSnapshot(doc(db, "user", userInfo.userId), (doc) => {
+        const data = doc.data();
+        setUserData(data);
+      });
+      return userSnap;
+    }
+  }, [userInfo.userId]);
 
   function logOut() {
     signOut(auth)
@@ -148,6 +155,10 @@ function Header() {
       <Link to="/">
         <img src={logo} className="m-8 h-20 w-auto" />
       </Link>
+      <div className="flex">
+        <img src={userData.picture} className="w-20"></img>
+        <div>{`${userData.userName} ，您好`}</div>
+      </div>
 
       <div className="m-16">{renderSwitch("LogOut")}</div>
     </div>

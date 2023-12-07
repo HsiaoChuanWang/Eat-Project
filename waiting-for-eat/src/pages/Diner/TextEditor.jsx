@@ -196,6 +196,15 @@ function TextEditor() {
       </div>
 
       <button
+        className="absolute bottom-2 right-40 border-2 border-solid border-black"
+        onClick={() => {
+          navigate(`/diner/posted/${orderData.userId}`);
+        }}
+      >
+        返回
+      </button>
+
+      <button
         className="absolute bottom-2 right-20 border-2 border-solid border-black"
         onClick={() => {
           handleSend();

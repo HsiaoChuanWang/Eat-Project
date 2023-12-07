@@ -4,6 +4,8 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css";
+import Activity from "./pages/Boss/Activity.jsx";
+import ActivityEdit from "./pages/Boss/ActivityEdit.jsx";
 import BossInfo from "./pages/Boss/BossInfo.jsx";
 import BossInfoEdit from "./pages/Boss/BossInfoEdit";
 import OpenTime from "./pages/Boss/OpenTime";
@@ -12,6 +14,7 @@ import PhotoUpload from "./pages/Boss/PhotoUpload";
 import Schedule from "./pages/Boss/Schedule";
 import Table from "./pages/Boss/Table";
 import Boss from "./pages/Boss/index.jsx";
+import Commented from "./pages/Diner/Commented.jsx";
 import DinerInfo from "./pages/Diner/DinerInfo.jsx";
 import DinerInfoEdit from "./pages/Diner/DinerInfoEdit";
 import DislikeShop from "./pages/Diner/DislikeShop";
@@ -60,6 +63,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                 element={<DislikeShop />}
               />
               <Route path="/diner/posted/:userId" element={<Posted />} />
+              <Route path="/diner/commented/:userId" element={<Commented />} />
             </Route>
 
             <Route path="/diner/textEditor/:orderId" element={<TextEditor />} />
@@ -79,6 +83,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                 element={<PhotoUpload />}
               />
               <Route path="/boss/openTime/:companyId" element={<OpenTime />} />
+              <Route path="/boss/activity/:companyId" element={<Activity />} />
+              <Route
+                path="/boss/activityEdit/:companyId"
+                element={<ActivityEdit />}
+              />
               <Route path="/boss/table/:companyId" element={<Table />} />
               <Route path="/boss/schedule/:companyId" element={<Schedule />} />
             </Route>

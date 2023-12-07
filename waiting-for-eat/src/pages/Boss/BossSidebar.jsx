@@ -22,6 +22,12 @@ function BossSidebar() {
           </div>
 
           <div className="my-20 flex h-12 w-full justify-center bg-red-200">
+            <button onClick={() => navigate(`/boss/activity/${companyId}`)}>
+              編輯活動
+            </button>
+          </div>
+
+          <div className="my-20 flex h-12 w-full justify-center bg-red-200">
             <button onClick={() => navigate(`/boss/openTime/${companyId}`)}>
               營業時間設定
             </button>

@@ -59,7 +59,7 @@ function Posted() {
           getOrderInfo(newItem.orderId).then((data) => {
             const newnewItem = Object.assign(newItem, data);
             orderList.push(newnewItem);
-            setCombineData(orderList);
+            setCombineData([...orderList]);
           });
         });
       });

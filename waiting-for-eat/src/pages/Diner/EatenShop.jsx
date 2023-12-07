@@ -23,7 +23,6 @@ import Star from "./Star";
 function EatenShop() {
   const navigate = useNavigate();
   const { userId } = useParams();
-  const [favorites, setFavorites] = useState([]);
   const [combineData, setCombineData] = useState([]);
   const favoriteq = query(
     collection(db, "favorite"),
@@ -128,6 +127,8 @@ function EatenShop() {
 
     return favoriteSnap;
   }, []);
+
+  console.log(combineData);
 
   const handleLike = async (favoriteId, change) => {
     const favoriteRef = doc(db, "favorite", favoriteId);

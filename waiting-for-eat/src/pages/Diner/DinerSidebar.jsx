@@ -44,6 +44,12 @@ function DinerSidebar() {
               我的食記
             </button>
           </div>
+
+          <div className="my-16 flex h-12 w-full justify-center bg-red-200">
+            <button onClick={() => navigate(`/diner/commented/${userId}`)}>
+              我的評論
+            </button>
+          </div>
         </div>
       </div>
     </>

@@ -1,11 +1,21 @@
-import React from "react";
+import { doc, onSnapshot } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useUserStore from "../../stores/userStore";
+import db from "../../firebase";
 
 function DinerInfo() {
   const { userId } = useParams();
   const navigate = useNavigate();
-  const detailInfo = useUserStore((state) => state.detailInfo);
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    const userSnap = onSnapshot(doc(db, "user", userId), (doc) => {
+      const data = doc.data();
+      setUserData(data);
+    });
+
+    return userSnap;
+  });
 
   return (
     <>
@@ -20,30 +30,30 @@ function DinerInfo() {
         <div className="flex">
           <p className="my-6  text-xl">姓名</p>
           <p className="mx-4  my-6 text-xl">|</p>
-          <p className="my-6  text-xl">{detailInfo.userName}</p>
+          <p className="my-6  text-xl">{userData.userName}</p>
         </div>
 
         <div className="flex">
           <p className="my-6  text-xl">性別</p>
           <p className="mx-4  my-6 text-xl">|</p>
           <p className="my-6  text-xl">
-            {detailInfo.gender === "小姐" ? "女" : "男"}
+            {userData.gender === "小姐" ? "女" : "男"}
           </p>
         </div>
 
         <div className="flex">
           <p className="my-6  text-xl">電話</p>
           <p className="mx-4  my-6 text-xl">|</p>
-          <p className="my-6  text-xl">{detailInfo.phone}</p>
+          <p className="my-6  text-xl">{userData.phone}</p>
         </div>
 
         <div className="flex">
           <p className="my-6  text-xl">大頭照</p>
           <p className="mx-4  my-6 text-xl">|</p>
-          {detailInfo.picture === "" ? (
+          {userData.picture === "" ? (
             <p>尚無上傳照片</p>
           ) : (
-            <img src={detailInfo.picture} />
+            <img src={userData.picture} />
           )}
         </div>
       </div>
