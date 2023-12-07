@@ -12,7 +12,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
 
-function Posted({ setContent }) {
+function Posted() {
   const navigate = useNavigate();
   const { userId } = useParams();
   const [combineData, setCombineData] = useState([]);
@@ -59,7 +59,7 @@ function Posted({ setContent }) {
           getOrderInfo(newItem.orderId).then((data) => {
             const newnewItem = Object.assign(newItem, data);
             orderList.push(newnewItem);
-            setCombineData(orderList);
+            setCombineData([...orderList]);
           });
         });
       });
@@ -118,7 +118,7 @@ function Posted({ setContent }) {
 
             <button
               onClick={() => {
-                navigate(`/postedEdit/${data.postId}`);
+                navigate(`/diner/postedEdit/${data.postId}`);
               }}
               className="absolute bottom-16 right-8 h-8 border-2 border-solid border-black"
             >

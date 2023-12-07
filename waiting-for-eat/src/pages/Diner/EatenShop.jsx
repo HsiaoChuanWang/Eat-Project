@@ -23,7 +23,6 @@ import Star from "./Star";
 function EatenShop() {
   const navigate = useNavigate();
   const { userId } = useParams();
-  const [favorites, setFavorites] = useState([]);
   const [combineData, setCombineData] = useState([]);
   const favoriteq = query(
     collection(db, "favorite"),
@@ -128,6 +127,8 @@ function EatenShop() {
 
     return favoriteSnap;
   }, []);
+
+  console.log(combineData);
 
   const handleLike = async (favoriteId, change) => {
     const favoriteRef = doc(db, "favorite", favoriteId);
@@ -240,7 +241,7 @@ function EatenShop() {
             </div>
 
             <button
-              onClick={() => navigate(`/editor/${data.orderId}`)}
+              onClick={() => navigate(`/diner/textEditor/${data.orderId}`)}
               className={` ${
                 data.canWritePost === false && "hidden"
               } absolute bottom-2 right-8 h-8 border-2 border-solid border-black`}

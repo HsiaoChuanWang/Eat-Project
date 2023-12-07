@@ -1,62 +1,32 @@
 import { Button, Form, Input, Radio } from "antd";
+import { doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { useRef, useState } from "react";
-import { storage } from "../../firebase";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import db, { storage } from "../../firebase";
 import useUserStore from "../../stores/userStore";
 
-function DinerEdit() {
-  const userInfo = useUserStore((state) => state.userInfo);
-  const getDetailInfo = useUserStore((state) => state.getDetailInfo);
-  const sendUserFirestore = useUserStore((state) => state.sendUserFirestore);
-
-  const checkRef = useRef(false);
-
-  const [detail, setDetail] = useState({
-    userName: "",
-    address: "",
-    companyId: "",
-    gender: "",
-    phone: "",
-    picture: "",
-    status: "active",
+function DinerInfoEdit() {
+  const { userId } = useParams();
+  const navigate = useNavigate();
+  const detailInfo = useUserStore((state) => state.detailInfo);
+  const [updateData, setUpdateData] = useState({
+    userName: detailInfo.userName,
+    gender: detailInfo.gender,
+    phone: detailInfo.phone,
   });
 
   async function handlePicture(picture) {
-    const storageRef = ref(storage, userInfo.userId);
+    const storageRef = ref(storage, userId);
     await uploadBytes(storageRef, picture);
     const downloadURL = await getDownloadURL(storageRef);
-    setDetail({ ...detail, picture: downloadURL });
+    setUpdateData({ ...updateData, picture: downloadURL });
   }
 
-  const handleData = (e) => {
-    let target = e.target.name;
-    let value = e.target.value;
-
-    switch (target) {
-      case "userName":
-        setDetail({ ...detail, userName: value });
-        break;
-      case "gender":
-        setDetail({ ...detail, gender: value });
-        break;
-      case "phone":
-        setDetail({ ...detail, phone: value });
-        break;
-      case "picture":
-        handlePicture(e.target.files[0]);
-        break;
-    }
-  };
-
-  async function handleNext() {
-    if (detail.userName != "" && detail.gender != "" && detail.phone != "") {
-      checkRef.current = false;
-      await getDetailInfo(detail);
-      await sendUserFirestore();
-      setActive("StepFourDiner");
-    } else {
-      alert("請填寫完整資訊");
-    }
+  async function handleUpdate() {
+    const userRef = doc(db, "user", userId);
+    await updateDoc(userRef, updateData);
+    navigate(`/diner/dinerInfo/${userId}`);
   }
 
   const onFinish = (values) => {
@@ -88,75 +58,45 @@ function DinerEdit() {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Form.Item
-          label="姓名"
-          name="userName"
-          rules={[
-            {
-              required: true,
-              message: "請輸入姓名!",
-            },
-          ]}
-        >
+        <Form.Item label="姓名">
           <Input
             name="userName"
-            onChange={(e) => handleData(e)}
-            value={detail.userName}
+            onChange={(e) =>
+              setUpdateData({ ...updateData, userName: e.target.value })
+            }
+            value={updateData.userName}
           />
         </Form.Item>
 
-        <Form.Item
-          label="性別"
-          name="gender"
-          rules={[
-            {
-              required: true,
-              message: "請點選性別!",
-            },
-          ]}
-        >
+        <Form.Item label="性別">
           <Radio.Group
             name="gender"
-            onChange={(e) => handleData(e)}
-            value={detail.gender}
+            onChange={(e) =>
+              setUpdateData({ ...updateData, gender: e.target.value })
+            }
+            value={updateData.gender}
           >
             <Radio value="小姐">女</Radio>
             <Radio value="先生">男</Radio>
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item
-          label="手機"
-          name="phone"
-          rules={[
-            {
-              required: true,
-              message: "請輸入手機!",
-            },
-          ]}
-        >
+        <Form.Item label="手機">
           <Input
             name="phone"
-            onChange={(e) => handleData(e)}
-            value={detail.phone}
+            onChange={(e) =>
+              setUpdateData({ ...updateData, phone: e.target.value })
+            }
+            value={updateData.phone}
           />
         </Form.Item>
 
-        <Form.Item
-          label="上傳大頭照"
-          name="picture"
-          rules={[
-            {
-              required: false,
-              message: "請輸入姓名!",
-            },
-          ]}
-        >
+        <Form.Item label="上傳大頭照">
           <Input
             type="file"
             accept="image/*"
             name="picture"
-            onChange={(e) => handleData(e)}
+            onChange={(e) => handlePicture(e.target.files[0])}
           />
         </Form.Item>
 
@@ -168,8 +108,7 @@ function DinerEdit() {
         >
           <Button
             className="bg-[#1677ff]"
-            onClick={handleNext}
-            disabled={checkRef.current}
+            onClick={handleUpdate}
             type="primary"
             htmlType="button"
           >
@@ -181,4 +120,4 @@ function DinerEdit() {
   );
 }
 
-export default DinerEdit;
+export default DinerInfoEdit;

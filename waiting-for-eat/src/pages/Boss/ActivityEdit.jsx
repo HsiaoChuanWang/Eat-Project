@@ -1,13 +1,6 @@
-import { Form, Input } from "antd";
 import { ContentState, EditorState, convertToRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
-import {
-  doc,
-  getDoc,
-  onSnapshot,
-  serverTimestamp,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import htmlToDraft from "html-to-draftjs";
 import React, { useEffect, useState } from "react";
@@ -52,12 +45,13 @@ function Media(props) {
   );
 }
 
-function PostedEdit() {
+function ActivityEdit() {
   const navigate = useNavigate();
+  const { companyId } = useParams();
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [title, setTitle] = useState("");
   const [mainPicture, setMainPicture] = useState("");
-  const [post, setPost] = useState([]);
+  const [companyData, setCompanyData] = useState([]);
   const { postId } = useParams();
   const uuid = uuidv4();
 
@@ -78,25 +72,20 @@ function PostedEdit() {
   }
 
   useEffect(() => {
-    let postData;
-    const postSnap = onSnapshot(doc(db, "post", postId), (doc) => {
-      postData = doc.data();
-      getCompanyInfo(postData.companyId).then((result) => {
-        const data = Object.assign(postData, result);
-        setPost(data);
-        const blocksFromHtml = htmlToDraft(data.content);
-        const { contentBlocks, entityMap } = blocksFromHtml;
-        const contentState = ContentState.createFromBlockArray(
-          contentBlocks,
-          entityMap,
-        );
-        const editorState = EditorState.createWithContent(contentState);
-        setEditorState(editorState);
-        setTitle(data.title);
-      });
+    const companySnap = onSnapshot(doc(db, "company", companyId), (doc) => {
+      const data = doc.data();
+      setCompanyData(data);
+      const blocksFromHtml = htmlToDraft(data.description);
+      const { contentBlocks, entityMap } = blocksFromHtml;
+      const contentState = ContentState.createFromBlockArray(
+        contentBlocks,
+        entityMap,
+      );
+      const editorState = EditorState.createWithContent(contentState);
+      setEditorState(editorState);
     });
 
-    return postSnap;
+    return companySnap;
   }, []);
 
   //上傳食記中照片，拿回URL
@@ -113,72 +102,20 @@ function PostedEdit() {
     return pictureURL;
   }
 
-  //上傳main照片
-  async function handleMainPicture(picture) {
-    const storage = getStorage();
-    const storageRef = ref(storage, uuid);
-    await uploadBytes(storageRef, picture);
-    const downloadURL = await getDownloadURL(storageRef);
-    setMainPicture(downloadURL);
-  }
-
   //送出html到firestore
   async function handleSend(postId) {
-    console.log(postId);
     const uploadHtml = draftToHtml(
       convertToRaw(editorState.getCurrentContent()),
     );
 
-    const postRef = doc(db, "post", postId);
-    await updateDoc(postRef, {
-      title: title,
-      content: uploadHtml,
-      createTime: serverTimestamp(),
+    const companyRef = doc(db, "company", companyId);
+    await updateDoc(companyRef, {
+      description: uploadHtml,
     });
-
-    if (mainPicture !== "") {
-      await updateDoc(postRef, {
-        mainPicture: mainPicture,
-      });
-    }
   }
 
   return (
     <div className="relative p-20">
-      <h1 className="text-2xl text-red-600">請直接填寫需要更改的地方</h1>
-      <div>
-        <Form>
-          <Form.Item
-            label="標題"
-            rules={[
-              {
-                message: "請輸入標題!",
-              },
-            ]}
-          >
-            <Input
-              name="title"
-              onChange={(e) => {
-                setTitle(e.target.value);
-              }}
-              value={title}
-            />
-          </Form.Item>
-          <div>
-            <img src={post.mainPicture}></img>
-          </div>
-
-          <Form.Item label="更改封面照片" className="w-96">
-            <Input
-              type="file"
-              accept="image/*"
-              name="picture"
-              onChange={(e) => handleMainPicture(e.target.files[0])}
-            />
-          </Form.Item>
-        </Form>
-      </div>
-
       <div className="min-h-[400px] border-2 border-solid border-black">
         <Editor
           editorState={editorState}
@@ -235,7 +172,7 @@ function PostedEdit() {
       <button
         className="absolute bottom-2 right-40 border-2 border-solid border-black"
         onClick={() => {
-          navigate(`/diner/posted/${post.userId}`);
+          navigate(`/boss/activity/${companyId}`);
         }}
       >
         取消
@@ -244,8 +181,8 @@ function PostedEdit() {
       <button
         className="absolute bottom-2 right-20 border-2 border-solid border-black"
         onClick={() => {
-          handleSend(postId);
-          navigate(`/diner/posted/${post.userId}`);
+          handleSend();
+          navigate(`/boss/activity/${companyId}`);
         }}
       >
         保存
@@ -254,4 +191,4 @@ function PostedEdit() {
   );
 }
 
-export default PostedEdit;
+export default ActivityEdit;

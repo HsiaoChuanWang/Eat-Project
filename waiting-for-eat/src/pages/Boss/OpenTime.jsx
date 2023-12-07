@@ -14,6 +14,7 @@ import { FaTrashCan } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
 import db from "../../firebase";
 import "./openTime.css";
+
 function OpenTime() {
   const { companyId } = useParams();
   const [openTime, setOpenTime] = useState([]);
