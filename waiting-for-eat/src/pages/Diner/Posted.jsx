@@ -118,7 +118,7 @@ function Posted({ setContent }) {
 
             <button
               onClick={() => {
-                navigate(`/postedEdit/${data.postId}`);
+                navigate(`/diner/postedEdit/${data.postId}`);
               }}
               className="absolute bottom-16 right-8 h-8 border-2 border-solid border-black"
             >

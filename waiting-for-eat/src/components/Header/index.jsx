@@ -43,7 +43,7 @@ function Header() {
 
   const buttonDiner = [
     {
-      link: `diner/${userInfo.userId}`,
+      link: `diner/dinerInfo/${userInfo.userId}`,
       displayText: "食客專區",
       status: "DinerLogIn",
     },

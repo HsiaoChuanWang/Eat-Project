@@ -1,17 +1,16 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useUserStore from "../../stores/userStore";
 
-function DinerInfo({ setContent }) {
+function DinerInfo() {
   const { userId } = useParams();
+  const navigate = useNavigate();
   const detailInfo = useUserStore((state) => state.detailInfo);
 
   return (
     <>
       <button
-        onClick={() => {
-          setContent("DinerInfoEdit");
-        }}
+        onClick={() => navigate(`/diner/dinerInfoEdit/${userId}`)}
         className="absolute right-0 border-2 border-solid border-black"
       >
         編輯

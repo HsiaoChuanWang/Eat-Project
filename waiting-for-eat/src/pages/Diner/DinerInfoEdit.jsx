@@ -1,10 +1,13 @@
 import { Button, Form, Input, Radio } from "antd";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { storage } from "../../firebase";
 import useUserStore from "../../stores/userStore";
 
-function DinerEdit() {
+function DinerInfoEdit() {
+  const { userId } = useParams();
+  const navigate = useNavigate();
   const userInfo = useUserStore((state) => state.userInfo);
   const getDetailInfo = useUserStore((state) => state.getDetailInfo);
   const sendUserFirestore = useUserStore((state) => state.sendUserFirestore);
@@ -54,6 +57,7 @@ function DinerEdit() {
       await getDetailInfo(detail);
       await sendUserFirestore();
       setActive("StepFourDiner");
+      navigate(`/diner/dinerInfo/${userId}`);
     } else {
       alert("請填寫完整資訊");
     }
@@ -181,4 +185,4 @@ function DinerEdit() {
   );
 }
 
-export default DinerEdit;
+export default DinerInfoEdit;

@@ -58,8 +58,8 @@ function TextEditor() {
   const [title, setTitle] = useState("");
   const [mainPicture, setMainPicture] = useState("");
   const [orderData, setOrderData] = useState({});
-
   const uuid = uuidv4();
+
   useEffect(() => {
     const orderRef = doc(db, "order", orderId);
     getDoc(orderRef).then((result) => {
@@ -199,7 +199,7 @@ function TextEditor() {
         className="absolute bottom-2 right-20 border-2 border-solid border-black"
         onClick={() => {
           handleSend();
-          navigate(`/diner/${orderData.userId}`);
+          navigate(`/diner/posted/${orderData.userId}`);
         }}
       >
         保存

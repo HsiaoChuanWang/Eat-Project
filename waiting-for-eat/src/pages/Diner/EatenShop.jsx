@@ -240,7 +240,7 @@ function EatenShop() {
             </div>
 
             <button
-              onClick={() => navigate(`/editor/${data.orderId}`)}
+              onClick={() => navigate(`/diner/textEditor/${data.orderId}`)}
               className={` ${
                 data.canWritePost === false && "hidden"
               } absolute bottom-2 right-8 h-8 border-2 border-solid border-black`}

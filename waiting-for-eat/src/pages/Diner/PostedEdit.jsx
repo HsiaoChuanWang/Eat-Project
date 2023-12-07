@@ -237,7 +237,7 @@ function PostedEdit() {
         className="absolute bottom-2 right-20 border-2 border-solid border-black"
         onClick={() => {
           handleSend(postId);
-          navigate(`/diner/${post.userId}`);
+          navigate(`/diner/posted/${post.userId}`);
         }}
       >
         保存
