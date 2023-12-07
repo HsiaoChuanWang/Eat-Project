@@ -2,43 +2,18 @@ import { UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Upload } from "antd";
 import { doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { default as React, useRef, useState } from "react";
+import { default as React, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import db, { storage } from "../../firebase";
 import useUserStore from "../../stores/userStore";
 
-function PhotoUpload({ setContent }) {
+function PhotoUpload() {
   const { companyId } = useParams();
   const navigate = useNavigate();
-  const [mainPicture, setMainpicture] = useState("");
   const [mainPictures, setMainpictures] = useState([]);
-
-  const userInfo = useUserStore((state) => state.userInfo);
-  const [menuPicture, setMenupicture] = useState([]);
   const detailInfo = useUserStore((state) => state.detailInfo);
-  const getDetailInfo = useUserStore((state) => state.getDetailInfo);
-  const sendUserFirestore = useUserStore((state) => state.sendUserFirestore);
-  const getCompanyInfo = useUserStore((state) => state.getCompanyInfo);
-  const sendCompanyFirestore = useUserStore(
-    (state) => state.sendCompanyFirestore,
-  );
   const [menuPictures, setMenuPictures] = useState([]);
-
-  const checkRef = useRef(false);
-
-  const handleData = (e) => {
-    const file = e.target.files[0];
-    handleMainPicture(file);
-  };
-
-  async function handleMainPicture(picture) {
-    const uuid = uuidv4();
-    const storageRef = ref(storage, uuid);
-    await uploadBytes(storageRef, picture);
-    const downloadURL = await getDownloadURL(storageRef);
-    setMainpicture(downloadURL);
-  }
 
   const mainProps = {
     onRemove: (file) => {
@@ -98,8 +73,7 @@ function PhotoUpload({ setContent }) {
     await updateDoc(companyRef, {
       menu: urls,
     });
-    setContent("Photo");
-    navigate(`/boss/${companyId}`);
+    navigate(`/boss/photoUpload/${companyId}`);
   }
 
   const handleMenu = () => {
@@ -112,8 +86,7 @@ function PhotoUpload({ setContent }) {
         .then(() => {
           uploadMenu(menuUrls);
         });
-      setContent("Photo");
-      navigate(`/boss/${companyId}`);
+      navigate(`/boss/photoUpload/${companyId}`);
     });
   };
 

@@ -264,6 +264,7 @@ function Schedule() {
       </div>
       <div className="pt-20">
         <DatePicker onChange={changeStartDate} />
+
         <FullCalendar
           //   themeSystem="asd"
           resourceAreaWidth={150}

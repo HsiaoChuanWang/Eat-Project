@@ -1,6 +1,6 @@
 import React from "react";
 
-function BossInfoEdit({ setContent }) {
+function BossInfoEdit() {
   return (
     <>
       <div>BossInfoEdit</div>

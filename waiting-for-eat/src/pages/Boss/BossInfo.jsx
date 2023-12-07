@@ -1,11 +1,12 @@
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
 import useUserStore from "../../stores/userStore";
 
-function BossInfo({ setContent }) {
+function BossInfo() {
   const { companyId } = useParams();
+  const navigate = useNavigate();
   const [type, setType] = useState("");
   const detailInfo = useUserStore((state) => state.detailInfo);
   const companyInfo = useUserStore((state) => state.companyInfo);
@@ -33,7 +34,7 @@ function BossInfo({ setContent }) {
     <>
       <button
         onClick={() => {
-          setContent("BossInfoEdit");
+          navigate(`/boss/bossInfoEdit/${companyId}`);
         }}
         className="absolute right-12 border-2 border-solid border-black"
       >

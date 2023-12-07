@@ -52,7 +52,7 @@ function Header() {
 
   const buttonBoss = [
     {
-      link: `boss/${detailInfo.companyId}`,
+      link: `boss/bossInfo/${detailInfo.companyId}`,
       displayText: "業者專區",
       status: "BossLogIn",
     },
