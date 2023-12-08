@@ -8,7 +8,6 @@ import {
   doc,
   getDoc,
   getDocs,
-  onSnapshot,
   query,
   updateDoc,
   where,
@@ -24,6 +23,8 @@ function Schedule() {
   const { companyId } = useParams();
   const [tables, setTables] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [updateOrders, setUpdateOrders] = useState([]);
+  const [finalUpdateOrders, setFinalUpdateOrders] = useState([]);
   const companyRef = collection(db, "company");
   const tableRef = query(collection(companyRef, companyId, "table"));
   const orderRef = query(collection(db, "order"));
@@ -42,16 +43,16 @@ function Schedule() {
   }
 
   useEffect(() => {
-    // getDocs(tableRef).then((result) => {
-    //   let seats = [];
-    //   result.forEach((doc) => {
-    //     const data = doc.data();
-    //     const dataId = doc.id;
-    //     const combine = { ...data, tableId: dataId };
-    //     seats.push(combine);
-    //   });
-    //   setTables(seats);
-    // });
+    getDocs(tableRef).then((result) => {
+      let seats = [];
+      result.forEach((doc) => {
+        const data = doc.data();
+        const dataId = doc.id;
+        const combine = { ...data, tableId: dataId };
+        seats.push(combine);
+      });
+      setTables(seats);
+    });
 
     getDocs(orderq)
       .then((result) => {
@@ -81,28 +82,6 @@ function Schedule() {
             });
         });
       });
-
-    onSnapshot(tableRef, (querySnapshot) => {
-      let seats = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const dataId = doc.id;
-        const combine = { ...data, tableId: dataId };
-        seats.push(combine);
-      });
-      setTables(seats);
-    });
-
-    onSnapshot(orderq, (querySnapshot) => {
-      let orderList = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const dataId = doc.id;
-        const combine = { ...data, tableId: dataId };
-        orderList.push(combine);
-      });
-      setOrders(orderList);
-    });
   }, []);
 
   //左邊列表
@@ -119,8 +98,6 @@ function Schedule() {
 
   //新增事件，一筆訂單可能有兩個以上的桌號
   let events = [];
-  console.log("orders");
-  console.log(orders);
   orders.map((order) => {
     order.tableNumber.map((orderTableNumber) => {
       events.push({
@@ -135,7 +112,7 @@ function Schedule() {
           order.people,
         start: new Date(order.date + " " + order.start),
         end: new Date(order.date + " " + order.end),
-        id: order.orderId + orderTableNumber,
+        id: order.orderId + "$" + orderTableNumber,
         resourceId: orderTableNumber,
         display: "auto",
         color: "#ff9f89",
@@ -143,8 +120,6 @@ function Schedule() {
       });
     });
   });
-
-  console.log(events);
 
   //拖曳事件
   //更新
@@ -166,31 +141,97 @@ function Schedule() {
 
   function MyDropEvent(info) {
     const startDay = dateFormat(info.event.start, "yyyy/mm/dd");
-    const startTime = dateFormat(info.event.start, "HH:ss");
+    const startTime = dateFormat(info.event.start, "HH:MM");
     const endDay = dateFormat(info.event.end, "yyyy/mm/dd");
-    const endTime = dateFormat(info.event.end, "HH:ss");
-    const orderId = info.event.id;
-    const tableNumber = info.event._def.resourceIds[0];
+    const endTime = dateFormat(info.event.end, "HH:MM");
+    const eventID = info.event.id;
+    const idSplit = info.event.id.split("$");
+    const orderId = idSplit[0];
+    const oldTableNumber = idSplit[1];
+    const newtableNumber = info.event._def.resourceIds[0];
 
-    alert(
-      "ID: " +
-        orderId +
-        "\n桌號: " +
-        tableNumber +
-        "\n開始: " +
-        startDay +
-        " " +
-        startTime +
-        "\n結束: " +
-        endDay +
-        " " +
-        endTime,
-    );
+    let updateOrder = updateOrders.find((p) => p.eventID == eventID);
+
+    if (updateOrder == undefined) {
+      let order = orders.find((p) => p.orderId == orderId);
+      let orderTableNumber = order.tableNumber;
+      const tableNumberIndex = orderTableNumber.indexOf(oldTableNumber);
+      if (tableNumberIndex != -1) {
+        updateOrder = {
+          eventID: eventID,
+          start: startTime,
+          end: endTime,
+          orderId: orderId,
+          newtableNumber: newtableNumber,
+          tableNumberIndex: tableNumberIndex,
+        };
+        updateOrders.push(updateOrder); //撈到移動的資料
+      }
+    } else {
+      updateOrder.start = startTime;
+      updateOrder.end = endTime;
+      updateOrder.newtableNumber = newtableNumber;
+    }
+    // alert(
+    //   "ID: " +
+    //     orderId +
+    //     "\n桌號: " +
+    //     newtableNumber +
+    //     "\n開始: " +
+    //     startDay +
+    //     " " +
+    //     startTime +
+    //     "\n結束: " +
+    //     endDay +
+    //     " " +
+    //     endTime,
+    // );
   }
 
   //datePicker選用時間
   function changeStartDate(date, dateString) {
     if (date != null) myRef.current.getApi().gotoDate(dateString);
+  }
+
+  async function updateFirestore(finalUpdateOrders) {
+    console.log(finalUpdateOrders.orderId);
+    const orderRef = doc(db, "order", finalUpdateOrders.orderId);
+
+    await updateDoc(orderRef, {
+      start: finalUpdateOrders.start,
+      end: finalUpdateOrders.end,
+      tableNumber: finalUpdateOrders.tableNumber,
+    });
+  }
+
+  function save(e) {
+    setFinalUpdateOrders([]);
+    //改原本的值orders，updateOrders是有改過的所有訂單(但同一筆訂單可能有兩個component)
+    updateOrders.forEach((updateOrder) => {
+      let order = orders.find((p) => p.orderId == updateOrder.orderId);
+      order.start = updateOrder.start;
+      order.end = updateOrder.end;
+      let orderTableNumber = order.tableNumber;
+      orderTableNumber[updateOrder.tableNumberIndex] =
+        updateOrder.newtableNumber;
+
+      //上傳有被移動的結果(同一筆訂單的component合併成一個訂單)
+      let finalUpdateOrder = finalUpdateOrders.find(
+        (p) => p.orderId == updateOrder.orderId,
+      );
+      if (finalUpdateOrder == undefined) {
+        finalUpdateOrders.push(order);
+      } else {
+        finalUpdateOrder = order;
+      }
+    });
+
+    finalUpdateOrders.forEach((item) => {
+      updateFirestore(item);
+    });
+
+    setUpdateOrders([]);
+    setEditable(false);
   }
 
   //自製event的格式
@@ -222,7 +263,7 @@ function Schedule() {
                 console.log("test");
               }}
             >
-              保留
+              出席
             </button>
           </div>
 
@@ -254,9 +295,7 @@ function Schedule() {
         </button>
 
         <button
-          onClick={() => {
-            setEditable(false);
-          }}
+          onClick={save}
           className="absolute right-16 border-2 border-solid border-black"
         >
           保存

@@ -29,7 +29,7 @@ function EatenShop() {
     where("userId", "==", userId),
     where("postId", "==", ""),
   );
-  const orderq = query(collection(db, "order"), where("userId", "==", userId));
+  const starq = query(collection(db, "star"), where("userId", "==", userId));
 
   async function getCompanyInfo(companyId) {
     const docRef = doc(db, "company", companyId);
@@ -116,7 +116,10 @@ function EatenShop() {
             })
             .then((newnewItem) => {
               getCommentInfo(newItem.orderId).then((data) => {
-                const newnewnewItem = { ...newnewItem, canWriteComment: data };
+                const newnewnewItem = {
+                  ...newnewItem,
+                  canWriteComment: data,
+                };
                 combineList.push(newnewnewItem);
                 setCombineData([...combineList]);
               });
@@ -127,8 +130,6 @@ function EatenShop() {
 
     return favoriteSnap;
   }, []);
-
-  console.log(combineData);
 
   const handleLike = async (favoriteId, change) => {
     const favoriteRef = doc(db, "favorite", favoriteId);
@@ -185,72 +186,74 @@ function EatenShop() {
 
   const companyDatas =
     combineData.length > 0 ? (
-      combineData.map((data) => {
-        return (
-          <div
-            key={data.favoriteId}
-            className="relative my-2 flex items-center border-2 border-solid border-black px-2"
-          >
-            <div className="w-64">
-              <img
-                src={data.picture}
-                onClick={() => {
-                  navigate(`/restaurant/${data.companyId}`);
-                }}
-              />
-            </div>
-            <div className=" ml-4">
-              <div className="flex">
-                <p className="my-4  text-xl">餐廳名稱</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">{data.name}</p>
-              </div>
-
-              <div className="flex">
-                <p className="my-4  text-xl">電話</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">{data.phone}</p>
-              </div>
-
-              <div className="flex">
-                <p className="my-4  text-xl">地址</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">
-                  {data.city}
-                  {data.district}
-                  {data.address}
-                </p>
-              </div>
-            </div>
-
-            <div className="absolute right-8 top-2 flex h-16 w-24 items-center justify-between">
-              {favoriteState(data.favoriteId, data.status)}
-            </div>
-
+      combineData
+        .sort((a, b) => (a.favoriteId > b.favoriteId ? 1 : -1))
+        .map((data) => {
+          return (
             <div
-              className={` ${
-                data.canWriteComment === false && "hidden"
-              } absolute bottom-12 right-8 h-8 `}
+              key={data.favoriteId}
+              className="relative my-2 flex items-center border-2 border-solid border-black px-2"
             >
-              <Star
-                companyId={data.companyId}
-                orderId={data.orderId}
-                userId={data.userId}
-                companyName={data.name}
-              />
-            </div>
+              <div className="w-64">
+                <img
+                  src={data.picture}
+                  onClick={() => {
+                    navigate(`/restaurant/${data.companyId}`);
+                  }}
+                />
+              </div>
+              <div className=" ml-4">
+                <div className="flex">
+                  <p className="my-4  text-xl">餐廳名稱</p>
+                  <p className="mx-4  my-4 text-xl">|</p>
+                  <p className="my-4  text-xl">{data.name}</p>
+                </div>
 
-            <button
-              onClick={() => navigate(`/diner/textEditor/${data.orderId}`)}
-              className={` ${
-                data.canWritePost === false && "hidden"
-              } absolute bottom-2 right-8 h-8 border-2 border-solid border-black`}
-            >
-              寫食記
-            </button>
-          </div>
-        );
-      })
+                <div className="flex">
+                  <p className="my-4  text-xl">電話</p>
+                  <p className="mx-4  my-4 text-xl">|</p>
+                  <p className="my-4  text-xl">{data.phone}</p>
+                </div>
+
+                <div className="flex">
+                  <p className="my-4  text-xl">地址</p>
+                  <p className="mx-4  my-4 text-xl">|</p>
+                  <p className="my-4  text-xl">
+                    {data.city}
+                    {data.district}
+                    {data.address}
+                  </p>
+                </div>
+              </div>
+
+              <div className="absolute right-8 top-2 flex h-16 w-24 items-center justify-between">
+                {favoriteState(data.favoriteId, data.status)}
+              </div>
+
+              <div
+                className={` ${
+                  data.canWriteComment === false && "hidden"
+                } absolute bottom-12 right-8 h-8 `}
+              >
+                <Star
+                  companyId={data.companyId}
+                  orderId={data.orderId}
+                  userId={data.userId}
+                  companyName={data.name}
+                />
+              </div>
+
+              <button
+                onClick={() => navigate(`/diner/textEditor/${data.orderId}`)}
+                className={` ${
+                  data.canWritePost === false && "hidden"
+                } absolute bottom-2 right-8 h-8 border-2 border-solid border-black`}
+              >
+                寫食記
+              </button>
+            </div>
+          );
+        })
     ) : (
       <h1 key="no">未有相關資訊</h1>
     );

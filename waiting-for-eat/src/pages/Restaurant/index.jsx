@@ -80,32 +80,34 @@ function Restaurant() {
       });
   }, []);
 
-  const posts = post.map((item) => {
-    return (
-      <div
-        key={item.userId}
-        className="my-4 border-2 border-solid border-black px-4"
-      >
-        <h2>{dateFormat(item.createTime.toDate(), "yyyy/mm/dd HH:MM")}</h2>
+  const posts = post
+    .sort((a, b) => (a.createTime > b.createTime ? 1 : -1))
+    .map((item) => {
+      return (
         <div
-          onClick={() => {
-            navigation(`/post/${item.postId}`);
-          }}
+          key={item.userId}
+          className="my-4 border-2 border-solid border-black px-4"
         >
-          <div className="flex items-center">
-            <img src={item.picture} className="w-20" />
-            <h2>{item.userName}</h2>
-          </div>
+          <h2>{dateFormat(item.createTime.toDate(), "yyyy/mm/dd HH:MM")}</h2>
+          <div
+            onClick={() => {
+              navigation(`/post/${item.postId}`);
+            }}
+          >
+            <div className="flex items-center">
+              <img src={item.picture} className="w-20" />
+              <h2>{item.userName}</h2>
+            </div>
 
-          <div className="flex">
-            <p className="my-6  text-xl">標題</p>
-            <p className="mx-4  my-6 text-xl">|</p>
-            <p className="my-6  text-xl">{item.title}</p>
+            <div className="flex">
+              <p className="my-6  text-xl">標題</p>
+              <p className="mx-4  my-6 text-xl">|</p>
+              <p className="my-6  text-xl">{item.title}</p>
+            </div>
           </div>
         </div>
-      </div>
-    );
-  });
+      );
+    });
 
   return (
     <div>

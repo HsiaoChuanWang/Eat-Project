@@ -18,6 +18,7 @@ import {
   getDoc,
   onSnapshot,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
@@ -87,6 +88,14 @@ function Commented() {
 
   async function handleDelete(starId) {
     await deleteDoc(doc(db, "star", starId));
+  }
+
+  async function handleSend(starId) {
+    const starRef = doc(db, "star", starId);
+    await updateDoc(starRef, {
+      star: star,
+      content: content,
+    });
   }
 
   const printDatas =
@@ -161,13 +170,14 @@ function Commented() {
                             onChange={(e) => {
                               setStar(e);
                             }}
+                            value={star}
                           />
                           <Textarea
                             size="lg"
                             onChange={(e) => {
                               setContent(e.target.value);
                             }}
-                            value={data.content}
+                            value={content}
                           />
                         </div>
                       </ModalBody>
@@ -182,7 +192,7 @@ function Commented() {
                         <Button
                           color="primary"
                           onPress={onClose}
-                          // onClick={handleSend}
+                          onClick={handleSend(data.starId)}
                         >
                           張貼
                         </Button>
