@@ -73,67 +73,69 @@ function Posted() {
 
   const printDatas =
     combineData.length > 0 ? (
-      combineData.map((data) => {
-        return (
-          <div
-            key={data.postId}
-            className="relative flex items-center border-2 border-solid border-black"
-          >
-            <div className="w-64">
-              <img
-                src={data.mainPicture}
+      combineData
+        .sort((a, b) => (a.createTime > b.createTime ? -1 : 1))
+        .map((data) => {
+          return (
+            <div
+              key={data.postId}
+              className="relative flex items-center border-2 border-solid border-black"
+            >
+              <div className="w-64">
+                <img
+                  src={data.mainPicture}
+                  onClick={() => {
+                    navigate(`/post/${data.postId}`);
+                  }}
+                />
+              </div>
+              <div className=" ml-4">
+                <div className="flex">
+                  <p className="my-4  text-xl">用餐時間</p>
+                  <p className="mx-4  my-4 text-xl">|</p>
+                  <p className="my-4  text-xl">{data.date}</p>
+                  <p className="my-4  ml-4 text-xl">{data.start}</p>
+                </div>
+
+                <div className="flex">
+                  <p className="my-4  text-xl">餐廳名稱</p>
+                  <p className="mx-4  my-4 text-xl">|</p>
+                  <p className="my-4  text-xl">{data.name}</p>
+                </div>
+
+                <div className="flex">
+                  <p className="my-4  text-xl">食記主題</p>
+                  <p className="mx-4  my-4 text-xl">|</p>
+                  <p className="my-4  text-xl">{data.title}</p>
+                </div>
+
+                <div className="flex">
+                  <p className="my-4  text-xl">撰寫時間</p>
+                  <p className="mx-4  my-4 text-xl">|</p>
+                  <p className="my-4  text-xl">
+                    {dateFormat(data.createTime.toDate(), "yyyy/mm/dd HH:MM")}
+                  </p>
+                </div>
+              </div>
+
+              <button
                 onClick={() => {
-                  navigate(`/post/${data.postId}`);
+                  navigate(`/diner/postedEdit/${data.postId}`);
                 }}
-              />
+                className="absolute bottom-16 right-8 h-8 border-2 border-solid border-black"
+              >
+                編輯
+              </button>
+
+              <button
+                onClick={() => handleDelete(data.postId)}
+                className="absolute bottom-2 right-8 h-8 border-2 border-solid border-black"
+              >
+                刪除
+              </button>
             </div>
-            <div className=" ml-4">
-              <div className="flex">
-                <p className="my-4  text-xl">用餐時間</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">{data.date}</p>
-                <p className="my-4  ml-4 text-xl">{data.start}</p>
-              </div>
-
-              <div className="flex">
-                <p className="my-4  text-xl">餐廳名稱</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">{data.name}</p>
-              </div>
-
-              <div className="flex">
-                <p className="my-4  text-xl">食記主題</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">{data.title}</p>
-              </div>
-
-              <div className="flex">
-                <p className="my-4  text-xl">撰寫時間</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">
-                  {dateFormat(data.createTime.toDate(), "yyyy/mm/dd HH:MM")}
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => {
-                navigate(`/diner/postedEdit/${data.postId}`);
-              }}
-              className="absolute bottom-16 right-8 h-8 border-2 border-solid border-black"
-            >
-              編輯
-            </button>
-
-            <button
-              onClick={() => handleDelete(data.postId)}
-              className="absolute bottom-2 right-8 h-8 border-2 border-solid border-black"
-            >
-              刪除
-            </button>
-          </div>
-        );
-      })
+          );
+        })
     ) : (
       <h1 key="no">未有相關資訊</h1>
     );

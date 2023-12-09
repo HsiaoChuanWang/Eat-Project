@@ -45,6 +45,7 @@ const useUserStore = create(
           phone: "",
           category: "",
           picture: "",
+          totalStar: 0,
           menu: [],
         };
       });
@@ -75,6 +76,7 @@ const useUserStore = create(
       phone: "",
       category: "",
       picture: "",
+      totalStar: 0,
       menu: [],
     },
 

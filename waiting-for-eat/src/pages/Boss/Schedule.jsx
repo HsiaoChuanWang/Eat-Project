@@ -5,10 +5,12 @@ import { DatePicker } from "antd";
 import dateFormat from "dateformat";
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
   query,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -19,6 +21,7 @@ import "./schedule.css";
 
 function Schedule() {
   const [editable, setEditable] = useState(false);
+  const [active, setActive] = useState(true);
   const myRef = useRef();
   const { companyId } = useParams();
   const [tables, setTables] = useState([]);
@@ -109,7 +112,13 @@ function Schedule() {
           "\n備註 : " +
           order.remark +
           "$" +
-          order.people,
+          order.people +
+          "$" +
+          order.orderId +
+          "$" +
+          order.userId +
+          "$" +
+          order.attend,
         start: new Date(order.date + " " + order.start),
         end: new Date(order.date + " " + order.end),
         id: order.orderId + "$" + orderTableNumber,
@@ -234,6 +243,27 @@ function Schedule() {
     setEditable(false);
   }
 
+  async function AddFavorite(orderId, userId) {
+    await setDoc(doc(db, "favorite", orderId), {
+      orderId: orderId,
+      userId: userId,
+      companyId: companyId,
+      status: "eaten",
+      postId: "",
+    });
+  }
+
+  async function DeleteOrder(orderId) {
+    await deleteDoc(doc(db, "order", orderId));
+  }
+
+  async function UpdateAttend(orderId) {
+    const OrderRef = doc(db, "order", orderId);
+    await updateDoc(OrderRef, {
+      attend: "yes",
+    });
+  }
+
   //自製event的格式
   function eventContent(arg) {
     let stringArray = arg.event.title.split("$");
@@ -242,6 +272,9 @@ function Schedule() {
     let tel = titleArray[1];
     let remark = titleArray[2];
     let people = stringArray[1];
+    let orderId = stringArray[2];
+    let userId = stringArray[3];
+    let attend = stringArray[4];
 
     return (
       <div className="flex justify-between">
@@ -250,29 +283,47 @@ function Schedule() {
           <br />
           {tel}
           <br />
-          {remark}
+          {remark?.remark}
         </div>
 
         <div className="py-8">{people}人</div>
 
         <div>
-          <div>
+          <button
+            className={` h-8 border-2 border-solid border-black ${
+              active === true && "hidden"
+            }`}
+          >
+            已出席
+          </button>
+        </div>
+
+        <div>
+          <div className={` ${active === false && "hidden"}`}>
             <button
-              className="my-1 h-8 border-2 border-solid border-black"
+              className={`my-1 h-8 border-2 border-solid border-black`}
               onClick={() => {
-                console.log("test");
+                if (editable === true) {
+                  AddFavorite(orderId, userId);
+                  UpdateAttend(orderId);
+                  setActive(false);
+                }
               }}
+              disabled={attend === "yes"}
             >
-              出席
+              {attend === "no" ? "入席" : "已出席"}
             </button>
           </div>
 
           <div>
             <button
-              className="h-8 border-2 border-solid border-black"
+              className={`absolute h-8 border-2 border-solid border-black ${
+                attend === "yes" && "hidden"
+              }`}
               onClick={() => {
-                console.log("test");
+                DeleteOrder(orderId);
               }}
+              disabled={attend === "yes"}
             >
               取消
             </button>

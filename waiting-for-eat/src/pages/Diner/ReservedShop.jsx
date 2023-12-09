@@ -85,19 +85,6 @@ function ReservedShop() {
             </div>
             <div className=" ml-4">
               <div className="flex">
-                <p className="my-4  text-xl">用餐時間</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">{data.date}</p>
-                <p className="my-4  ml-4 text-xl">{data.start}</p>
-              </div>
-
-              <div className="flex">
-                <p className="my-4  text-xl">訂位人數</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">{data.people}</p>
-              </div>
-
-              <div className="flex">
                 <p className="my-4  text-xl">餐廳名稱</p>
                 <p className="mx-4  my-4 text-xl">|</p>
                 <p className="my-4  text-xl">{data.name}</p>
@@ -117,6 +104,34 @@ function ReservedShop() {
                   {data.district}
                   {data.address}
                 </p>
+              </div>
+
+              <div className="flex">
+                <p className="my-4  text-xl">用餐時間</p>
+                <p className="mx-4  my-4 text-xl">|</p>
+                <p className="my-4  text-xl">{data.date}</p>
+                <p className="my-4  ml-4 text-xl">{data.start}</p>
+              </div>
+
+              <div className="flex">
+                <p className="my-4  text-xl">訂位人數</p>
+                <p className="mx-4  my-4 text-xl">|</p>
+                <p className="my-4  text-xl">{data.people}</p>
+              </div>
+
+              <div className="flex">
+                <p className="my-4  text-xl">桌號</p>
+                <p className="mx-4  my-4 text-xl">|</p>
+                {data.tableNumber.map((number) => {
+                  return (
+                    <div
+                      key={number}
+                      className="mx-2 flex h-10 w-12 items-center justify-center border-2 border-solid border-black "
+                    >
+                      {number}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 

@@ -1,8 +1,10 @@
+import { Button, Form, Select } from "antd";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import db from "../../firebase";
 import useSearchStore from "../../stores/searchStore";
+import useUserStore from "../../stores/userStore";
 import bbq from "./bbq.jpg";
 import hotpot from "./hotpot.jpg";
 import smalleat from "./smalleat.jpg";
@@ -11,8 +13,55 @@ function HomePage() {
   const setSearchArray = useSearchStore((state) => state.setSearchArray);
   const [searchName, setSearchName] = useState("");
   const [searchPlace, setSearchPlace] = useState("");
+  const [restaurants, setRestaurants] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const userInfo = useUserStore((state) => state.userInfo);
   const companyRef = collection(db, "company");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let companyList = [];
+    getDocs(collection(db, "company")).then((result) => {
+      result.forEach((doc) => {
+        const result = doc.data();
+        const resultId = doc.id;
+        const combine = { ...result, companyId: resultId };
+        companyList.push(combine);
+      });
+      const shopList = [];
+      const categoryList = [];
+      companyList.forEach((shop) => {
+        shopList.push({ label: shop.name, value: shop.name });
+        categoryList.push({ label: shop.category, value: shop.category });
+      });
+      setRestaurants(shopList);
+      setCategories(categoryList);
+    });
+  }, []);
+
+  async function getfavorite(companyId) {
+    const favoriteq = query(
+      collection(db, "favorite"),
+      where("companyId", "==", companyId),
+      where("userId", "==", userInfo.userId),
+    );
+
+    let resultList = [];
+    const querySnapshot = await getDocs(favoriteq);
+    querySnapshot.forEach((doc) => {
+      const result = doc.data();
+      resultList.push(result);
+    });
+
+    if (resultList.length > 0) {
+      const finalResult = resultList[0];
+      const status = finalResult.status;
+      return status;
+    } else {
+      const status = "";
+      return status;
+    }
+  }
 
   //搜尋特定一間店的店名
   async function getRestaurant(searchitem) {
@@ -24,14 +73,26 @@ function HomePage() {
       const data = doc.data();
       const dataId = doc.id;
       const newData = { ...data, companyId: dataId };
-
       dataList.push(newData);
     });
-    setSearchArray(dataList);
+
+    let resultArray = [];
+    dataList.forEach((item) => {
+      getfavorite(item.companyId)
+        .then((result) => {
+          const newData = { ...item, status: result };
+          resultArray.push(newData);
+          return resultArray;
+        })
+        .then((resultArray) => {
+          setSearchArray([...resultArray]);
+        });
+    });
     navigate(`/search`);
   }
 
   function handleRestaurant() {
+    setSearchArray([]);
     getRestaurant(searchName);
   }
 
@@ -45,19 +106,32 @@ function HomePage() {
       const data = doc.data();
       const dataId = doc.id;
       const newData = { ...data, companyId: dataId };
-
       dataList.push(newData);
     });
-    setSearchArray(dataList);
+
+    let resultArray = [];
+    dataList.forEach((item) => {
+      getfavorite(item.companyId)
+        .then((result) => {
+          const newData = { ...item, status: result };
+          resultArray.push(newData);
+          return resultArray;
+        })
+        .then((resultArray) => {
+          setSearchArray([...resultArray]);
+        });
+    });
     navigate(`/search`);
   }
 
   function handlePlace() {
+    setSearchArray([]);
     getPlace(searchPlace);
   }
 
   //照片選擇食物類別
   function handleCategory(e) {
+    setSearchArray([]);
     getCategory(e.target.title);
   }
 
@@ -70,10 +144,21 @@ function HomePage() {
       const data = doc.data();
       const dataId = doc.id;
       const newData = { ...data, companyId: dataId };
-
       dataList.push(newData);
     });
-    setSearchArray(dataList);
+
+    let resultArray = [];
+    dataList.forEach((item) => {
+      getfavorite(item.companyId)
+        .then((result) => {
+          const newData = { ...item, status: result };
+          resultArray.push(newData);
+          return resultArray;
+        })
+        .then((resultArray) => {
+          setSearchArray([...resultArray]);
+        });
+    });
     navigate(`/search`);
   }
 
@@ -93,6 +178,36 @@ function HomePage() {
           >
             按我
           </button>
+
+          <div>
+            <Form>
+              <Form.Item>
+                <Select
+                  name="category"
+                  onChange={(e) => setSearchName(e)}
+                  value={searchName}
+                  showSearch
+                  style={{
+                    width: 200,
+                  }}
+                  placeholder="搜尋餐廳"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "").includes(input)
+                  }
+                  options={restaurants}
+                />
+              </Form.Item>
+              <Button
+                className="bg-[#1677ff]"
+                onClick={handleRestaurant}
+                type="primary"
+                htmlType="button"
+              >
+                Submit
+              </Button>
+            </Form>
+          </div>
 
           <input
             className="border-2 border-solid border-black"

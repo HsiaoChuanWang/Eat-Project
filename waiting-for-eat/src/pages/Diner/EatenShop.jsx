@@ -1,10 +1,12 @@
 import {
+  addDoc,
   collection,
   doc,
   getDoc,
   getDocs,
   onSnapshot,
   query,
+  serverTimestamp,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -18,18 +20,20 @@ import {
 } from "react-icons/hi";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
-import Star from "./Star";
+import useStarStore from "../../stores/starStore";
 
 function EatenShop() {
   const navigate = useNavigate();
   const { userId } = useParams();
   const [combineData, setCombineData] = useState([]);
+  const setCompanyName = useStarStore((state) => state.setCompanyName);
+  const setCompanyId = useStarStore((state) => state.setCompanyId);
+  const setOrderId = useStarStore((state) => state.setOrderId);
   const favoriteq = query(
     collection(db, "favorite"),
     where("userId", "==", userId),
     where("postId", "==", ""),
   );
-  const starq = query(collection(db, "star"), where("userId", "==", userId));
 
   async function getCompanyInfo(companyId) {
     const docRef = doc(db, "company", companyId);
@@ -138,6 +142,17 @@ function EatenShop() {
     });
   };
 
+  async function handleSend() {
+    const starRef = await addDoc(collection(db, "star"), {
+      orderId: orderId,
+      companyId: companyId,
+      userId: userId,
+      star: star,
+      content: content,
+      createTime: serverTimestamp(),
+    });
+  }
+
   const favoriteState = (favoriteId, status) => {
     switch (status) {
       case "like":
@@ -234,14 +249,21 @@ function EatenShop() {
                 className={` ${
                   data.canWriteComment === false && "hidden"
                 } absolute bottom-12 right-8 h-8 `}
+              ></div>
+
+              <button
+                onClick={() => {
+                  setCompanyName(data.name);
+                  setOrderId(data.orderId);
+                  setCompanyId(data.companyId);
+                  navigate(`/diner/addStar/${userId}`);
+                }}
+                className={` ${
+                  data.canWriteComment === false && "hidden"
+                } absolute bottom-12 right-8 h-8 border-2 border-solid border-black`}
               >
-                <Star
-                  companyId={data.companyId}
-                  orderId={data.orderId}
-                  userId={data.userId}
-                  companyName={data.name}
-                />
-              </div>
+                寫評論
+              </button>
 
               <button
                 onClick={() => navigate(`/diner/textEditor/${data.orderId}`)}

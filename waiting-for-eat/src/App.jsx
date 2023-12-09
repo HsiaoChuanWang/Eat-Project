@@ -38,8 +38,10 @@ function App() {
   }, [isLogin]);
 
   useEffect(() => {
-    if (detailInfo.companyId === "") {
+    if (detailInfo.companyId === "" && detailInfo.userName !== "") {
       setHeader("DinerLogIn");
+    } else if (detailInfo.companyId === "" && detailInfo.userName === "") {
+      setHeader("LogOut");
     } else {
       setHeader("BossLogIn");
       getCompanyFirestore();

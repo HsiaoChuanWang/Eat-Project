@@ -145,8 +145,8 @@ function Reserve() {
       send.tableNumber = tableNumbers;
 
       updateData(send);
-      alert(`預約成功!`);
-      navigate(`/restaurant/${companyId}`);
+      alert(`預約成功! 請確認訂位資訊，若有任何疑問請洽電。`);
+      navigate(`/diner/reservedShop/${userInfo.userId}`);
     } else {
       alert("請填寫完整資訊");
     }
