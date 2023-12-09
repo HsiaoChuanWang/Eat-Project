@@ -11,7 +11,7 @@ function StepFourBoss() {
       <h2 className="mx-40 my-8 text-2xl">We are waiting for you!</h2>
       <button
         className="my-8 ml-48 border-2 border-solid border-black text-xl"
-        onClick={() => navigate(`/boss/${detailInfo.companyId}`)}
+        onClick={() => navigate(`/boss/bossInfo/${detailInfo.companyId}`)}
       >
         前往業者專區
       </button>
