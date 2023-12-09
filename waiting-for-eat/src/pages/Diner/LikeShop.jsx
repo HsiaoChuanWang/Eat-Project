@@ -55,7 +55,7 @@ function LikeShop() {
             companyList.push(newData);
           })
           .then(() => {
-            setCombineData(companyList);
+            setCombineData([...companyList]);
           });
       });
     });

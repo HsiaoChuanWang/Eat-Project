@@ -1,19 +1,54 @@
 import { useLoadScript } from "@react-google-maps/api";
-import { Select } from "antd";
+import { Rate, Select } from "antd";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import { IconContext } from "react-icons";
+import {
+  HiOutlineThumbDown,
+  HiOutlineThumbUp,
+  HiThumbDown,
+  HiThumbUp,
+} from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import db from "../../firebase";
 import useSearchStore from "../../stores/searchStore";
+import useUserStore from "../../stores/userStore";
 import MyGoogleMaps from "./MyGoogleMaps";
 import tasty from "./tasty.jpg";
 
 const libraries = ["places"];
 
 function Search() {
+  //   const [redPin, setRedPin] = useState([]);
+  const userInfo = useUserStore((state) => state.userInfo);
   const searchArray = useSearchStore((state) => state.searchArray);
   const setSearchArray = useSearchStore((state) => state.setSearchArray);
   const navigation = useNavigate();
+
+  async function getfavorite(companyId) {
+    const favoriteq = query(
+      collection(db, "favorite"),
+      where("companyId", "==", companyId),
+      where("userId", "==", userInfo.userId),
+    );
+
+    let resultList = [];
+    const querySnapshot = await getDocs(favoriteq);
+    querySnapshot.forEach((doc) => {
+      const result = doc.data();
+      resultList.push(result);
+    });
+
+    if (resultList.length > 0) {
+      const finalResult = resultList[0];
+      const status = finalResult.status;
+      return status;
+    } else {
+      const status = "";
+      return status;
+    }
+  }
+
   //一、將Google Map顯示於畫面
   //isLoaded為布林值，地圖準備好即進行渲染
   const { isLoaded } = useLoadScript({
@@ -63,10 +98,23 @@ function Search() {
         lng: data.lng,
       });
     });
-    setSearchArray(dataList);
+
+    let resultArray = [];
+    dataList.forEach((item) => {
+      getfavorite(item.companyId)
+        .then((result) => {
+          const newData = { ...item, status: result };
+          resultArray.push(newData);
+          return resultArray;
+        })
+        .then((resultArray) => {
+          setSearchArray([...resultArray]);
+        });
+    });
   }
 
   function handleRestaurant() {
+    setSearchArray([]);
     getRestaurant(searchName);
   }
 
@@ -92,22 +140,33 @@ function Search() {
         isCenter = false;
       }
     });
-    setSearchArray(dataList);
+
+    let resultArray = [];
+    dataList.forEach((item) => {
+      getfavorite(item.companyId)
+        .then((result) => {
+          const newData = { ...item, status: result };
+          resultArray.push(newData);
+          return resultArray;
+        })
+        .then((resultArray) => {
+          setSearchArray([...resultArray]);
+        });
+    });
   }
 
   function handlePlace() {
+    setSearchArray([]);
     getPlace(searchPlace);
   }
 
   //取得所有種類
   function handleCategory(e) {
+    setSearchArray([]);
     getCategory(e);
   }
 
   async function getCategory(item) {
-    console.log(item);
-    console.log(typeof item);
-
     const qq = query(companyRef, where("category", "==", item));
     const querySnapshotC = await getDocs(qq);
 
@@ -116,7 +175,7 @@ function Search() {
     querySnapshotC.forEach((doc) => {
       const data = doc.data();
       const dataId = doc.id;
-      const newData = { ...data, companyId: dataId };
+      const newData = { ...data, companyId: dataId, status: status };
 
       dataList.push(newData);
       if (isCenter) {
@@ -127,11 +186,67 @@ function Search() {
         isCenter = false;
       }
     });
-    setSearchArray(dataList);
+
+    let resultArray = [];
+    dataList.forEach((item) => {
+      getfavorite(item.companyId)
+        .then((result) => {
+          const newData = { ...item, status: result };
+          resultArray.push(newData);
+          return resultArray;
+        })
+        .then((resultArray) => {
+          setSearchArray([...resultArray]);
+        });
+    });
   }
 
   //二、提醒使用者正在載入，使用<GoogleMap></GoogleMap>來載入地圖
   if (!isLoaded) return <div>Loading...</div>;
+
+  const favoriteState = (status) => {
+    switch (status) {
+      case "like":
+        return (
+          <>
+            <IconContext.Provider value={{ size: "25px" }}>
+              <HiThumbUp />
+            </IconContext.Provider>
+            <p>Like!</p>
+          </>
+        );
+
+      case "dislike":
+        return (
+          <>
+            <IconContext.Provider
+              value={{ size: "25px", backgroundColor: "black" }}
+            >
+              <HiThumbDown />
+            </IconContext.Provider>
+            <p>Oh No!</p>
+          </>
+        );
+
+      case "eaten":
+        return (
+          <>
+            <div className="flex">
+              <IconContext.Provider value={{ size: "25px" }}>
+                <HiOutlineThumbUp title="noLike" />
+              </IconContext.Provider>
+
+              <IconContext.Provider value={{ size: "25px" }}>
+                <HiOutlineThumbDown />
+              </IconContext.Provider>
+            </div>
+          </>
+        );
+
+      case "":
+        return;
+    }
+  };
 
   return (
     <div>
@@ -204,37 +319,43 @@ function Search() {
       </div>
       <div className="flex">
         <div>
-          {searchArray.map((info, index) => {
-            return (
-              <div key={info.companyId} className="mr-20 flex pb-10 pl-10">
-                <div
-                  className="w-64"
-                  onClick={() => {
-                    navigation(`/restaurant/${info.companyId}`);
-                  }}
-                >
-                  <img src={info.picture ? info.picture : tasty} />
-                </div>
-
-                <div className="w-64">
-                  <h3
+          {[...searchArray]
+            .sort((a, b) => (a.totalStar > b.totalStar ? -1 : 1))
+            .map((info, index) => {
+              return (
+                <div key={info.companyId} className="mr-20 flex pb-10 pl-10">
+                  <div
+                    className="w-64"
                     onClick={() => {
                       navigation(`/restaurant/${info.companyId}`);
                     }}
                   >
-                    {index + 1}.{info.name}
-                  </h3>
-                  <p>
-                    {info.city}
-                    {info.district}
-                    {info.address}
-                  </p>
-                  <p>{info.phone}</p>
-                  <br />
+                    <img src={info.picture ? info.picture : tasty} />
+                  </div>
+
+                  <div className="w-64">
+                    <h3
+                      onClick={() => {
+                        navigation(`/restaurant/${info.companyId}`);
+                      }}
+                    >
+                      {index + 1}.{info.name}
+                    </h3>
+                    <p>
+                      {info.city}
+                      {info.district}
+                      {info.address}
+                    </p>
+                    <p>{info.phone}</p>
+                    <br />
+                  </div>
+                  <div>
+                    <Rate disabled allowHalf defaultValue={info.totalStar} />
+                  </div>
+                  <div>{favoriteState(info.status)}</div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
         <div className="pl-20">
           <MyGoogleMaps
@@ -243,6 +364,8 @@ function Search() {
             onLoad={onLoad}
             map={map}
             setMap={setMap}
+            // redPin={redPin}
+            // setRedPin={setRedPin}
           />
         </div>
       </div>

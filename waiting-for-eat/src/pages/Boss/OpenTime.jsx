@@ -260,6 +260,7 @@ function OpenTime() {
             ]}
           >
             <TimePicker
+              minuteStep={30}
               format={format}
               onChange={(e) => {
                 setAddTime({ ...addTime, start: e.format("HH:mm") });
@@ -279,6 +280,7 @@ function OpenTime() {
             ]}
           >
             <TimePicker
+              minuteStep={30}
               format={format}
               onChange={(e) =>
                 setAddTime({ ...addTime, end: e.format("HH:mm") })

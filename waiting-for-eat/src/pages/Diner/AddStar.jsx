@@ -1,10 +1,11 @@
 import { Rate } from "antd";
 import {
+  addDoc,
   collection,
   doc,
-  getDoc,
   getDocs,
   query,
+  serverTimestamp,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -13,53 +14,38 @@ import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
 import useStarStore from "../../stores/starStore";
 
-function StarEdit() {
+function AddStar() {
   const { userId } = useParams();
   const navigate = useNavigate();
-  const [oldStar, setOldStar] = useState(0);
   const [star, setStar] = useState(0);
   const [content, setContent] = useState("");
   const [starList, setStarList] = useState([]);
-  const starId = useStarStore((state) => state.starId);
-  const companyName = useStarStore((state) => state.companyName);
   const companyId = useStarStore((state) => state.companyId);
+  const orderId = useStarStore((state) => state.orderId);
+  const companyName = useStarStore((state) => state.companyName);
   const starq = query(
     collection(db, "star"),
     where("companyId", "==", companyId),
   );
 
   useEffect(() => {
-    if (companyId) {
-      let starList = [];
-      getDocs(starq).then((result) => {
-        result.forEach((doc) => {
-          const result = doc.data();
-          const resultStar = result.star;
-          const resultId = doc.id;
-          const combine = { ...result, starId: resultId };
-          starList.push(resultStar);
-        });
-        setStarList(starList);
+    let starList = [];
+    getDocs(starq).then((result) => {
+      result.forEach((doc) => {
+        const result = doc.data();
+        const resultStar = result.star;
+        const resultId = doc.id;
+        const combine = { ...result, starId: resultId };
+        starList.push(resultStar);
       });
-    }
-  }, [companyId]);
-
-  useEffect(() => {
-    if (starId) {
-      const starRef = doc(db, "star", starId);
-      getDoc(starRef).then((result) => {
-        const data = result.data();
-        setOldStar(data.star);
-        setStar(data.star);
-        setContent(data.content);
-      });
-    }
-  }, [starId]);
+      setStarList(starList);
+    });
+  }, []);
 
   async function UpdateTotalStar() {
     const newStarList = [...starList, star];
     const sumStar = newStarList.reduce((a, c) => a + c, 0);
-    const avg = (sumStar - oldStar) / starList.length;
+    const avg = sumStar / (starList.length + 1);
 
     const companyRef = doc(db, "company", companyId);
     await updateDoc(companyRef, {
@@ -67,11 +53,14 @@ function StarEdit() {
     });
   }
 
-  async function handleUpdate() {
-    const starRef = doc(db, "star", starId);
-    await updateDoc(starRef, {
+  async function handleSend() {
+    const starRef = await addDoc(collection(db, "star"), {
+      orderId: orderId,
+      companyId: companyId,
+      userId: userId,
       star: star,
       content: content,
+      createTime: serverTimestamp(),
     });
 
     UpdateTotalStar();
@@ -105,7 +94,7 @@ function StarEdit() {
               onClick={() => {
                 setStar("");
                 setContent("");
-                navigate(`/diner/commented/${userId}`);
+                navigate(`/diner/eatenShop/${userId}`);
               }}
             >
               取消
@@ -113,8 +102,8 @@ function StarEdit() {
             <button
               className="border-2 border-solid border-black"
               onClick={() => {
-                navigate(`/diner/commented/${userId}`);
-                handleUpdate();
+                navigate(`/diner/eatenShop/${userId}`);
+                handleSend();
               }}
             >
               送出
@@ -126,4 +115,4 @@ function StarEdit() {
   );
 }
 
-export default StarEdit;
+export default AddStar;

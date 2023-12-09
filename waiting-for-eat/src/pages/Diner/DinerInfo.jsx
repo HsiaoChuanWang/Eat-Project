@@ -15,7 +15,7 @@ function DinerInfo() {
     });
 
     return userSnap;
-  });
+  }, []);
 
   return (
     <>

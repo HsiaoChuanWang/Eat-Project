@@ -1,14 +1,3 @@
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Textarea,
-  User,
-  useDisclosure,
-} from "@nextui-org/react";
 import { Rate } from "antd";
 import dateFormat from "dateformat";
 import {
@@ -16,24 +5,26 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
-import useUserStore from "../../stores/userStore";
+import useStarStore from "../../stores/starStore";
 
 function Commented() {
   const navigate = useNavigate();
   const { userId } = useParams();
   const [combineData, setCombineData] = useState([]);
-  const [star, setStar] = useState("");
-  const [content, setContent] = useState("");
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [starArray, setStarArray] = useState([]);
   const starq = query(collection(db, "star"), where("userId", "==", userId));
-  const detailInfo = useUserStore((state) => state.detailInfo);
+  const setStarId = useStarStore((state) => state.setStarId);
+  const setCompanyName = useStarStore((state) => state.setCompanyName);
+  const setCompanyId = useStarStore((state) => state.setCompanyId);
 
   async function getCompanyInfo(companyId) {
     const docRef = doc(db, "company", companyId);
@@ -85,123 +76,122 @@ function Commented() {
     return starSnap;
   }, []);
 
-  async function handleDelete(starId) {
+  async function getStarArray(companyId) {
+    const starq = query(
+      collection(db, "star"),
+      where("companyId", "==", companyId),
+    );
+
+    let starList = [];
+    await getDocs(starq).then((result) => {
+      result.forEach((doc) => {
+        const result = doc.data();
+        const resultStar = result.star;
+        const resultId = doc.id;
+        const combine = { ...result, starId: resultId };
+        starList.push(resultStar);
+      });
+      setStarArray(starList);
+    });
+  }
+
+  async function UpdateTotalStar(companyId) {
+    await getStarArray(companyId);
+
+    const sumStar = starArray.reduce((a, c) => a + c, 0);
+    let avg;
+    if (sumStar === 0) {
+      avg = 0;
+    } else {
+      avg = sumStar / starArray.length;
+    }
+
+    const companyRef = doc(db, "company", companyId);
+    await updateDoc(companyRef, {
+      totalStar: avg,
+    });
+  }
+
+  async function handleDelete(starId, companyId) {
     await deleteDoc(doc(db, "star", starId));
+
+    UpdateTotalStar(companyId);
   }
 
   const printDatas =
     combineData.length > 0 ? (
-      combineData.map((data) => {
-        return (
-          <div
-            key={data.starId}
-            className="relative flex items-center border-2 border-solid border-black"
-          >
-            <div className="w-64">
-              <img
-                src={data.picture}
-                onClick={() => {
-                  navigate(`/restaurant/${data.companyId}`);
-                }}
-              />
-            </div>
-            <div className=" ml-4">
-              <div className="flex">
-                <p className="my-4  text-xl">用餐時間</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">{data.date}</p>
-                <p className="my-4  ml-4 text-xl">{data.start}</p>
-              </div>
-
-              <div className="flex">
-                <p className="my-4  text-xl">餐廳名稱</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">{data.name}</p>
-              </div>
-
-              <div className="flex">
-                <Rate disabled defaultValue={data.star} />
-              </div>
-
-              <div className="flex">
-                <p className="my-4  text-xl">撰寫時間</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">
-                  {dateFormat(data.createTime.toDate(), "yyyy/mm/dd HH:MM")}
-                </p>
-              </div>
-            </div>
-
-            <div className="absolute bottom-2 right-24">
-              <Button onPress={onOpen}>編輯</Button>
-              <Modal
-                size="5xl"
-                isOpen={isOpen}
-                onOpenChange={onOpenChange}
-                isDismissable={false}
-              >
-                <ModalContent>
-                  {(onClose) => (
-                    <>
-                      <ModalHeader className="flex flex-col gap-1">
-                        {data.name}
-                      </ModalHeader>
-                      <ModalBody>
-                        <div className="w-full">
-                          <User
-                            name={detailInfo.userName}
-                            avatarProps={{
-                              src: detailInfo.picture,
-                            }}
-                          />
-
-                          <Rate
-                            allowHalf
-                            className="block px-20 text-5xl"
-                            onChange={(e) => {
-                              setStar(e);
-                            }}
-                          />
-                          <Textarea
-                            size="lg"
-                            onChange={(e) => {
-                              setContent(e.target.value);
-                            }}
-                            value={data.content}
-                          />
-                        </div>
-                      </ModalBody>
-                      <ModalFooter>
-                        <Button
-                          color="danger"
-                          variant="light"
-                          onPress={onClose}
-                        >
-                          取消
-                        </Button>
-                        <Button
-                          color="primary"
-                          onPress={onClose}
-                          // onClick={handleSend}
-                        >
-                          張貼
-                        </Button>
-                      </ModalFooter>
-                    </>
-                  )}
-                </ModalContent>
-              </Modal>
-            </div>
-
-            <button
-              onClick={() => handleDelete(data.starId)}
-              className="absolute bottom-2 right-8 h-8 border-2 border-solid border-black"
+      combineData
+        .sort((a, b) => (a.createTime > b.createTime ? -1 : 1))
+        .map((data) => {
+          return (
+            <div
+              key={data.starId}
+              className="relative flex items-center border-2 border-solid border-black"
             >
-              刪除
-            </button>
-          </div>
-        );
-      })
+              <div className="w-64">
+                <img
+                  src={data.picture}
+                  onClick={() => {
+                    navigate(`/restaurant/${data.companyId}`);
+                  }}
+                />
+              </div>
+              <div className=" ml-4">
+                <div className="flex">
+                  <p className="my-4  text-xl">用餐時間</p>
+                  <p className="mx-4  my-4 text-xl">|</p>
+                  <p className="my-4  text-xl">{data.date}</p>
+                  <p className="my-4  ml-4 text-xl">{data.start}</p>
+                </div>
+
+                <div className="flex">
+                  <p className="my-4  text-xl">餐廳名稱</p>
+                  <p className="mx-4  my-4 text-xl">|</p>
+                  <p className="my-4  text-xl">{data.name}</p>
+                </div>
+
+                <div className="flex">
+                  <Rate disabled defaultValue={data.star} />
+                </div>
+
+                <div className="flex">
+                  <p className="my-4  text-xl">撰寫時間</p>
+                  <p className="mx-4  my-4 text-xl">|</p>
+                  <p className="my-4  text-xl">
+                    {dateFormat(data.createTime.toDate(), "yyyy/mm/dd HH:MM")}
+                  </p>
+                </div>
+
+                <div className="flex">
+                  <p className="my-4  text-xl">評論內容</p>
+                  <p className="mx-4  my-4 text-xl">|</p>
+                  <p className="my-4  text-xl">{data.content}</p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  setCompanyId(data.companyId);
+                  setCompanyName(data.name);
+                  setStarId(data.starId);
+                  navigate(`/diner/starEdit/${userId}`);
+                }}
+                className="absolute bottom-12 right-8 h-8 border-2 border-solid border-black"
+              >
+                編輯
+              </button>
+
+              <button
+                onClick={() => {
+                  handleDelete(data.starId, data.companyId);
+                }}
+                className="absolute bottom-2 right-8 h-8 border-2 border-solid border-black"
+              >
+                刪除
+              </button>
+            </div>
+          );
+        })
     ) : (
       <h1 key="no">未有相關資訊</h1>
     );

@@ -14,6 +14,7 @@ import PhotoUpload from "./pages/Boss/PhotoUpload";
 import Schedule from "./pages/Boss/Schedule";
 import Table from "./pages/Boss/Table";
 import Boss from "./pages/Boss/index.jsx";
+import AddStar from "./pages/Diner/AddStar.jsx";
 import Commented from "./pages/Diner/Commented.jsx";
 import DinerInfo from "./pages/Diner/DinerInfo.jsx";
 import DinerInfoEdit from "./pages/Diner/DinerInfoEdit";
@@ -23,6 +24,7 @@ import LikeShop from "./pages/Diner/LikeShop";
 import Posted from "./pages/Diner/Posted";
 import PostedEdit from "./pages/Diner/PostedEdit.jsx";
 import ReservedShop from "./pages/Diner/ReservedShop";
+import StarEdit from "./pages/Diner/StarEdit.jsx";
 import TextEditor from "./pages/Diner/TextEditor.jsx";
 import Diner from "./pages/Diner/index.jsx";
 import Homepage from "./pages/Homepage";
@@ -64,6 +66,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               />
               <Route path="/diner/posted/:userId" element={<Posted />} />
               <Route path="/diner/commented/:userId" element={<Commented />} />
+              <Route path="/diner/addStar/:userId" element={<AddStar />} />
+              <Route path="/diner/starEdit/:userId" element={<StarEdit />} />
             </Route>
 
             <Route path="/diner/textEditor/:orderId" element={<TextEditor />} />

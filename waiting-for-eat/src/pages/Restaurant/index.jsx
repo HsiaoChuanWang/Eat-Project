@@ -80,32 +80,34 @@ function Restaurant() {
       });
   }, []);
 
-  const posts = post.map((item) => {
-    return (
-      <div
-        key={item.userId}
-        className="my-4 border-2 border-solid border-black px-4"
-      >
-        <h2>{dateFormat(item.createTime.toDate(), "yyyy/mm/dd HH:MM")}</h2>
+  const posts = post
+    .sort((a, b) => (a.createTime > b.createTime ? 1 : -1))
+    .map((item) => {
+      return (
         <div
-          onClick={() => {
-            navigation(`/post/${item.postId}`);
-          }}
+          key={item.userId}
+          className="my-4 border-2 border-solid border-black px-4"
         >
-          <div className="flex items-center">
-            <img src={item.picture} className="w-20" />
-            <h2>{item.userName}</h2>
-          </div>
+          <h2>{dateFormat(item.createTime.toDate(), "yyyy/mm/dd HH:MM")}</h2>
+          <div
+            onClick={() => {
+              navigation(`/post/${item.postId}`);
+            }}
+          >
+            <div className="flex items-center">
+              <img src={item.picture} className="w-20" />
+              <h2>{item.userName}</h2>
+            </div>
 
-          <div className="flex">
-            <p className="my-6  text-xl">標題</p>
-            <p className="mx-4  my-6 text-xl">|</p>
-            <p className="my-6  text-xl">{item.title}</p>
+            <div className="flex">
+              <p className="my-6  text-xl">標題</p>
+              <p className="mx-4  my-6 text-xl">|</p>
+              <p className="my-6  text-xl">{item.title}</p>
+            </div>
           </div>
         </div>
-      </div>
-    );
-  });
+      );
+    });
 
   return (
     <div>
@@ -147,7 +149,7 @@ function Restaurant() {
 
           <div className="my-4 border-2 border-solid border-black px-2">
             <h1 className="text-4xl">現熱活動</h1>
-            <h4>{data.description}</h4>
+            <div dangerouslySetInnerHTML={{ __html: data.description }}></div>
           </div>
         </div>
         <div className="mx-2 w-1/2 border-2 border-solid border-black  px-2">
@@ -159,7 +161,11 @@ function Restaurant() {
       <div
         className="fixed bottom-24 flex w-full justify-center"
         onClick={() => {
-          navigation(`/reserve/${companyId}`);
+          if (userInfo.userId === "") {
+            alert("請登入以進行預約");
+          } else {
+            navigation(`/reserve/${companyId}`);
+          }
         }}
       >
         <button className=" w-1/2 border-2 border-solid border-black bg-orange-300 text-center text-2xl">

@@ -1,6 +1,6 @@
 import { Button, DatePicker, Form, Input } from "antd";
 import dayjs from "dayjs";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { default as React, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
@@ -65,6 +65,10 @@ function Reserve() {
   const disabledDate = (current) => {
     return current && current <= dayjs().subtract(1, "day").endOf("day");
   };
+
+  async function updateData(send) {
+    const orderRef = await addDoc(collection(db, "order"), send);
+  }
 
   async function handleSend() {
     if (!Object.values(send).includes("")) {
@@ -140,11 +144,9 @@ function Reserve() {
       }
       send.tableNumber = tableNumbers;
 
-      console.log(tables);
-      alert(
-        `您預定到的桌號為${send.tableNumber}，分別為6人桌及4人桌，若對座位有疑問，請洽電!`,
-      );
-      navigate(`/restaurant/${companyId}`);
+      updateData(send);
+      alert(`預約成功! 請確認訂位資訊，若有任何疑問請洽電。`);
+      navigate(`/diner/reservedShop/${userInfo.userId}`);
     } else {
       alert("請填寫完整資訊");
     }
@@ -277,14 +279,6 @@ function Reserve() {
         <h1 className="mx-6">|</h1>
         {timeList}
       </div>
-      {/* 
-      <div className="mx-6 flex">
-        <h1>桌號</h1>
-        <h1 className="mx-6">|</h1>
-        {send.tableNumber?.send.tableNumber.map((number) => {
-          return <div key={number} className="border-black border-2 border-solid">{number}</div>;
-        })}
-      </div> */}
 
       <div className="mx-6 flex">
         <h1>備註</h1>

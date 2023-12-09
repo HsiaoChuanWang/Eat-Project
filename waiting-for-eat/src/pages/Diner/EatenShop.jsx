@@ -1,10 +1,12 @@
 import {
+  addDoc,
   collection,
   doc,
   getDoc,
   getDocs,
   onSnapshot,
   query,
+  serverTimestamp,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -18,18 +20,20 @@ import {
 } from "react-icons/hi";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
-import Star from "./Star";
+import useStarStore from "../../stores/starStore";
 
 function EatenShop() {
   const navigate = useNavigate();
   const { userId } = useParams();
   const [combineData, setCombineData] = useState([]);
+  const setCompanyName = useStarStore((state) => state.setCompanyName);
+  const setCompanyId = useStarStore((state) => state.setCompanyId);
+  const setOrderId = useStarStore((state) => state.setOrderId);
   const favoriteq = query(
     collection(db, "favorite"),
     where("userId", "==", userId),
     where("postId", "==", ""),
   );
-  const orderq = query(collection(db, "order"), where("userId", "==", userId));
 
   async function getCompanyInfo(companyId) {
     const docRef = doc(db, "company", companyId);
@@ -116,7 +120,10 @@ function EatenShop() {
             })
             .then((newnewItem) => {
               getCommentInfo(newItem.orderId).then((data) => {
-                const newnewnewItem = { ...newnewItem, canWriteComment: data };
+                const newnewnewItem = {
+                  ...newnewItem,
+                  canWriteComment: data,
+                };
                 combineList.push(newnewnewItem);
                 setCombineData([...combineList]);
               });
@@ -128,14 +135,23 @@ function EatenShop() {
     return favoriteSnap;
   }, []);
 
-  console.log(combineData);
-
   const handleLike = async (favoriteId, change) => {
     const favoriteRef = doc(db, "favorite", favoriteId);
     await updateDoc(favoriteRef, {
       status: change,
     });
   };
+
+  async function handleSend() {
+    const starRef = await addDoc(collection(db, "star"), {
+      orderId: orderId,
+      companyId: companyId,
+      userId: userId,
+      star: star,
+      content: content,
+      createTime: serverTimestamp(),
+    });
+  }
 
   const favoriteState = (favoriteId, status) => {
     switch (status) {
@@ -185,72 +201,81 @@ function EatenShop() {
 
   const companyDatas =
     combineData.length > 0 ? (
-      combineData.map((data) => {
-        return (
-          <div
-            key={data.favoriteId}
-            className="relative my-2 flex items-center border-2 border-solid border-black px-2"
-          >
-            <div className="w-64">
-              <img
-                src={data.picture}
-                onClick={() => {
-                  navigate(`/restaurant/${data.companyId}`);
-                }}
-              />
-            </div>
-            <div className=" ml-4">
-              <div className="flex">
-                <p className="my-4  text-xl">餐廳名稱</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">{data.name}</p>
-              </div>
-
-              <div className="flex">
-                <p className="my-4  text-xl">電話</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">{data.phone}</p>
-              </div>
-
-              <div className="flex">
-                <p className="my-4  text-xl">地址</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">
-                  {data.city}
-                  {data.district}
-                  {data.address}
-                </p>
-              </div>
-            </div>
-
-            <div className="absolute right-8 top-2 flex h-16 w-24 items-center justify-between">
-              {favoriteState(data.favoriteId, data.status)}
-            </div>
-
+      combineData
+        .sort((a, b) => (a.favoriteId > b.favoriteId ? 1 : -1))
+        .map((data) => {
+          return (
             <div
-              className={` ${
-                data.canWriteComment === false && "hidden"
-              } absolute bottom-12 right-8 h-8 `}
+              key={data.favoriteId}
+              className="relative my-2 flex items-center border-2 border-solid border-black px-2"
             >
-              <Star
-                companyId={data.companyId}
-                orderId={data.orderId}
-                userId={data.userId}
-                companyName={data.name}
-              />
-            </div>
+              <div className="w-64">
+                <img
+                  src={data.picture}
+                  onClick={() => {
+                    navigate(`/restaurant/${data.companyId}`);
+                  }}
+                />
+              </div>
+              <div className=" ml-4">
+                <div className="flex">
+                  <p className="my-4  text-xl">餐廳名稱</p>
+                  <p className="mx-4  my-4 text-xl">|</p>
+                  <p className="my-4  text-xl">{data.name}</p>
+                </div>
 
-            <button
-              onClick={() => navigate(`/diner/textEditor/${data.orderId}`)}
-              className={` ${
-                data.canWritePost === false && "hidden"
-              } absolute bottom-2 right-8 h-8 border-2 border-solid border-black`}
-            >
-              寫食記
-            </button>
-          </div>
-        );
-      })
+                <div className="flex">
+                  <p className="my-4  text-xl">電話</p>
+                  <p className="mx-4  my-4 text-xl">|</p>
+                  <p className="my-4  text-xl">{data.phone}</p>
+                </div>
+
+                <div className="flex">
+                  <p className="my-4  text-xl">地址</p>
+                  <p className="mx-4  my-4 text-xl">|</p>
+                  <p className="my-4  text-xl">
+                    {data.city}
+                    {data.district}
+                    {data.address}
+                  </p>
+                </div>
+              </div>
+
+              <div className="absolute right-8 top-2 flex h-16 w-24 items-center justify-between">
+                {favoriteState(data.favoriteId, data.status)}
+              </div>
+
+              <div
+                className={` ${
+                  data.canWriteComment === false && "hidden"
+                } absolute bottom-12 right-8 h-8 `}
+              ></div>
+
+              <button
+                onClick={() => {
+                  setCompanyName(data.name);
+                  setOrderId(data.orderId);
+                  setCompanyId(data.companyId);
+                  navigate(`/diner/addStar/${userId}`);
+                }}
+                className={` ${
+                  data.canWriteComment === false && "hidden"
+                } absolute bottom-12 right-8 h-8 border-2 border-solid border-black`}
+              >
+                寫評論
+              </button>
+
+              <button
+                onClick={() => navigate(`/diner/textEditor/${data.orderId}`)}
+                className={` ${
+                  data.canWritePost === false && "hidden"
+                } absolute bottom-2 right-8 h-8 border-2 border-solid border-black`}
+              >
+                寫食記
+              </button>
+            </div>
+          );
+        })
     ) : (
       <h1 key="no">未有相關資訊</h1>
     );
