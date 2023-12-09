@@ -122,8 +122,10 @@ function StepThreeBoss({ setActive }) {
     ) {
       checkRef.current = false;
       await getLocation();
-      await getDetailInfo(detail);
-      setActive("StepFourBoss");
+      if (company.lat !== "") {
+        await getDetailInfo(detail);
+        setActive("StepFourBoss");
+      }
     } else {
       alert("請填寫完整資訊");
     }

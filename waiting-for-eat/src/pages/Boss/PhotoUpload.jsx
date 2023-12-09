@@ -51,6 +51,7 @@ function PhotoUpload() {
     getUrl(main).then((url) => {
       uploadMain(url);
     });
+    navigate(`/boss/photo/${companyId}`);
   };
 
   const menuProps = {
@@ -73,7 +74,7 @@ function PhotoUpload() {
     await updateDoc(companyRef, {
       menu: urls,
     });
-    navigate(`/boss/photoUpload/${companyId}`);
+    navigate(`/boss/photo/${companyId}`);
   }
 
   const handleMenu = () => {

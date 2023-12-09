@@ -155,10 +155,13 @@ function Header() {
       <Link to="/">
         <img src={logo} className="m-8 h-20 w-auto" />
       </Link>
-      <div className="flex">
-        <img src={userData.picture} className="w-20"></img>
-        <div>{`${userData.userName} ，您好`}</div>
-      </div>
+      {/* <div className="flex">
+        <img
+          src={userData.picture ? userData.picture : { fake }}
+          className="w-20"
+        ></img>
+        <div>{`${userData.userName} ?. ${userData.userName} : "你好"} ，您好`}</div>
+      </div> */}
 
       <div className="m-16">{renderSwitch("LogOut")}</div>
     </div>

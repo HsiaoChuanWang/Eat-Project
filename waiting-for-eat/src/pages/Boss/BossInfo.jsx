@@ -23,20 +23,22 @@ function BossInfo() {
   }
 
   useEffect(() => {
-    const userSnap = onSnapshot(doc(db, "user", userInfo.userId), (doc) => {
-      const data = doc.data();
-      setUserData(data);
-    });
+    if (userInfo.userId) {
+      const userSnap = onSnapshot(doc(db, "user", userInfo.userId), (doc) => {
+        const data = doc.data();
+        setUserData(data);
+      });
 
-    const companySnap = onSnapshot(doc(db, "company", companyId), (doc) => {
-      const data = doc.data();
-      setCompanyData(data);
-      const category = data.category;
-      getCategory(category);
-    });
+      const companySnap = onSnapshot(doc(db, "company", companyId), (doc) => {
+        const data = doc.data();
+        setCompanyData(data);
+        const category = data.category;
+        getCategory(category);
+      });
 
-    return companySnap, userSnap;
-  }, []);
+      return companySnap, userSnap;
+    }
+  }, [userInfo.userId]);
 
   return (
     <>
