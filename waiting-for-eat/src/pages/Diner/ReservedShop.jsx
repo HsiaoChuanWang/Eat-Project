@@ -45,7 +45,7 @@ function ReservedShop() {
         const combine = { ...data, orderId: dataId };
         orderList.push(combine);
       });
-      setOrders(orderList);
+      setOrders([...orderList]);
 
       let companyList = [];
       orderList.forEach((order) => {
@@ -55,7 +55,7 @@ function ReservedShop() {
             companyList.push(newData);
           })
           .then(() => {
-            setCombineData(companyList);
+            setCombineData([...companyList]);
           });
       });
     });

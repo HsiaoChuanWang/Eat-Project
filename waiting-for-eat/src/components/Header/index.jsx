@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import db from "../../firebase";
 import useHeaderStore from "../../stores/headerStore";
 import useUserStore from "../../stores/userStore";
-import logo from "./fakelogo.svg";
+import logo from "./logo.png";
 
 function Header() {
   const navigate = useNavigate();
@@ -151,9 +151,9 @@ function Header() {
   };
 
   return (
-    <div className="flex h-24 items-center justify-between shadow-[0_0_2px_1px_rgba(0,0,0,0.16)]">
+    <div className=" flex h-24 items-center justify-between shadow-[0_0_4px_2px_rgba(0,0,0,0.16)]">
       <Link to="/">
-        <img src={logo} className="m-8 h-20 w-auto" />
+        <img src={logo} className="ml-16 h-32 w-auto" />
       </Link>
       {/* <div className="flex">
         <img

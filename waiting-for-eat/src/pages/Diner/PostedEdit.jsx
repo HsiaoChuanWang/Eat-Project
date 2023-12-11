@@ -244,8 +244,9 @@ function PostedEdit() {
       <button
         className="absolute bottom-2 right-20 border-2 border-solid border-black"
         onClick={() => {
-          handleSend(postId);
-          navigate(`/diner/posted/${post.userId}`);
+          handleSend(postId).then(() => {
+            navigate(`/diner/posted/${post.userId}`);
+          });
         }}
       >
         保存

@@ -59,21 +59,23 @@ function Comment() {
       });
   }, []);
 
-  const comments = comment.map((item, index) => {
-    return (
-      <div key={index} className="border-2 border-solid border-black">
-        <Rate disabled allowHalf defaultValue={item.star} />
-        <h2>{dateFormat(item.createTime.toDate(), "yyyy/mm/dd HH:MM")}</h2>
-        <div></div>
-        <div className="flex">
-          <img src={item.picture} className="w-20" />
-          <h2>{item.userName}</h2>
+  const comments = comment
+    .sort((a, b) => (a.createTime > b.createTime ? -1 : 1))
+    .map((item, index) => {
+      return (
+        <div key={index} className="border-2 border-solid border-black">
+          <Rate disabled allowHalf defaultValue={item.star} />
+          <h2>{dateFormat(item.createTime.toDate(), "yyyy/mm/dd HH:MM")}</h2>
+          <div></div>
+          <div className="flex">
+            <img src={item.picture} className="w-20" />
+            <h2>{item.userName}</h2>
+          </div>
+          <h2>這是內容</h2>
+          <h2>{item.content}</h2>
         </div>
-        <h2>這是內容</h2>
-        <h2>{item.content}</h2>
-      </div>
-    );
-  });
+      );
+    });
 
   return (
     <div className="w-full">

@@ -80,7 +80,7 @@ function AddStar() {
           />
 
           <textarea
-            className="w-96 border-2 border-solid border-black"
+            className="h-96 w-96 border-2 border-solid border-black"
             size="lg"
             onChange={(e) => {
               setContent(e.target.value);

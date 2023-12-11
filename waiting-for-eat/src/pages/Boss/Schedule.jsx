@@ -283,31 +283,26 @@ function Schedule() {
           <br />
           {tel}
           <br />
-          {remark?.remark}
+          {remark}
         </div>
 
         <div className="py-8">{people}人</div>
 
-        <div>
-          <button
-            className={` h-8 border-2 border-solid border-black ${
-              active === true && "hidden"
-            }`}
-          >
+        {/* <div>
+          <button className={` h-8 border-2 border-solid border-black `}>
             已出席
           </button>
-        </div>
+        </div> */}
 
         <div>
-          <div className={` ${active === false && "hidden"}`}>
+          <div>
             <button
               className={`my-1 h-8 border-2 border-solid border-black`}
               onClick={() => {
-                if (editable === true) {
-                  AddFavorite(orderId, userId);
-                  UpdateAttend(orderId);
-                  setActive(false);
-                }
+                // if (editable === true) {
+                AddFavorite(orderId, userId);
+                UpdateAttend(orderId);
+                // }
               }}
               disabled={attend === "yes"}
             >
@@ -342,7 +337,7 @@ function Schedule() {
           }}
           className="absolute right-0 border-2 border-solid border-black"
         >
-          編輯
+          移動
         </button>
 
         <button
