@@ -63,6 +63,9 @@ function BossInfoEdit() {
         let obj = updateCompany;
         obj.lat = lat;
         obj.lng = lng;
+        const companyRef = doc(db, "company", companyId);
+        updateDoc(companyRef, updateCompany);
+        navigate(`/boss/bossInfo/${companyId}`);
       } else {
         console.log("error");
         console.log(`Geocode + ${status}`);
@@ -73,9 +76,9 @@ function BossInfoEdit() {
 
   async function handleCompanyUpdate() {
     await getLocation();
-    const companyRef = doc(db, "company", companyId);
-    await updateDoc(companyRef, updateCompany);
-    navigate(`/boss/bossInfo/${companyId}`);
+    // const companyRef = doc(db, "company", companyId);
+    // await updateDoc(companyRef, updateCompany);
+    // navigate(`/boss/bossInfo/${companyId}`);
   }
 
   return (

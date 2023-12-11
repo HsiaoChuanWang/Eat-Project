@@ -46,15 +46,15 @@ function MyGoogleMaps({ currentPosition, mapRef, map, setMap, onLoad }) {
       });
       setRedPin((pre) => [...pre, marker]);
 
-      marker.addListener("click", () => {
+      marker.addListener("mouseover", () => {
         infoWindow.close(map);
         // toggleBounce();
         infoWindow.setContent(`
-            <div className="modal">
-              <div className="modal-body">
-                <h3 className="modal-title">${markInfo.name}</h3>
-                <p className="total">${markInfo.city}${markInfo.district}${markInfo.address}</p>
-                <p className="remain">${markInfo.phone}</p>
+            <div className="modal" style="width: 250px">
+              <div className="modal-body" >
+                <h3 className="modal-title"  style="font-size: 16px; font-weight: 700; margin-top: 8px; margin-bottom: 8px">${markInfo.name}</h3>
+                <p className="total" style="margin-top: 8px; margin-bottom: 8px">${markInfo.city}${markInfo.district}${markInfo.address}</p>
+                <p className="remain" style="margin-top: 10px; margin-bottom: 8px">${markInfo.phone}</p>
                 
               </div>
             </div>
@@ -71,9 +71,9 @@ function MyGoogleMaps({ currentPosition, mapRef, map, setMap, onLoad }) {
         // }
       });
 
-      //   marker.addListener("mouseout", () => {
-      //     infoWindow.close(map);
-      //   });
+      marker.addListener("mouseout", () => {
+        infoWindow.close(map);
+      });
     });
   }, [searchArray, map]);
 

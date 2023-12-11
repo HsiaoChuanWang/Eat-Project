@@ -14,8 +14,11 @@ import db from "../../firebase";
 function Post() {
   const navigation = useNavigate();
   const { postId } = useParams();
+  const [companyData, setCompanyData] = useState({});
   const [post, setPost] = useState({});
   const [postList, setPostList] = useState([]);
+  const [mainPoster, setMainPoster] = useState({});
+  const [mainTime, setMainTime] = useState("");
 
   async function getHtml() {
     const postRef = doc(db, "post", postId);
@@ -30,12 +33,13 @@ function Post() {
     }
   }
 
-  async function getCompanyData() {
+  async function getCompanyData(companyId) {
     const docRef = doc(db, "company", companyId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      const resultData = docSnap.data();
-      setData(resultData);
+      const data = docSnap.data();
+      const resultData = { ...data, companyId: companyId };
+      setCompanyData(resultData);
     } else {
       console.log("No company data document in boss page!");
     }
@@ -55,10 +59,13 @@ function Post() {
 
   useEffect(() => {
     getHtml().then((postData) => {
+      getCompanyData(postData.companyId);
+
       const postq = query(
         collection(db, "post"),
         where("companyId", "==", postData.companyId),
       );
+
       getDocs(postq)
         .then((quarySnaps) => {
           let posts = [];
@@ -72,6 +79,7 @@ function Post() {
         })
         .then((posts) => {
           let combinePosts = [];
+          let mainPost = [];
           posts.forEach((post) => {
             if (post.postId != postId) {
               getPosterInfo(post.userId)
@@ -86,6 +94,25 @@ function Post() {
                 .then(() => {
                   setPostList([...combinePosts]);
                 });
+            } else {
+              getPosterInfo(post.userId)
+                .then((data) => {
+                  const newData = {
+                    ...post,
+                    userName: data.userName,
+                    picture: data.picture,
+                  };
+                  mainPost.push(newData);
+                })
+                .then(() => {
+                  const result = mainPost[0];
+                  const time = dateFormat(
+                    result.createTime.toDate(),
+                    "yyyy/mm/dd HH:MM",
+                  );
+                  setMainTime(time);
+                  setMainPoster(result);
+                });
             }
           });
         });
@@ -93,7 +120,7 @@ function Post() {
   }, [postId]);
 
   const posts = postList
-    .sort((a, b) => (a.createTime > b.createTime ? 1 : -1))
+    .sort((a, b) => (a.createTime > b.createTime ? -1 : 1))
     .map((item) => {
       return (
         <div
@@ -122,18 +149,32 @@ function Post() {
     });
 
   return (
-    <div className="m-8 mb-48 flex">
-      <div className="p-20">
-        <h2 className="text-2xl font-bold">{post.title}</h2>
-        <br />
-        {/* <h2>{post.createdDate}</h2> */}
-        <div className="flex">
-          <img src={post.picture} className="w-20" />
-          <h2>{post.userName}</h2>
+    <div>
+      <div className="m-8 mb-48 flex">
+        <div className="p-20">
+          <h2 className="text-2xl font-bold">{post.title}</h2>
+          <br />
+          <h2>{mainTime}</h2>
+          <div className="flex">
+            <img src={mainPoster.picture} className="w-20" />
+            <h2>{mainPoster.userName}</h2>
+          </div>
+          <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
         </div>
-        <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+        <div>{posts}</div>
       </div>
-      <div>{posts}</div>
+
+      <div onClick={() => navigation(`/restaurant/${companyData.companyId}`)}>
+        <h1 className="text-2xl">餐廳資訊</h1>
+        <img src={companyData.picture} />
+        <h1>{companyData.name}</h1>
+        <h1>
+          {companyData.city}
+          {companyData.district}
+          {companyData.address}
+        </h1>
+        <h1>{companyData.phone}</h1>
+      </div>
     </div>
   );
 }

@@ -36,6 +36,7 @@ function StepThreeBoss({ setActive }) {
     address: "",
     phone: "",
     category: "",
+    totalStar: 0,
   });
 
   async function handlePicture(picture) {

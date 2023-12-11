@@ -1,6 +1,14 @@
 import { Button, DatePicker, Form, Input } from "antd";
 import dayjs from "dayjs";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { default as React, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
@@ -8,7 +16,7 @@ import useUserStore from "../../stores/userStore";
 
 function Reserve() {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState({});
+  const [companyData, setCompanyData] = useState({});
   const [openTime, setOpenTime] = useState([]);
   const [orders, setOrders] = useState([]);
   const [tables, setTables] = useState([]);
@@ -22,6 +30,7 @@ function Reserve() {
     end: "",
     people: "",
     attend: "no",
+    remark: "無",
   });
   const weekRef = useRef(null);
   const detailInfo = useUserStore((state) => state.detailInfo);
@@ -30,8 +39,14 @@ function Reserve() {
   const orderRef = collection(db, "order");
   const openTimeRef = query(collection(companyRef, companyId, "openTime"));
   const tableRef = query(collection(companyRef, companyId, "table"));
+  const companyInfoRef = doc(db, "company", companyId);
 
   useEffect(() => {
+    getDoc(companyInfoRef).then((result) => {
+      const data = result.data();
+      setCompanyData(data);
+    });
+
     getDocs(openTimeRef).then((result) => {
       let openTimes = [];
       result.forEach((doc) => {
@@ -233,76 +248,82 @@ function Reserve() {
   }
 
   return (
-    <>
-      <h2 className="p-6 text-center text-xl">預約資訊</h2>
-      <div className="mx-6 flex">
-        <h1>姓名</h1>
-        <h1 className="mx-6">|</h1>
-        <h1>
-          {detailInfo.userName} {detailInfo.gender}
-        </h1>
+    <div className="flex">
+      <div>
+        <img src={companyData.picture} className="w-96"></img>
       </div>
-      <div className="mx-6 flex">
-        <h1>手機</h1>
-        <h1 className="mx-6">|</h1>
-        <h1>{detailInfo.phone}</h1>
-      </div>
-      <div className="mx-6 flex">
-        <h1>人數</h1>
-        <h1 className="mx-6">|</h1>
-        <Form>
-          <Form.Item
-            name="people"
-            rules={[
-              {
-                message: "請輸入人數!",
-              },
-            ]}
-          >
-            <Input
+
+      <div>
+        <h2 className="p-6 text-center text-xl">預約資訊</h2>
+        <div className="mx-6 flex">
+          <h1>姓名</h1>
+          <h1 className="mx-6">|</h1>
+          <h1>
+            {detailInfo.userName} {detailInfo.gender}
+          </h1>
+        </div>
+        <div className="mx-6 flex">
+          <h1>手機</h1>
+          <h1 className="mx-6">|</h1>
+          <h1>{detailInfo.phone}</h1>
+        </div>
+        <div className="mx-6 flex">
+          <h1>人數</h1>
+          <h1 className="mx-6">|</h1>
+          <Form>
+            <Form.Item
               name="people"
-              onChange={(e) => setSend({ ...send, people: e.target.value })}
-              value={send.people}
-            />
-          </Form.Item>
-        </Form>
-        <h1>人</h1>
-      </div>
-      <div className="mx-6 flex">
-        <h1>日期</h1>
-        <h1 className="mx-6">|</h1>
-        <DatePicker disabledDate={disabledDate} onChange={changeDate} />
-      </div>
+              rules={[
+                {
+                  message: "請輸入人數!",
+                },
+              ]}
+            >
+              <Input
+                name="people"
+                onChange={(e) => setSend({ ...send, people: e.target.value })}
+                value={send.people}
+              />
+            </Form.Item>
+          </Form>
+          <h1>人</h1>
+        </div>
+        <div className="mx-6 flex">
+          <h1>日期</h1>
+          <h1 className="mx-6">|</h1>
+          <DatePicker disabledDate={disabledDate} onChange={changeDate} />
+        </div>
 
-      <div className="mx-6 flex">
-        <h1>時間</h1>
-        <h1 className="mx-6">|</h1>
-        {timeList}
-      </div>
+        <div className="mx-6 flex">
+          <h1>時間</h1>
+          <h1 className="mx-6">|</h1>
+          {timeList}
+        </div>
 
-      <div className="mx-6 flex">
-        <h1>備註</h1>
-        <h1 className="mx-6">|</h1>
-        <Form>
-          <Form.Item name="remark">
-            <Input
-              name="remark"
-              onChange={(e) => setSend({ ...send, remark: e.target.value })}
-              value={send.remark}
-            />
-          </Form.Item>
-        </Form>
+        <div className="mx-6 flex">
+          <h1>備註</h1>
+          <h1 className="mx-6">|</h1>
+          <Form>
+            <Form.Item name="remark">
+              <Input
+                name="remark"
+                onChange={(e) => setSend({ ...send, remark: e.target.value })}
+                value={send.remark}
+              />
+            </Form.Item>
+          </Form>
+        </div>
+        <Button
+          className="bg-[#1677ff]"
+          onClick={handleSend}
+          disabled={checkRef.current}
+          type="primary"
+          htmlType="button"
+        >
+          Submit
+        </Button>
       </div>
-      <Button
-        className="bg-[#1677ff]"
-        onClick={handleSend}
-        disabled={checkRef.current}
-        type="primary"
-        htmlType="button"
-      >
-        Submit
-      </Button>
-    </>
+    </div>
   );
 }
 

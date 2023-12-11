@@ -207,8 +207,9 @@ function TextEditor() {
       <button
         className="absolute bottom-2 right-20 border-2 border-solid border-black"
         onClick={() => {
-          handleSend();
-          navigate(`/diner/posted/${orderData.userId}`);
+          handleSend().then(() => {
+            navigate(`/diner/posted/${orderData.userId}`);
+          });
         }}
       >
         保存

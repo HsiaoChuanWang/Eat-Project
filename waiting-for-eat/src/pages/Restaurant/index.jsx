@@ -81,7 +81,7 @@ function Restaurant() {
   }, []);
 
   const posts = post
-    .sort((a, b) => (a.createTime > b.createTime ? 1 : -1))
+    .sort((a, b) => (a.createTime > b.createTime ? -1 : 1))
     .map((item) => {
       return (
         <div
