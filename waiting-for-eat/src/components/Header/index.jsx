@@ -151,7 +151,7 @@ function Header() {
   };
 
   return (
-    <div className=" flex h-24 items-center justify-between shadow-[0_0_4px_2px_rgba(0,0,0,0.16)]">
+    <div className="sticky top-0 z-50 flex h-24 items-center justify-between bg-white shadow-[0_0_4px_2px_rgba(0,0,0,0.16)]">
       <Link to="/">
         <img src={logo} className="ml-16 h-32 w-auto" />
       </Link>
