@@ -1,4 +1,5 @@
-import { Button, DatePicker, Form, Input } from "antd";
+import { Button, Card } from "@nextui-org/react";
+import { DatePicker, Form, Input } from "antd";
 import dayjs from "dayjs";
 import {
   addDoc,
@@ -20,6 +21,7 @@ function Reserve() {
   const [openTime, setOpenTime] = useState([]);
   const [orders, setOrders] = useState([]);
   const [tables, setTables] = useState([]);
+  const [isSelected, setIsSelected] = useState("");
   const userInfo = useUserStore((state) => state.userInfo);
   const { companyId } = useParams();
   const [send, setSend] = useState({
@@ -162,6 +164,7 @@ function Reserve() {
       updateData(send);
       alert(`預約成功! 請確認訂位資訊，若有任何疑問請洽電。`);
       navigate(`/diner/reservedShop/${userInfo.userId}`);
+      setIsSelected("");
     } else {
       alert("請填寫完整資訊");
     }
@@ -208,21 +211,25 @@ function Reserve() {
         );
         if (hasOrder == undefined) canOrderArray.push(table);
       });
-      if (canOrderArray.length > 0)
+
+      if (canOrderArray.length > 0) {
         return (
           <div
             key={time.timeId}
-            className="mx-4 h-12 w-20 border-2 border-solid border-black"
+            className={`mb-3 mr-3 h-10 w-24 cursor-pointer rounded border border-solid border-gray-400 text-center leading-[40px] text-gray-500 ${
+              isSelected === time.timeId && "bg-[#ff850e]"
+            }  ${isSelected === time.timeId && "text-white"}`}
             onClick={() => {
               setSend({ ...send, start: time.start, end: time.end });
+              setIsSelected(time.timeId);
             }}
           >
             <div>{time.start}</div>
           </div>
         );
+      }
     }
   });
-
   async function changeDate(e) {
     let date = null;
     if (e != null) date = e.$y + "/" + (e.$M + 1) + "/" + e.$D;
@@ -248,80 +255,138 @@ function Reserve() {
   }
 
   return (
-    <div className="flex">
-      <div>
-        <img src={companyData.picture} className="w-96"></img>
-      </div>
+    <div className="flex justify-center">
+      <div className="flex max-w-[1400px] justify-between">
+        <div className="mt-44 w-4/12">
+          <img
+            src={companyData.picture}
+            className=" max-h-[400px] w-full rounded-2xl object-cover object-center"
+          ></img>
 
-      <div>
-        <h2 className="p-6 text-center text-xl">預約資訊</h2>
-        <div className="mx-6 flex">
-          <h1>姓名</h1>
-          <h1 className="mx-6">|</h1>
-          <h1>
-            {detailInfo.userName} {detailInfo.gender}
-          </h1>
-        </div>
-        <div className="mx-6 flex">
-          <h1>手機</h1>
-          <h1 className="mx-6">|</h1>
-          <h1>{detailInfo.phone}</h1>
-        </div>
-        <div className="mx-6 flex">
-          <h1>人數</h1>
-          <h1 className="mx-6">|</h1>
-          <Form>
-            <Form.Item
-              name="people"
-              rules={[
-                {
-                  message: "請輸入人數!",
-                },
-              ]}
-            >
-              <Input
-                name="people"
-                onChange={(e) => setSend({ ...send, people: e.target.value })}
-                value={send.people}
-              />
-            </Form.Item>
-          </Form>
-          <h1>人</h1>
-        </div>
-        <div className="mx-6 flex">
-          <h1>日期</h1>
-          <h1 className="mx-6">|</h1>
-          <DatePicker disabledDate={disabledDate} onChange={changeDate} />
+          <div className="py-4 pl-6">
+            <h1 className="text-2xl font-black">{companyData.name}</h1>
+            <h1 className="my-2 font-bold">
+              {companyData.city}
+              {companyData.district}
+              {companyData.address}
+            </h1>
+            <h1 className="font-bold">{companyData.phone}</h1>
+          </div>
         </div>
 
-        <div className="mx-6 flex">
-          <h1>時間</h1>
-          <h1 className="mx-6">|</h1>
-          {timeList}
-        </div>
+        <Card className="mt-20 w-7/12 border-2 border-solid border-gray-300">
+          <div>
+            <div className="flex justify-center">
+              <h2 className="p-6 text-center text-3xl font-black">
+                填寫訂位資訊
+              </h2>
+            </div>
 
-        <div className="mx-6 flex">
-          <h1>備註</h1>
-          <h1 className="mx-6">|</h1>
-          <Form>
-            <Form.Item name="remark">
-              <Input
-                name="remark"
-                onChange={(e) => setSend({ ...send, remark: e.target.value })}
-                value={send.remark}
-              />
-            </Form.Item>
-          </Form>
-        </div>
-        <Button
-          className="bg-[#1677ff]"
-          onClick={handleSend}
-          disabled={checkRef.current}
-          type="primary"
-          htmlType="button"
-        >
-          Submit
-        </Button>
+            <div className="flex justify-center">
+              <div className="mt-2">
+                <div className="mx-6 mb-8 flex text-lg font-semibold">
+                  <h1>姓名</h1>
+                  <h1 className="mx-6">|</h1>
+                  <h1>
+                    {detailInfo.userName} {detailInfo.gender}
+                  </h1>
+                </div>
+
+                <div className="mx-6 mb-8 flex text-lg font-semibold">
+                  <h1>手機</h1>
+                  <h1 className="mx-6">|</h1>
+                  <h1>{detailInfo.phone}</h1>
+                </div>
+
+                <div className="mx-6 mb-2 flex items-baseline text-lg font-semibold">
+                  <h1>人數</h1>
+                  <h1 className="mx-6">|</h1>
+                  <Form>
+                    <Form.Item
+                      rules={[
+                        {
+                          message: "請輸入人數!",
+                        },
+                      ]}
+                    >
+                      <Input
+                        name="people"
+                        className="h-10 w-20"
+                        onChange={(e) =>
+                          setSend({ ...send, people: e.target.value })
+                        }
+                        value={send.people}
+                      />
+                    </Form.Item>
+                  </Form>
+                  <h1 className="mx-2 text-lg font-semibold">人</h1>
+                </div>
+
+                <div className="mx-6 mb-8 flex items-baseline text-lg font-semibold">
+                  <h1>日期</h1>
+                  <h1 className="mx-6">|</h1>
+                  <DatePicker
+                    className="h-10 w-44"
+                    disabledDate={disabledDate}
+                    onChange={changeDate}
+                    placeholder=""
+                  />
+                </div>
+
+                <div className="mx-6 mb-4 flex text-lg font-semibold">
+                  <h1>時間</h1>
+                  <h1 className="mx-6">|</h1>
+                  <div className="flex w-96 flex-wrap">
+                    {timeList[0] === undefined ? (
+                      <div
+                        className={`mb-3 mr-3 h-10 w-36 rounded border border-solid border-gray-400 text-center leading-[40px] text-gray-500`}
+                      >
+                        <div>尚無可預約時段</div>
+                      </div>
+                    ) : (
+                      timeList
+                    )}
+                  </div>
+                </div>
+
+                <div className="mx-6 mb-6 flex text-lg font-semibold">
+                  <h1>備註</h1>
+                  <h1 className="mx-6">|</h1>
+                  <Form>
+                    <Form.Item name="remark">
+                      <Input
+                        className="h-36 w-96"
+                        name="remark"
+                        onChange={(e) =>
+                          setSend({ ...send, remark: e.target.value })
+                        }
+                        value={send.remark}
+                      />
+                    </Form.Item>
+                  </Form>
+                </div>
+
+                <div className="mb-8 flex justify-end">
+                  <Button
+                    radius="full"
+                    className="mr-8 block h-11 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg"
+                    onClick={() => navigate(`/`)}
+                  >
+                    返回首頁
+                  </Button>
+                  <Button
+                    radius="full"
+                    className="block h-11 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
+                    onClick={handleSend}
+                    disabled={checkRef.current}
+                  >
+                    確認訂位
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
       </div>
     </div>
   );

@@ -84,41 +84,54 @@ function Like() {
     switch (like) {
       case "like":
         return (
-          <>
-            <IconContext.Provider value={{ size: "50px" }}>
-              <HiThumbUp onClick={() => handleLike("eaten")} />
-            </IconContext.Provider>
-            <p>Like!</p>
-          </>
+          <div className="flex h-10 w-28 items-center justify-center rounded-xl border border-solid bg-gray-200">
+            <div className="mr-1">
+              <IconContext.Provider value={{ size: "30px" }}>
+                <HiThumbUp onClick={() => handleLike("eaten")} />
+              </IconContext.Provider>
+            </div>
+            <p className="mr-1">|</p>
+            <p className="font-semibold">Like</p>
+          </div>
         );
 
       case "dislike":
         return (
-          <>
-            <IconContext.Provider
-              value={{ size: "50px", backgroundColor: "black" }}
-            >
-              <HiThumbDown onClick={(e) => handleLike("eaten")} />
-            </IconContext.Provider>
-            <p>Oh No!</p>
-          </>
+          <div className="flex h-10 w-28 items-center justify-center rounded-xl border border-solid bg-gray-200">
+            <div className="mr-1">
+              <IconContext.Provider
+                value={{ size: "30px", backgroundColor: "black" }}
+              >
+                <HiThumbDown onClick={(e) => handleLike("eaten")} />
+              </IconContext.Provider>
+            </div>
+            <p className="mr-1">|</p>
+            <p className="font-semibold">Bad</p>
+          </div>
         );
 
       case "eaten":
         return (
           <>
-            <div className="flex">
-              <IconContext.Provider value={{ size: "50px" }}>
-                <HiOutlineThumbUp
-                  title="noLike"
-                  onClick={(e) => handleLike("like")}
-                />
-              </IconContext.Provider>
-              <p>{totalLike}</p>
-
-              <IconContext.Provider value={{ size: "50px" }}>
-                <HiOutlineThumbDown onClick={(e) => handleLike("dislike")} />
-              </IconContext.Provider>
+            <div className="flex h-10 w-28 items-center justify-center rounded-xl border border-solid bg-gray-200">
+              <div className="flex items-center justify-center">
+                <div className="mr-1">
+                  <IconContext.Provider value={{ size: "30px" }}>
+                    <HiOutlineThumbUp
+                      title="noLike"
+                      onClick={(e) => handleLike("like")}
+                    />
+                  </IconContext.Provider>
+                </div>
+                <p className="mr-1">|</p>
+                <div>
+                  <IconContext.Provider value={{ size: "30px" }}>
+                    <HiOutlineThumbDown
+                      onClick={(e) => handleLike("dislike")}
+                    />
+                  </IconContext.Provider>
+                </div>
+              </div>
             </div>
           </>
         );

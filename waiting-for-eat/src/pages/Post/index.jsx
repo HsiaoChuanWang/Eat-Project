@@ -1,3 +1,4 @@
+import { Button, Card, Image, ScrollShadow, User } from "@nextui-org/react";
 import dateFormat from "dateformat";
 import {
   collection,
@@ -10,6 +11,7 @@ import {
 import { default as React, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
+import useUserStore from "../../stores/userStore";
 
 function Post() {
   const navigation = useNavigate();
@@ -19,6 +21,7 @@ function Post() {
   const [postList, setPostList] = useState([]);
   const [mainPoster, setMainPoster] = useState({});
   const [mainTime, setMainTime] = useState("");
+  const userInfo = useUserStore((state) => state.userInfo);
 
   async function getHtml() {
     const postRef = doc(db, "post", postId);
@@ -125,55 +128,121 @@ function Post() {
       return (
         <div
           key={item.userId}
-          className="my-4 border-2 border-solid border-black px-4"
+          className="my-4 cursor-pointer"
+          onClick={() => {
+            navigation(`/post/${item.postId}`);
+          }}
         >
-          <h2>{dateFormat(item.createTime.toDate(), "yyyy/mm/dd HH:MM")}</h2>
-          <div
-            onClick={() => {
-              navigation(`/post/${item.postId}`);
-            }}
-          >
-            <div className="flex items-center">
-              <img src={item.picture} className="w-20" />
-              <h2>{item.userName}</h2>
-            </div>
+          <Card className="border border-solid border-gray-400 shadow-xl">
+            <div className="flex items-center justify-center p-2">
+              <Image
+                alt="Card background"
+                style={{ width: "100px", height: "100px" }}
+                className="rounded-xl object-cover object-center"
+                src={item.mainPicture}
+              />
 
-            <div className="flex">
-              <p className="my-6  text-xl">標題</p>
-              <p className="mx-4  my-6 text-xl">|</p>
-              <p className="my-6  text-xl">{item.title}</p>
+              <div className="mx-2 w-44 py-2">
+                <div className="flex justify-end">
+                  <p className="text-tiny font-bold">
+                    {dateFormat(item.createTime.toDate(), "yyyy/mm/dd HH:MM")}
+                  </p>
+                </div>
+                <div className="flex items-center">
+                  <User
+                    avatarProps={{
+                      src: item.picture,
+                      className: "border-2 border-solid border-gray-400",
+                    }}
+                  />
+                  <h3 className="font-bold">{item.userName}</h3>
+                </div>
+
+                <h1 className="line-clamp-2 text-xl font-bold">{item.title}</h1>
+              </div>
             </div>
-          </div>
+          </Card>
         </div>
       );
     });
 
   return (
-    <div>
-      <div className="m-8 mb-48 flex">
-        <div className="p-20">
-          <h2 className="text-2xl font-bold">{post.title}</h2>
-          <br />
-          <h2>{mainTime}</h2>
-          <div className="flex">
-            <img src={mainPoster.picture} className="w-20" />
-            <h2>{mainPoster.userName}</h2>
-          </div>
-          <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
-        </div>
-        <div>{posts}</div>
-      </div>
+    <div className="flex justify-center">
+      <div className="m-8 flex w-full max-w-[1400px] justify-between">
+        <div className="w-3/4 pr-10">
+          <h2 className="text-5xl font-black text-[#134f6c]">{post.title}</h2>
 
-      <div onClick={() => navigation(`/restaurant/${companyData.companyId}`)}>
-        <h1 className="text-2xl">餐廳資訊</h1>
-        <img src={companyData.picture} />
-        <h1>{companyData.name}</h1>
-        <h1>
-          {companyData.city}
-          {companyData.district}
-          {companyData.address}
-        </h1>
-        <h1>{companyData.phone}</h1>
+          <div className="my-4 flex items-center">
+            <div className="mr-4 rounded border-2 border-solid border-lime-400  bg-lime-200 px-1 text-lg font-bold">
+              {mainPoster.userName}
+            </div>
+            <p className="text-base font-bold">{mainTime}</p>
+          </div>
+
+          <img
+            src={mainPoster.mainPicture}
+            className="h-[500px] w-full object-cover object-center"
+          />
+
+          <div
+            className="mt-4"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          ></div>
+
+          <Card className=" w-3/4 bg-gradient-to-tr from-gray-300 to-stone-200 p-4 shadow-lg">
+            <div className="flex justify-between">
+              <div className="flex ">
+                <img
+                  onClick={() => {
+                    navigation(`/restaurant/${companyData.companyId}`);
+                  }}
+                  className="h-full w-[250px] cursor-pointer rounded-2xl object-cover object-center"
+                  src={companyData.picture}
+                />
+
+                <div className="py-4 pl-6">
+                  <h1 className="text-2xl font-black">{companyData.name}</h1>
+                  <h1 className="my-2 font-bold">
+                    {companyData.city}
+                    {companyData.district}
+                    {companyData.address}
+                  </h1>
+                  <h1 className="font-bold">{companyData.phone}</h1>
+                </div>
+              </div>
+
+              <div className="mr-14">
+                <Button
+                  radius="full"
+                  className="my-6 block h-11 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
+                  onClick={() => {
+                    if (userInfo.userId === "") {
+                      alert("請登入以進行預約");
+                    } else {
+                      navigation(`/reserve/${companyData.companyId}`);
+                    }
+                  }}
+                >
+                  前往訂位
+                </Button>
+                <Button
+                  radius="full"
+                  className="block h-11 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg"
+                  onClick={() => navigation(`/`)}
+                >
+                  返回首頁
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <div className="sticky top-24 mx-2 h-[calc(100vh-150px)] w-1/4 px-2 shadow-[-4px_0_4px_2px_rgba(0,0,0,0.16)]">
+          <h2 className="mt-2 text-2xl font-bold text-gray-500">相關食記</h2>
+          <ScrollShadow className="h-[calc(100vh-196px)] w-full">
+            {posts}
+          </ScrollShadow>
+        </div>
       </div>
     </div>
   );
