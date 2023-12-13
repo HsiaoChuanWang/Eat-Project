@@ -4,8 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 function DinerSidebar() {
   const { userId } = useParams();
   const navigate = useNavigate();
-  const [active, setActive] = useState("diner");
-  console.log(active);
+  const [active, setActive] = useState("");
 
   return (
     <>

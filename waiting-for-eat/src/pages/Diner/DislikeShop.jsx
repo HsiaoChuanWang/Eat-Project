@@ -70,8 +70,11 @@ function DislikeShop() {
     combineData.length > 0 ? (
       combineData.map((data) => {
         return (
-          <Card className="mb-8 border-2 border-solid border-gray-800 shadow-[-8px_8px_4px_2px_rgba(0,0,0,0.2)]">
-            <div key={data.favoriteId} className="relative flex items-center">
+          <Card
+            key={data.favoriteId}
+            className="mb-8 border-2 border-solid border-gray-800 shadow-[-8px_8px_4px_2px_rgba(0,0,0,0.2)]"
+          >
+            <div className="relative flex items-center">
               <div className="bg-amber-800/30 py-8 pl-6 pr-10">
                 <div className="flex h-40 w-64 items-center justify-center">
                   <img
