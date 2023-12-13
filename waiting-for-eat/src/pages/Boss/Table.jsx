@@ -1,5 +1,6 @@
 import { PushpinOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Menu } from "antd";
+import { Button, Card, ScrollShadow } from "@nextui-org/react";
+import { Form, Input, Menu } from "antd";
 import {
   addDoc,
   collection,
@@ -128,67 +129,90 @@ function Table() {
 
   return (
     <>
-      <div className="border-2 border-solid border-black">
-        <h1 className="mx-6 my-8 text-4xl font-bold">新增桌位</h1>
-        <Form>
-          <Form.Item
-            label="桌號"
-            name="number"
-            rules={[
-              {
-                required: true,
-                message: "請輸入桌號!",
-              },
-            ]}
-          >
-            <Input
-              name="number"
-              onChange={(e) =>
-                setAddTable({ ...addTable, number: e.target.value })
-              }
-              value={addTable.number}
-            />
-          </Form.Item>
+      <div className="my-12 flex justify-center ">
+        <div className="flex w-full justify-center">
+          <Card className="ml-12 mt-24 h-64 w-1/3 border-2 border-solid border-gray-400 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)]">
+            <div className="relative">
+              <h1 className="m-4 text-2xl font-black text-gray-600">
+                新增桌位
+              </h1>
+              <Form>
+                <Form.Item
+                  className="mx-6"
+                  label="桌號"
+                  name="number"
+                  rules={[
+                    {
+                      required: true,
+                      message: "請輸入桌號!",
+                    },
+                  ]}
+                >
+                  <Input
+                    name="number"
+                    onChange={(e) =>
+                      setAddTable({ ...addTable, number: e.target.value })
+                    }
+                    value={addTable.number}
+                  />
+                </Form.Item>
 
-          <Form.Item
-            label="人數"
-            name="people"
-            rules={[
-              {
-                required: true,
-                message: "請輸入桌號!",
-              },
-            ]}
-          >
-            <Input
-              name="people"
-              onChange={(e) =>
-                setAddTable({ ...addTable, people: e.target.value })
-              }
-              value={addTable.number}
-            />
-          </Form.Item>
+                <Form.Item
+                  className="mx-6"
+                  label="人數"
+                  name="people"
+                  rules={[
+                    {
+                      required: true,
+                      message: "請輸入桌號!",
+                    },
+                  ]}
+                >
+                  <Input
+                    name="people"
+                    onChange={(e) =>
+                      setAddTable({ ...addTable, people: e.target.value })
+                    }
+                    value={addTable.number}
+                  />
+                </Form.Item>
+              </Form>
+            </div>
 
-          <Button
-            className="mx-6 mb-6 bg-[#1677ff]"
-            onClick={handleAddTable}
-            type="primary"
-            htmlType="button"
-          >
-            Submit
-          </Button>
-        </Form>
+            <Button
+              className="absolute bottom-6 right-4 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
+              onClick={handleAddTable}
+              type="primary"
+              htmlType="button"
+            >
+              新增
+            </Button>
+          </Card>
+
+          <Card className="mx-10 my-6 h-96 w-[400px] border-2 border-solid border-gray-400 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)]">
+            <ScrollShadow
+              size={0}
+              hideScrollBar
+              className="h-[calc(100vh-300px)] w-full justify-center"
+            >
+              <h1 className="m-4 text-2xl font-black text-gray-600">
+                桌位列表
+              </h1>
+              <div className="flex justify-center">
+                <Menu
+                  mode="inline"
+                  openKeys={openKeys}
+                  onOpenChange={onOpenChange}
+                  style={{
+                    width: 256,
+                  }}
+                  items={items}
+                />
+              </div>
+            </ScrollShadow>
+          </Card>
+        </div>
       </div>
-      <h1 className="my-8 text-4xl font-bold">桌位列表</h1>
-      <Menu
-        mode="inline"
-        openKeys={openKeys}
-        onOpenChange={onOpenChange}
-        style={{
-          width: 256,
-        }}
-        items={items}
-      />
     </>
   );
 }

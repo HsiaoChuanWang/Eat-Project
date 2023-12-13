@@ -1,6 +1,7 @@
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
+import { ScrollShadow } from "@nextui-org/react";
 import { DatePicker } from "antd";
 import dateFormat from "dateformat";
 import {
@@ -124,7 +125,7 @@ function Schedule() {
         id: order.orderId + "$" + orderTableNumber,
         resourceId: orderTableNumber,
         display: "auto",
-        color: "#ff9f89",
+        color: "#ff850e",
         //   constraints: "businessHours",//限制時段
       });
     });
@@ -278,15 +279,15 @@ function Schedule() {
 
     return (
       <div className="flex justify-between">
-        <div>
+        <div className="ml-2 mt-4 text-base font-medium">
           {name}
           <br />
           {tel}
-          <br />
-          {remark}
         </div>
 
-        <div className="py-8">{people}人</div>
+        <div className="flex w-[80px] items-center justify-center bg-orange-800/50 ">
+          <div>{people}人</div>
+        </div>
 
         {/* <div>
           <button className={` h-8 border-2 border-solid border-black `}>
@@ -297,7 +298,7 @@ function Schedule() {
         <div>
           <div>
             <button
-              className={`my-1 h-8 border-2 border-solid border-black`}
+              className={`my-1 mr-4 h-8 rounded border-2 border-solid border-gray-600 bg-gray-400`}
               onClick={() => {
                 // if (editable === true) {
                 AddFavorite(orderId, userId);
@@ -314,7 +315,7 @@ function Schedule() {
             <button
               className={`absolute h-8 border-2 border-solid border-black ${
                 attend === "yes" && "hidden"
-              }`}
+              } `}
               onClick={() => {
                 DeleteOrder(orderId);
               }}
@@ -329,47 +330,63 @@ function Schedule() {
   }
 
   return (
-    <div>
-      <div>
-        <button
-          onClick={() => {
-            setEditable(true);
-          }}
-          className="absolute right-0 border-2 border-solid border-black"
-        >
-          移動
-        </button>
+    <div className="flex justify-center ">
+      <div className="mt-8 w-5/6">
+        {/* <div>
+          <button
+            onClick={() => {
+              setEditable(true);
+            }}
+            className="absolute right-0 border-2 border-solid border-black"
+          >
+            移動
+          </button>
 
-        <button
-          onClick={save}
-          className="absolute right-16 border-2 border-solid border-black"
-        >
-          保存
-        </button>
-      </div>
-      <div className="pt-20">
-        <DatePicker onChange={changeStartDate} />
+          <button
+            onClick={save}
+            className="absolute right-16 border-2 border-solid border-black"
+          >
+            保存
+          </button>
+        </div> */}
 
-        <FullCalendar
-          //   themeSystem="asd"
-          resourceAreaWidth={150}
-          contentHeight={"auto"}
-          slotMinWidth={100} //欄位寬度
-          height={100}
-          ref={myRef}
-          schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
-          plugins={[resourceTimelinePlugin, interactionPlugin]}
-          initialView="resourceTimeline"
-          //   selectable={true}
-          editable={editable}
-          events={events}
-          eventContent={eventContent}
-          eventDrop={MyDropEvent}
-          //   dateClick={MyAddEvent}
-          //   eventClick={MyEventClick}
-          resources={resources}
-          resourceAreaHeaderContent={"桌位/時間"} //title名
-        />
+        <div>
+          <div className="">
+            <h1 className="font-bold">選擇日期</h1>
+            <DatePicker
+              className="mb-4 border-2 border-solid border-black"
+              onChange={changeStartDate}
+            />
+          </div>
+
+          <ScrollShadow
+            size={0}
+            hideScrollBar
+            orientation="horizontal"
+            className="flex h-[calc(100vh-300px)] w-[850px] justify-center"
+          >
+            <FullCalendar
+              //   themeSystem="asd"
+              resourceAreaWidth={150}
+              contentHeight={"auto"}
+              slotMinWidth={80} //欄位寬度
+              height={"auto"}
+              ref={myRef}
+              schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
+              plugins={[resourceTimelinePlugin, interactionPlugin]}
+              initialView="resourceTimeline"
+              //   selectable={true}
+              editable={editable}
+              events={events}
+              eventContent={eventContent}
+              eventDrop={MyDropEvent}
+              //   dateClick={MyAddEvent}
+              //   eventClick={MyEventClick}
+              resources={resources}
+              resourceAreaHeaderContent={"桌位/時間"} //title名
+            />
+          </ScrollShadow>
+        </div>
       </div>
     </div>
   );

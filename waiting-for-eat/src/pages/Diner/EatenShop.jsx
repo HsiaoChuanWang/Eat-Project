@@ -223,8 +223,6 @@ function EatenShop() {
     }
   };
 
-  console.log(combineData);
-
   const companyDatas =
     combineData.length > 0 ? (
       combineData
