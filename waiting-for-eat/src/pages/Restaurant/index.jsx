@@ -214,9 +214,9 @@ function Restaurant() {
           </div>
         </div>
 
-        <div className="sticky top-0 mx-2 h-[calc(100vh-128px)] w-1/4 px-2 shadow-[-4px_0_4px_2px_rgba(0,0,0,0.16)]">
+        <div className="sticky top-24 mx-2 h-[calc(100vh-168px)] w-1/4 px-2 shadow-[-4px_0_4px_2px_rgba(0,0,0,0.16)]">
           <h2 className="mt-2 text-2xl font-bold text-gray-400">相關食記</h2>
-          <ScrollShadow className="h-[calc(100vh-160px)] w-full">
+          <ScrollShadow className="h-[calc(100vh-200px)] w-full">
             {posts}
           </ScrollShadow>
         </div>

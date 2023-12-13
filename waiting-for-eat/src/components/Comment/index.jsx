@@ -54,7 +54,7 @@ function Comment() {
               combineComment.push(newData);
             })
             .then(() => {
-              setComment(combineComment);
+              setComment([...combineComment]);
             });
         });
       });
@@ -105,7 +105,7 @@ function Comment() {
 
   return (
     <div className="flex w-full justify-center">
-      <ScrollShadow className="h-[720px] w-full">
+      <ScrollShadow hideScrollBar className="h-[720px] w-full">
         <div className="flex flex-wrap">{comments}</div>
       </ScrollShadow>
     </div>

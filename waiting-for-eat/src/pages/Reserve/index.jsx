@@ -337,7 +337,7 @@ function Reserve() {
                   <h1>時間</h1>
                   <h1 className="mx-6">|</h1>
                   <div className="flex w-96 flex-wrap">
-                    {timeList[0] === undefined ? (
+                    {send.date === "" ? (
                       <div
                         className={`mb-3 mr-3 h-10 w-36 rounded border border-solid border-gray-400 text-center leading-[40px] text-gray-500`}
                       >

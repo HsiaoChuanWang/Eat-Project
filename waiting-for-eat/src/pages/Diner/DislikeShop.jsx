@@ -1,3 +1,4 @@
+import { Card, ScrollShadow } from "@nextui-org/react";
 import {
   collection,
   doc,
@@ -9,6 +10,9 @@ import {
 import React, { useEffect, useState } from "react";
 import { IconContext } from "react-icons";
 import { HiThumbDown } from "react-icons/hi";
+import { IoMdPin } from "react-icons/io";
+import { IoRestaurant } from "react-icons/io5";
+import { PiPhoneCallFill } from "react-icons/pi";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
 
@@ -54,7 +58,7 @@ function DislikeShop() {
             companyList.push(newData);
           })
           .then(() => {
-            setCombineData(companyList);
+            setCombineData([...companyList]);
           });
       });
     });
@@ -66,51 +70,54 @@ function DislikeShop() {
     combineData.length > 0 ? (
       combineData.map((data) => {
         return (
-          <div
-            key={data.favoriteId}
-            className="relative flex items-center border-2 border-solid border-black"
-          >
-            <div className="w-64">
-              <img
-                src={data.picture}
-                onClick={() => {
-                  navigate(`/restaurant/${data.companyId}`);
-                }}
-              />
-            </div>
-            <div className=" ml-4">
-              <div className="flex">
-                <p className="my-4  text-xl">餐廳名稱</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">{data.name}</p>
+          <Card className="mb-8 border-2 border-solid border-gray-800 shadow-[-8px_8px_4px_2px_rgba(0,0,0,0.2)]">
+            <div key={data.favoriteId} className="relative flex items-center">
+              <div className="bg-amber-800/30 py-8 pl-6 pr-10">
+                <div className="flex h-40 w-64 items-center justify-center">
+                  <img
+                    className="h-full w-full cursor-pointer rounded-lg object-cover object-center"
+                    src={data.picture}
+                    onClick={() => {
+                      navigate(`/restaurant/${data.companyId}`);
+                    }}
+                  />
+                </div>
               </div>
 
-              <div className="flex">
-                <p className="my-4  text-xl">電話</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">{data.phone}</p>
+              <div className="ml-4">
+                <div className="flex items-center">
+                  <IoRestaurant className="mr-2 text-2xl" />
+                  <p className="text-lg font-bold">{data.name}</p>
+                </div>
+
+                <div className="mt-4 flex items-center">
+                  <PiPhoneCallFill className="mr-2 text-2xl" />
+                  <p className="text-lg font-bold">{data.phone}</p>
+                </div>
+
+                <div className="mt-4 flex items-center">
+                  <IoMdPin className="mr-2 text-2xl" />
+                  <p className="text-lg font-bold">
+                    {data.city}
+                    {data.district}
+                    {data.address}
+                  </p>
+                </div>
               </div>
 
-              <div className="flex">
-                <p className="my-4  text-xl">地址</p>
-                <p className="mx-4  my-4 text-xl">|</p>
-                <p className="my-4  text-xl">
-                  {data.city}
-                  {data.district}
-                  {data.address}
-                </p>
+              <div className="absolute right-4 top-4 flex w-24 items-center justify-between">
+                <div className="flex h-10 w-28 items-center justify-center rounded-xl border border-solid bg-gray-200">
+                  <div className="mr-1">
+                    <IconContext.Provider value={{ size: "30px" }}>
+                      <HiThumbDown />
+                    </IconContext.Provider>
+                  </div>
+                  <p className="mr-1">|</p>
+                  <p className="font-semibold">Bad</p>
+                </div>
               </div>
             </div>
-
-            <div className="absolute right-8 top-2 flex h-16 w-24 items-center justify-between">
-              <IconContext.Provider
-                value={{ size: "50px", backgroundColor: "black" }}
-              >
-                <HiThumbDown />
-              </IconContext.Provider>
-              <p>Oh No!</p>
-            </div>
-          </div>
+          </Card>
         );
       })
     ) : (
@@ -118,12 +125,17 @@ function DislikeShop() {
     );
 
   return (
-    <>
-      <div>
-        <h1 className="text-2xl font-bold">不好吃的餐廳</h1>
-      </div>
-      <div>{companyDatas}</div>
-    </>
+    <div className="justify-cente flex h-full items-center">
+      <ScrollShadow
+        size={0}
+        hideScrollBar
+        className="flex h-[calc(100vh-300px)] w-full justify-center"
+      >
+        <div className="flex h-full w-3/4 justify-center">
+          <div className="w-full">{companyDatas}</div>
+        </div>
+      </ScrollShadow>
+    </div>
   );
 }
 
