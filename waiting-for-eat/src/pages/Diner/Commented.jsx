@@ -1,3 +1,4 @@
+import { Button, Card, ScrollShadow } from "@nextui-org/react";
 import { Rate } from "antd";
 import dateFormat from "dateformat";
 import {
@@ -12,6 +13,8 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
+import { FaPenToSquare } from "react-icons/fa6";
+import { IoRestaurant, IoTimeSharp } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
 import useStarStore from "../../stores/starStore";
@@ -124,72 +127,82 @@ function Commented() {
         .sort((a, b) => (a.createTime > b.createTime ? -1 : 1))
         .map((data) => {
           return (
-            <div
+            <Card
               key={data.starId}
-              className="relative flex items-center border-2 border-solid border-black"
+              className="mb-8 border-2 border-solid border-gray-800 shadow-[-8px_8px_4px_2px_rgba(0,0,0,0.2)]"
             >
-              <div className="w-64">
-                <img
-                  src={data.picture}
+              <div className="relative flex items-center ">
+                <div className="bg-amber-800/30 py-10 pl-6 pr-10">
+                  <div className="flex h-40 w-64 items-center justify-center">
+                    <img
+                      className="h-full w-full cursor-pointer rounded-lg object-cover object-center"
+                      src={data.picture}
+                      onClick={() => {
+                        navigate(`/restaurant/${data.companyId}`);
+                      }}
+                    />
+                  </div>
+
+                  <div className="mt-4 flex items-center text-amber-900">
+                    <IoRestaurant className="mr-2 text-xl" />
+                    <p className="text-lg font-bold">{data.name}</p>
+                  </div>
+
+                  <div className="flex items-center text-amber-900">
+                    <IoTimeSharp className="mr-2 text-2xl" />
+                    <p className="text-lg font-bold">{data.date}</p>
+                    <p className="my-2  ml-2 text-lg  font-bold">
+                      {data.start}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="ml-4">
+                  <div className="mb-4 flex items-center">
+                    <FaPenToSquare className="mr-2 text-2xl" />
+                    <p className="mr-2 text-lg font-bold">
+                      {dateFormat(data.createTime.toDate(), "yyyy/mm/dd")}
+                    </p>
+                    <p className="text-lg font-bold">
+                      {dateFormat(data.createTime.toDate(), "HH:MM")}
+                    </p>
+                  </div>
+
+                  <div className="flex">
+                    <Rate
+                      className="text-2xl"
+                      disabled
+                      defaultValue={data.star}
+                    />
+                  </div>
+
+                  <div className="mr-28">
+                    <p className="my-4 text-xl">{data.content}</p>
+                  </div>
+                </div>
+
+                <Button
                   onClick={() => {
-                    navigate(`/restaurant/${data.companyId}`);
+                    setCompanyId(data.companyId);
+                    setCompanyName(data.name);
+                    setStarId(data.starId);
+                    navigate(`/diner/starEdit/${userId}`);
                   }}
-                />
+                  className="absolute bottom-16 right-4 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
+                >
+                  編輯
+                </Button>
+
+                <Button
+                  onClick={() => {
+                    handleDelete(data.starId, data.companyId);
+                  }}
+                  className="absolute bottom-4 right-4 mt-6 block h-10 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg"
+                >
+                  刪除
+                </Button>
               </div>
-              <div className=" ml-4">
-                <div className="flex">
-                  <p className="my-4  text-xl">用餐時間</p>
-                  <p className="mx-4  my-4 text-xl">|</p>
-                  <p className="my-4  text-xl">{data.date}</p>
-                  <p className="my-4  ml-4 text-xl">{data.start}</p>
-                </div>
-
-                <div className="flex">
-                  <p className="my-4  text-xl">餐廳名稱</p>
-                  <p className="mx-4  my-4 text-xl">|</p>
-                  <p className="my-4  text-xl">{data.name}</p>
-                </div>
-
-                <div className="flex">
-                  <Rate disabled defaultValue={data.star} />
-                </div>
-
-                <div className="flex">
-                  <p className="my-4  text-xl">撰寫時間</p>
-                  <p className="mx-4  my-4 text-xl">|</p>
-                  <p className="my-4  text-xl">
-                    {dateFormat(data.createTime.toDate(), "yyyy/mm/dd HH:MM")}
-                  </p>
-                </div>
-
-                <div className="flex">
-                  <p className="my-4  text-xl">評論內容</p>
-                  <p className="mx-4  my-4 text-xl">|</p>
-                  <p className="my-4  text-xl">{data.content}</p>
-                </div>
-              </div>
-
-              <button
-                onClick={() => {
-                  setCompanyId(data.companyId);
-                  setCompanyName(data.name);
-                  setStarId(data.starId);
-                  navigate(`/diner/starEdit/${userId}`);
-                }}
-                className="absolute bottom-12 right-8 h-8 border-2 border-solid border-black"
-              >
-                編輯
-              </button>
-
-              <button
-                onClick={() => {
-                  handleDelete(data.starId, data.companyId);
-                }}
-                className="absolute bottom-2 right-8 h-8 border-2 border-solid border-black"
-              >
-                刪除
-              </button>
-            </div>
+            </Card>
           );
         })
     ) : (
@@ -197,12 +210,17 @@ function Commented() {
     );
 
   return (
-    <>
-      <div>
-        <h1 className="text-2xl font-bold">我的評論</h1>
-      </div>
-      <div>{printDatas}</div>
-    </>
+    <div className="justify-cente flex h-full items-center">
+      <ScrollShadow
+        size={0}
+        hideScrollBar
+        className="flex h-[calc(100vh-300px)] w-full justify-center"
+      >
+        <div className="flex h-full w-3/4 justify-center">
+          <div className="w-full">{printDatas}</div>
+        </div>
+      </ScrollShadow>
+    </div>
   );
 }
 

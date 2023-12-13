@@ -12,6 +12,7 @@ import { default as React, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
 import useUserStore from "../../stores/userStore";
+import logologo from "./logologo.jpg";
 
 function Post() {
   const navigation = useNavigate();
@@ -189,7 +190,7 @@ function Post() {
             dangerouslySetInnerHTML={{ __html: post.content }}
           ></div>
 
-          <Card className=" w-3/4 bg-gradient-to-tr from-gray-300 to-stone-200 p-4 shadow-lg">
+          <Card className=" mt-8 w-3/4 bg-gradient-to-tr from-gray-300 to-stone-200 p-4 shadow-lg">
             <div className="flex justify-between">
               <div className="flex ">
                 <img
@@ -240,7 +241,20 @@ function Post() {
         <div className="sticky top-24 mx-2 h-[calc(100vh-150px)] w-1/4 px-2 shadow-[-4px_0_4px_2px_rgba(0,0,0,0.16)]">
           <h2 className="mt-2 text-2xl font-bold text-gray-500">相關食記</h2>
           <ScrollShadow className="h-[calc(100vh-196px)] w-full">
-            {posts}
+            {posts[0] === undefined ? (
+              <div className="my-4">
+                <Card className="flex h-36 w-full items-center justify-center border  border-solid border-gray-400 shadow-xl">
+                  <div className="flex items-center justify-center">
+                    <img src={logologo} className="h-20" />
+                    <h3 className="text-xl font-bold text-gray-600 ">
+                      痴吃等待你新增食記
+                    </h3>
+                  </div>
+                </Card>
+              </div>
+            ) : (
+              posts
+            )}
           </ScrollShadow>
         </div>
       </div>

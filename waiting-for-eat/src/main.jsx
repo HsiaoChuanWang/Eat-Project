@@ -3,6 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App.jsx";
+import ScrollToTop from "./components/ScrollToTop/index.jsx";
 import "./index.css";
 import Activity from "./pages/Boss/Activity.jsx";
 import ActivityEdit from "./pages/Boss/ActivityEdit.jsx";
@@ -39,6 +40,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   //   <React.StrictMode>
   <NextUIProvider>
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<Homepage />} />

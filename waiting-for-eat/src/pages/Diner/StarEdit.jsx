@@ -1,3 +1,4 @@
+import { Button, Card } from "@nextui-org/react";
 import { Rate } from "antd";
 import {
   collection,
@@ -78,12 +79,12 @@ function StarEdit() {
   }
 
   return (
-    <>
-      <div>
-        <div className="popup-content w-[600px] border-2 border-solid border-black bg-white p-20 font-bold">
-          <h1>{companyName}</h1>
+    <div className="mt-12 flex h-full w-full justify-center">
+      <Card className="flex h-[450px] w-1/2 justify-center border-2 border-solid border-gray-800 shadow-[-8px_8px_4px_2px_rgba(0,0,0,0.2)]">
+        <div className="h-full p-12">
+          <h1 className="mb-4 text-xl font-bold">{companyName}</h1>
           <Rate
-            className="block px-20 text-4xl"
+            className="mb-4 block px-24 text-4xl"
             onChange={(e) => {
               setStar(e);
             }}
@@ -91,7 +92,7 @@ function StarEdit() {
           />
 
           <textarea
-            className="w-96 border-2 border-solid border-black"
+            className="h-44 w-full rounded-lg border-2 border-solid border-black p-4"
             size="lg"
             onChange={(e) => {
               setContent(e.target.value);
@@ -100,8 +101,17 @@ function StarEdit() {
           />
 
           <div>
-            <button
-              className="border-2 border-solid border-black "
+            <Button
+              className="absolute bottom-12 right-8 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
+              onClick={() => {
+                navigate(`/diner/commented/${userId}`);
+                handleUpdate();
+              }}
+            >
+              送出
+            </Button>
+            <Button
+              className="absolute bottom-12 right-32 mt-6 block h-10 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg"
               onClick={() => {
                 setStar("");
                 setContent("");
@@ -109,20 +119,11 @@ function StarEdit() {
               }}
             >
               取消
-            </button>
-            <button
-              className="border-2 border-solid border-black"
-              onClick={() => {
-                navigate(`/diner/commented/${userId}`);
-                handleUpdate();
-              }}
-            >
-              送出
-            </button>
+            </Button>
           </div>
         </div>
-      </div>
-    </>
+      </Card>
+    </div>
   );
 }
 

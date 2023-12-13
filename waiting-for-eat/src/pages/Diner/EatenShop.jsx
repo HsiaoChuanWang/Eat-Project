@@ -1,3 +1,4 @@
+import { Button, Card, ScrollShadow } from "@nextui-org/react";
 import {
   addDoc,
   collection,
@@ -18,6 +19,9 @@ import {
   HiThumbDown,
   HiThumbUp,
 } from "react-icons/hi";
+import { IoMdPin } from "react-icons/io";
+import { IoRestaurant } from "react-icons/io5";
+import { PiPhoneCallFill } from "react-icons/pi";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
 import useStarStore from "../../stores/starStore";
@@ -157,47 +161,69 @@ function EatenShop() {
     switch (status) {
       case "like":
         return (
-          <>
-            <IconContext.Provider value={{ size: "50px" }}>
-              <HiThumbUp onClick={() => handleLike(favoriteId, "eaten")} />
-            </IconContext.Provider>
-            <p>Like!</p>
-          </>
+          <div className="flex h-10 w-28 items-center justify-center rounded-xl border border-solid bg-gray-200">
+            <div className="mr-1">
+              <IconContext.Provider value={{ size: "30px" }}>
+                <HiThumbUp
+                  className="cursor-pointer"
+                  onClick={() => handleLike(favoriteId, "eaten")}
+                />
+              </IconContext.Provider>
+            </div>
+            <p className="mr-1">|</p>
+            <p className="font-semibold">Like</p>
+          </div>
         );
 
       case "dislike":
         return (
-          <>
-            <IconContext.Provider
-              value={{ size: "50px", backgroundColor: "black" }}
-            >
-              <HiThumbDown onClick={(e) => handleLike(favoriteId, "eaten")} />
-            </IconContext.Provider>
-            <p>Oh No!</p>
-          </>
+          <div className="flex h-10 w-28 items-center justify-center rounded-xl border border-solid bg-gray-200">
+            <div className="mr-1">
+              <IconContext.Provider
+                value={{ size: "30px", backgroundColor: "black" }}
+              >
+                <HiThumbDown
+                  className="cursor-pointer"
+                  onClick={(e) => handleLike(favoriteId, "eaten")}
+                />
+              </IconContext.Provider>
+            </div>
+            <p className="mr-1">|</p>
+            <p className="font-semibold">Bad</p>
+          </div>
         );
 
       case "eaten":
         return (
           <>
-            <div className="flex">
-              <IconContext.Provider value={{ size: "50px" }}>
-                <HiOutlineThumbUp
-                  title="noLike"
-                  onClick={(e) => handleLike(favoriteId, "like")}
-                />
-              </IconContext.Provider>
-
-              <IconContext.Provider value={{ size: "50px" }}>
-                <HiOutlineThumbDown
-                  onClick={(e) => handleLike(favoriteId, "dislike")}
-                />
-              </IconContext.Provider>
+            <div className="flex h-10 w-28 items-center justify-center rounded-xl border border-solid bg-gray-200">
+              <div className="flex items-center justify-center">
+                <div className="mr-1">
+                  <IconContext.Provider value={{ size: "30px" }}>
+                    <HiOutlineThumbUp
+                      className="cursor-pointer"
+                      title="noLike"
+                      onClick={(e) => handleLike(favoriteId, "like")}
+                    />
+                  </IconContext.Provider>
+                </div>
+                <p className="mr-1">|</p>
+                <div>
+                  <IconContext.Provider value={{ size: "30px" }}>
+                    <HiOutlineThumbDown
+                      className="cursor-pointer"
+                      onClick={(e) => handleLike(favoriteId, "dislike")}
+                    />
+                  </IconContext.Provider>
+                </div>
+              </div>
             </div>
           </>
         );
     }
   };
+
+  console.log(combineData);
 
   const companyDatas =
     combineData.length > 0 ? (
@@ -205,75 +231,86 @@ function EatenShop() {
         .sort((a, b) => (a.favoriteId > b.favoriteId ? 1 : -1))
         .map((data) => {
           return (
-            <div
+            <Card
               key={data.favoriteId}
-              className="relative my-2 flex items-center border-2 border-solid border-black px-2"
+              className="mb-8 border-2 border-solid border-gray-800 shadow-[-8px_8px_4px_2px_rgba(0,0,0,0.2)]"
             >
-              <div className="w-64">
-                <img
-                  src={data.picture}
-                  onClick={() => {
-                    navigate(`/restaurant/${data.companyId}`);
-                  }}
-                />
-              </div>
-              <div className=" ml-4">
-                <div className="flex">
-                  <p className="my-4  text-xl">餐廳名稱</p>
-                  <p className="mx-4  my-4 text-xl">|</p>
-                  <p className="my-4  text-xl">{data.name}</p>
+              <div className="relative flex items-center">
+                <div className="bg-amber-800/30 py-8 pl-6 pr-10">
+                  <div className="flex h-40 w-64 items-center justify-center">
+                    <img
+                      className="h-full w-full cursor-pointer rounded-lg object-cover object-center"
+                      src={data.picture}
+                      onClick={() => {
+                        navigate(`/restaurant/${data.companyId}`);
+                      }}
+                    />
+                  </div>
                 </div>
 
-                <div className="flex">
-                  <p className="my-4  text-xl">電話</p>
-                  <p className="mx-4  my-4 text-xl">|</p>
-                  <p className="my-4  text-xl">{data.phone}</p>
+                <div className="ml-4">
+                  <div className="flex items-center">
+                    <IoRestaurant className="mr-2 text-2xl" />
+                    <p className="text-lg font-bold">{data.name}</p>
+                  </div>
+
+                  <div className="mt-4 flex items-center">
+                    <PiPhoneCallFill className="mr-2 text-2xl" />
+                    <p className="text-lg font-bold">{data.phone}</p>
+                  </div>
+
+                  <div className="mt-4 flex items-center">
+                    <IoMdPin className="mr-2 text-2xl" />
+                    <p className="text-lg font-bold">
+                      {data.city}
+                      {data.district}
+                      {data.address}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="flex">
-                  <p className="my-4  text-xl">地址</p>
-                  <p className="mx-4  my-4 text-xl">|</p>
-                  <p className="my-4  text-xl">
-                    {data.city}
-                    {data.district}
-                    {data.address}
-                  </p>
+                <div className="absolute right-4 top-4 flex w-24 items-center justify-between">
+                  {favoriteState(data.favoriteId, data.status)}
+                </div>
+
+                <div
+                  className={` ${
+                    data.canWriteComment === false && "hidden"
+                  } absolute bottom-12 right-8 h-8 `}
+                ></div>
+
+                <div
+                  className={` ${data.canWriteComment === false && "hidden"}`}
+                >
+                  <Button
+                    onClick={() => {
+                      setCompanyName(data.name);
+                      setOrderId(data.orderId);
+                      setCompanyId(data.companyId);
+                      navigate(`/diner/addStar/${userId}`);
+                    }}
+                    className={` ${
+                      data.canWriteComment === false && "hidden"
+                    } absolute bottom-16 right-4 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg`}
+                  >
+                    寫評論
+                  </Button>
+                </div>
+
+                <div className={` ${data.canWritePost === false && "hidden"}`}>
+                  <Button
+                    onClick={() =>
+                      navigate(`/diner/textEditor/${data.orderId}`)
+                    }
+                    className={` ${
+                      data.canWritePost === false && "hidden"
+                    } absolute bottom-4 right-4 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg`}
+                  >
+                    寫食記
+                  </Button>
                 </div>
               </div>
-
-              <div className="absolute right-8 top-2 flex h-16 w-24 items-center justify-between">
-                {favoriteState(data.favoriteId, data.status)}
-              </div>
-
-              <div
-                className={` ${
-                  data.canWriteComment === false && "hidden"
-                } absolute bottom-12 right-8 h-8 `}
-              ></div>
-
-              <button
-                onClick={() => {
-                  setCompanyName(data.name);
-                  setOrderId(data.orderId);
-                  setCompanyId(data.companyId);
-                  navigate(`/diner/addStar/${userId}`);
-                }}
-                className={` ${
-                  data.canWriteComment === false && "hidden"
-                } absolute bottom-12 right-8 h-8 border-2 border-solid border-black`}
-              >
-                寫評論
-              </button>
-
-              <button
-                onClick={() => navigate(`/diner/textEditor/${data.orderId}`)}
-                className={` ${
-                  data.canWritePost === false && "hidden"
-                } absolute bottom-2 right-8 h-8 border-2 border-solid border-black`}
-              >
-                寫食記
-              </button>
-            </div>
+            </Card>
           );
         })
     ) : (
@@ -281,12 +318,17 @@ function EatenShop() {
     );
 
   return (
-    <>
-      <div>
-        <h1 className="text-2xl font-bold">吃過的餐廳</h1>
-      </div>
-      <div>{companyDatas}</div>
-    </>
+    <div className="justify-cente flex h-full items-center">
+      <ScrollShadow
+        size={0}
+        hideScrollBar
+        className="flex h-[calc(100vh-300px)] w-full justify-center"
+      >
+        <div className="flex h-full w-3/4 justify-center">
+          <div className="w-full">{companyDatas}</div>
+        </div>
+      </ScrollShadow>
+    </div>
   );
 }
 
