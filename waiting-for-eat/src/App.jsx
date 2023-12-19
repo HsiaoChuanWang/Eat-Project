@@ -1,3 +1,4 @@
+import { ConfigProvider } from "antd";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
@@ -54,9 +55,32 @@ function App() {
 
   return (
     <>
-      <Header />
-      <Outlet />
-      <Footer />
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "#ff850e",
+            algorithm: true,
+            // colorBgContainer: "black",
+            // colorBorder: "gray",
+
+            // fontSize: "3xl",
+          },
+          components: {
+            Menu: {
+              //   colorItemText: "white",
+              //   itemColor: "red",
+              colorPrimary: "#ff850e",
+              colorItemBg: "#e5e7eb",
+              colorSubItemBg: "#f3f4f6",
+              algorithm: true, // 启用算法
+            },
+          },
+        }}
+      >
+        <Header />
+        <Outlet />
+        <Footer />
+      </ConfigProvider>
     </>
   );
 }

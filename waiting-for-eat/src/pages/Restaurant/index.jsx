@@ -8,6 +8,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Comment from "../../components/Comment";
@@ -91,14 +92,19 @@ function Restaurant() {
     .sort((a, b) => (a.createTime > b.createTime ? -1 : 1))
     .map((item) => {
       return (
-        <div
+        <motion.div
+          whileHover={{
+            scale: 1.05,
+            transition: { duration: 0.15 },
+          }}
+          whileTap={{ scale: 0.9 }}
           key={item.userId}
           className="my-4 cursor-pointer"
           onClick={() => {
             navigation(`/post/${item.postId}`);
           }}
         >
-          <Card className="border border-solid border-gray-400 shadow-xl">
+          <Card className="scale-95 border border-solid border-gray-400 shadow-xl">
             <div className="flex items-center justify-center p-2">
               <Image
                 alt="Card background"
@@ -127,13 +133,13 @@ function Restaurant() {
               </div>
             </div>
           </Card>
-        </div>
+        </motion.div>
       );
     });
 
   return (
-    <div className=" flex justify-center">
-      <div className="m-8 mb-16 flex w-full max-w-[1400px] justify-between">
+    <div className=" mb-4 flex justify-center">
+      <div className="m-8 flex w-full max-w-[1400px] justify-between">
         <div className="mr-8 w-3/4">
           <div className="pb-6">
             <div>
@@ -167,7 +173,12 @@ function Restaurant() {
                 {data.menu ? (
                   data.menu.map((picture, index) => (
                     <div className="min-w-[200px]" key={index}>
-                      <img
+                      <motion.img
+                        whileHover={{
+                          scale: 1.1,
+                          transition: { duration: 0.15 },
+                        }}
+                        whileTap={{ scale: 0.9 }}
                         className="cursor-pointer px-2"
                         src={picture}
                         onClick={() => {
@@ -214,28 +225,31 @@ function Restaurant() {
           </div>
         </div>
 
-        <div className="sticky top-24 mx-2 h-[calc(100vh-168px)] w-1/4 px-2 shadow-[-4px_0_4px_2px_rgba(0,0,0,0.16)]">
-          <h2 className="mt-2 text-2xl font-bold text-gray-400">相關食記</h2>
-          <ScrollShadow className="h-[calc(100vh-200px)] w-full">
+        <div className="sticky top-28 mx-2 h-[calc(100vh-148px)] w-1/4 px-2 shadow-[-4px_0_4px_2px_rgba(0,0,0,0.16)]">
+          <h2 className="mt-4 text-2xl font-bold text-gray-400">相關食記</h2>
+          <ScrollShadow hideScrollBar className="h-[calc(100vh-196px)] w-full">
             {posts}
           </ScrollShadow>
         </div>
       </div>
 
-      <div className="fixed bottom-4 flex w-full justify-center">
-        <Button
-          onClick={() => {
-            if (userInfo.userId === "") {
-              alert("請登入以進行預約");
-            } else {
-              navigation(`/reserve/${companyId}`);
-            }
-          }}
-          radius="full"
-          className="h-12 w-[1300px] rounded-lg bg-[#ff850e]  text-center text-2xl font-black text-white shadow-lg"
-        >
-          線上預約
-        </Button>
+      <div className="fixed bottom-4 flex w-full max-w-[1400px]">
+        <div className="h-12 w-[calc(75%-24px)] bg-white">
+          <Button
+            onClick={() => {
+              if (userInfo.userId === "") {
+                alert("請登入以進行預約");
+              } else {
+                navigation(`/reserve/${companyId}`);
+              }
+            }}
+            radius="full"
+            className="mx-auto h-12 w-full rounded-lg bg-[#ff850e] text-center text-2xl font-black text-white shadow-lg"
+          >
+            線上預約
+          </Button>
+        </div>
+        <div className="w-1/4"></div>
       </div>
     </div>
   );

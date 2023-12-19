@@ -1,14 +1,22 @@
+import { Button } from "@nextui-org/react";
 import { Form, Select } from "antd";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import db from "../../firebase";
 import useSearchStore from "../../stores/searchStore";
 import useUserStore from "../../stores/userStore";
+import Carousel from "./Carousel";
+import banner01 from "./banner01.jpg";
+import banner02 from "./banner02.jpg";
+import banner03 from "./banner03.jpg";
 import bbq from "./bbq.jpg";
+import boss from "./boss.png";
 import breakfast2 from "./breakfast2.jpg";
+import diner from "./diner.png";
 import hotpot from "./hotpot.jpg";
-import mainPicture from "./mainPicture.png";
 import smalleat from "./smalleat.jpg";
 import steak from "./steak.jpg";
 import sweet from "./sweet.jpg";
@@ -22,6 +30,8 @@ function HomePage() {
   const userInfo = useUserStore((state) => state.userInfo);
   const companyRef = collection(db, "company");
   const navigate = useNavigate();
+  const scrollRef = useRef();
+  const banners = [banner01, banner02, banner03];
 
   useEffect(() => {
     let companyList = [];
@@ -143,9 +153,9 @@ function HomePage() {
   }
 
   //照片選擇食物類別
-  function handleCategory(e) {
+  function handleCategory(name) {
     setSearchArray([]);
-    getCategory(e.target.title);
+    getCategory(name);
   }
 
   async function getCategory(item) {
@@ -169,22 +179,107 @@ function HomePage() {
           return resultArray;
         })
         .then((resultArray) => {
-          const finalArray = resultArray.sort((a, b) =>
-            a.totalStar > b.totalStar ? -1 : 1,
-          );
+          const finalArray = resultArray.sort((a, b) => {
+            if (a.totalStar === b.totalStar) {
+              return a.companyId > b.companyId ? -1 : 1;
+            } else {
+              return a.totalStar > b.totalStar ? -1 : 1;
+            }
+          });
           setSearchArray([...finalArray]);
         });
     });
     navigate(`/search`);
   }
 
+  const handleClick = () => {
+    console.log(scrollRef);
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div>
-      <div>
-        <img src={mainPicture} className="w-full" />
+      <div className="relative">
+        <Carousel />
+        <div className="absolute bottom-0 h-[400px] w-full bg-black/30"></div>
+        <div className="absolute bottom-12 right-48 items-center justify-center">
+          <div className="text-white/90">
+            <h1 className="text-right text-5xl font-bold">痴吃等待</h1>
+            <h1 className="text-right text-2xl font-bold">Waiting for eat</h1>
+            <h1 className="text-right text-xl font-black">
+              這個世界除了筷子，什麼都可以放下
+            </h1>
+
+            <div
+              className="mt-2 flex cursor-pointer justify-end"
+              onClick={handleClick}
+            >
+              <IoIosArrowDropdownCircle className="animate-[bounce_1s_infinite] text-3xl text-white " />
+              <h1 className="ml-2 text-lg font-bold">開始查詢餐廳</h1>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="my-8">
+      <motion.div
+        whileInView={{ x: 0, opacity: 1 }}
+        transition={{
+          ease: "linear",
+          duration: 0.5,
+          //   x: { duration: 1 },
+        }}
+        initial={{ x: -50, opacity: 0 }}
+        className="my-16 flex items-center justify-center"
+      >
+        <div>
+          <img className="h-[240px]" src={diner}></img>
+        </div>
+
+        <div className="ml-16 leading-8">
+          <div className="mb-2 text-2xl font-bold">
+            <span>動動手指，</span>
+            <span className="text-[#ff6e06]">探索你所不知道的熱門美食。</span>
+          </div>
+
+          <div className="text-gray-600">
+            <h1>以店名、地區、食物種類快速搜尋餐廳，</h1>
+            <h1>查看相關評論及食記，準確下訂感興趣的餐廳，</h1>
+            <h1>記錄每間吃過的餐廳，避免再度光臨不合口味的餐廳。</h1>
+          </div>
+        </div>
+      </motion.div>
+
+      <motion.div
+        whileInView={{ x: 0, opacity: 1 }}
+        transition={{
+          ease: "linear",
+          duration: 0.5,
+          //   x: { duration: 1 },
+        }}
+        initial={{ x: 50, opacity: 0 }}
+        className="my-16  flex items-center justify-center"
+      >
+        <div className="mr-16 leading-8">
+          <div className="mb-2 text-2xl font-bold">
+            <span>敲敲鍵盤，</span>
+            <span className="text-[#ff6e06]">輕鬆上架你的餐廳。</span>
+          </div>
+
+          <div className="text-gray-600">
+            <h1>編輯相關資訊、菜單、活動，</h1>
+            <h1>指定各時段可訂位人數，</h1>
+            <h1>使用日曆查看每天預約狀況。</h1>
+          </div>
+        </div>
+
+        <div>
+          <img className="h-[240px]" src={boss}></img>
+        </div>
+      </motion.div>
+
+      <div className="h-24" ref={scrollRef}></div>
+
+      <div className="py-8">
         <div className="flex justify-center">
           <h1 className="text-4xl font-bold">Waiting for Eat?</h1>
         </div>
@@ -200,15 +295,14 @@ function HomePage() {
             <Form className="flex">
               <Form.Item className="rounded-lg border-2 border-solid border-[#ff6e06]">
                 <Select
+                  placeholder="搜尋餐廳"
                   className="h-10"
-                  name="category"
                   onChange={(e) => setSearchName(e)}
                   value={searchName}
                   showSearch
                   style={{
                     width: 200,
                   }}
-                  placeholder="搜尋餐廳"
                   optionFilterProp="children"
                   filterOption={(input, option) =>
                     (option?.label ?? "").includes(input)
@@ -216,12 +310,12 @@ function HomePage() {
                   options={restaurants}
                 />
               </Form.Item>
-              <button
-                className="h-10 rounded-lg border bg-[#ff6e06] px-4 py-1 text-center text-xl font-semibold text-white"
+              <Button
+                className="ml-1 h-11 rounded-lg border bg-[#ff6e06] px-4 py-1 text-center text-xl font-semibold text-white"
                 onClick={handleRestaurant}
               >
                 餐廳搜尋
-              </button>
+              </Button>
             </Form>
           </div>
 
@@ -245,12 +339,12 @@ function HomePage() {
                   options={city}
                 />
               </Form.Item>
-              <button
-                className="h-10 rounded-lg border bg-[#ff6e06] px-4 py-1 text-center text-xl font-semibold text-white"
+              <Button
+                className="ml-1 h-11 rounded-lg border bg-[#ff6e06] px-4 py-1 text-center text-xl font-semibold text-white"
                 onClick={handlePlace}
               >
                 搜尋地區
-              </button>
+              </Button>
             </Form>
           </div>
         </div>
@@ -258,42 +352,97 @@ function HomePage() {
 
       <div className="flex justify-center">
         <div className="mb-8 flex max-w-[1440px] flex-wrap justify-center">
-          <img
-            className="mx-8 my-8 w-96 cursor-pointer"
-            src={hotpot}
-            title="0"
-            onClick={(e) => handleCategory(e)}
-          />
-          <img
-            className="mx-8 my-8 w-96 cursor-pointer"
-            src={bbq}
-            title="1"
-            onClick={(e) => handleCategory(e)}
-          />
-          <img
-            className="mx-8 my-8 w-96 cursor-pointer"
-            src={steak}
-            title="1"
-            onClick={(e) => handleCategory(e)}
-          />
-          <img
-            className="mx-8 my-8 w-96 cursor-pointer"
-            src={smalleat}
-            title="4"
-            onClick={(e) => handleCategory(e)}
-          />
-          <img
-            className="mx-8 my-8 w-96 cursor-pointer"
-            src={sweet}
-            title="1"
-            onClick={(e) => handleCategory(e)}
-          />
-          <img
-            className="mx-8 my-8 w-96 cursor-pointer"
-            src={breakfast2}
-            title="1"
-            onClick={(e) => handleCategory(e)}
-          />
+          <div
+            onClick={() => handleCategory("0")}
+            className="card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
+          >
+            <img
+              className="card-zoom-image absolute h-full w-full transform transition-all duration-500 ease-in-out"
+              src={hotpot}
+              //   title="0"
+            />
+            <div className="absolute h-full w-full bg-black/30"></div>
+            <div className="card-zoom-text absolute scale-150 transform text-center text-white transition-all duration-500 ease-in-out">
+              <h1 className="text-4xl font-black">火鍋</h1>
+              <h2 className="text-lg font-black">HOTPOT</h2>
+            </div>
+          </div>
+
+          <div
+            onClick={() => handleCategory("1")}
+            className="card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
+          >
+            <img
+              className="card-zoom-image absolute h-full w-full transform transition-all duration-500 ease-in-out"
+              src={bbq}
+              //   title="0"
+            />
+            <div className="absolute h-full w-full bg-black/30"></div>
+            <div className="card-zoom-text absolute scale-150 transform text-center text-white transition-all duration-500 ease-in-out">
+              <h1 className="text-4xl font-black">燒烤</h1>
+              <h2 className="text-lg font-black">BARBECUE</h2>
+            </div>
+          </div>
+
+          <div
+            onClick={() => handleCategory("2")}
+            className="card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
+          >
+            <img
+              className="card-zoom-image absolute h-full w-full transform transition-all duration-500 ease-in-out"
+              src={steak}
+            />
+            <div className="absolute h-full w-full bg-black/40"></div>
+            <div className="card-zoom-text absolute scale-150 transform text-center text-white transition-all duration-500 ease-in-out">
+              <h1 className="text-4xl font-black">牛排</h1>
+              <h2 className="text-lg font-black">STEAKHOUSE</h2>
+            </div>
+          </div>
+
+          <div
+            onClick={() => handleCategory("3")}
+            className="card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
+          >
+            <img
+              className="card-zoom-image absolute h-full w-full transform transition-all duration-500 ease-in-out"
+              src={sweet}
+            />
+            <div className="absolute h-full w-full bg-black/40"></div>
+            <div className="card-zoom-text absolute scale-150 transform text-center text-white transition-all duration-500 ease-in-out">
+              <h1 className="text-4xl font-black">甜點</h1>
+              <h2 className="text-lg font-black">DESSERT</h2>
+            </div>
+          </div>
+
+          <div
+            onClick={() => handleCategory("4")}
+            className="card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
+          >
+            <img
+              className="card-zoom-image absolute h-full w-full transform transition-all duration-500 ease-in-out"
+              src={smalleat}
+            />
+            <div className="absolute h-full w-full bg-black/40"></div>
+            <div className="card-zoom-text absolute scale-150 transform text-center text-white transition-all duration-500 ease-in-out">
+              <h1 className="text-4xl font-black">小吃</h1>
+              <h2 className="text-lg font-black">STREET FOOD</h2>
+            </div>
+          </div>
+
+          <div
+            onClick={() => handleCategory("5")}
+            className="card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
+          >
+            <img
+              className="card-zoom-image absolute h-full w-full transform transition-all duration-500 ease-in-out"
+              src={breakfast2}
+            />
+            <div className="absolute h-full w-full bg-black/40"></div>
+            <div className="card-zoom-text absolute scale-150 transform text-center text-white transition-all duration-500 ease-in-out">
+              <h1 className="text-4xl font-black">早餐</h1>
+              <h2 className="text-lg font-black">BREAKFAST</h2>
+            </div>
+          </div>
         </div>
       </div>
     </div>

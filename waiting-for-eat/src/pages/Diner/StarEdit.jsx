@@ -80,7 +80,7 @@ function StarEdit() {
 
   return (
     <div className="mt-12 flex h-full w-full justify-center">
-      <Card className="flex h-[450px] w-1/2 justify-center border-2 border-solid border-gray-800 shadow-[-8px_8px_4px_2px_rgba(0,0,0,0.2)]">
+      <Card className="flex h-[450px] w-1/2 justify-center border-2 border-solid border-gray-300 shadow-2xl">
         <div className="h-full p-12">
           <h1 className="mb-4 text-xl font-bold">{companyName}</h1>
           <Rate
@@ -92,7 +92,7 @@ function StarEdit() {
           />
 
           <textarea
-            className="h-44 w-full rounded-lg border-2 border-solid border-black p-4"
+            className="h-44 w-full rounded-lg border-2 border-solid border-gray-200 p-4"
             size="lg"
             onChange={(e) => {
               setContent(e.target.value);

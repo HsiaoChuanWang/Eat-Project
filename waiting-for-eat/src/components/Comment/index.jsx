@@ -9,6 +9,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import db from "../../firebase";
@@ -64,8 +65,13 @@ function Comment() {
     .sort((a, b) => (a.createTime > b.createTime ? -1 : 1))
     .map((item, index) => {
       return (
-        <div
+        <motion.div
           key={index}
+          whileHover={{
+            scale: 1.05,
+            transition: { duration: 0.15 },
+          }}
+          whileTap={{ scale: 0.9 }}
           className="w-xs max-w-xs cursor-pointer p-4"
           onClick={() => {
             if (show === false) {
@@ -93,13 +99,18 @@ function Comment() {
               </p>
             </div>
 
-            <Rate disabled allowHalf defaultValue={item.star} />
+            <Rate
+              disabled
+              allowHalf
+              defaultValue={item.star}
+              className="my-2"
+            />
 
             <h2 className={`${show === false && "line-clamp-4"} text-base`}>
               {item.content}
             </h2>
           </Card>
-        </div>
+        </motion.div>
       );
     });
 

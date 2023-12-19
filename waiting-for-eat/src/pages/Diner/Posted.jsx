@@ -1,4 +1,4 @@
-import { Button, Card, ScrollShadow } from "@nextui-org/react";
+import { Button, Card, ScrollShadow, Spinner } from "@nextui-org/react";
 import dateFormat from "dateformat";
 import {
   collection,
@@ -9,6 +9,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { FaPenToSquare } from "react-icons/fa6";
 import { IoRestaurant, IoTimeSharp } from "react-icons/io5";
@@ -78,82 +79,93 @@ function Posted() {
     combineData.length > 0 ? (
       combineData
         .sort((a, b) => (a.createTime > b.createTime ? -1 : 1))
-        .map((data) => {
+        .map((data, i) => {
           return (
-            <Card
+            <motion.div
+              animate={{ x: 0, opacity: 1, transition: { delay: 0.1 * i } }}
+              initial={{ x: -50, opacity: 0 }}
               key={data.postId}
-              className="mb-8 border-2 border-solid border-gray-800 shadow-[-8px_8px_4px_2px_rgba(0,0,0,0.2)]"
             >
-              <div className="relative flex items-center">
-                <div className="bg-amber-800/30 py-10 pl-6 pr-10">
-                  <div className="flex h-40 w-64 items-center justify-center">
-                    <img
-                      className="h-full w-full cursor-pointer rounded-lg object-cover object-center"
-                      src={data.mainPicture}
-                      onClick={() => {
-                        navigate(`/post/${data.postId}`);
-                      }}
-                    />
+              <Card className="border-2 shadow-xl">
+                <div className="relative flex items-center">
+                  <div className="bg-amber-800/30 p-6 py-8">
+                    <div className="flex h-48 w-64 items-center justify-center">
+                      <img
+                        className="h-full w-full cursor-pointer rounded-lg object-cover object-center"
+                        src={data.mainPicture}
+                        onClick={() => {
+                          navigate(`/post/${data.postId}`);
+                        }}
+                      />
+                    </div>
                   </div>
+
+                  <div className="ml-4 pr-4">
+                    <div>
+                      <p
+                        className="my-4 cursor-pointer text-2xl font-black text-[#134f6c]"
+                        onClick={() => {
+                          navigate(`/post/${data.postId}`);
+                        }}
+                      >
+                        {data.title}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center">
+                      <IoRestaurant className="mr-2 text-2xl" />
+                      <p className="text-lg font-bold">{data.name}</p>
+                    </div>
+
+                    <div className="flex items-center">
+                      <IoTimeSharp className="mr-2 text-2xl" />
+                      <p className="text-lg font-bold">{data.date}</p>
+                      <p className="my-4  ml-2 text-lg  font-bold">
+                        {data.start}
+                      </p>
+                    </div>
+
+                    <div className="mb-4 flex items-center">
+                      <FaPenToSquare className="mr-2 text-2xl" />
+                      <p className="mr-2 text-lg font-bold">
+                        {dateFormat(data.createTime.toDate(), "yyyy/mm/dd")}
+                      </p>
+                      <p className="text-lg font-bold">
+                        {dateFormat(data.createTime.toDate(), "HH:MM")}
+                      </p>
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={() => {
+                      navigate(`/diner/postedEdit/${data.postId}`);
+                    }}
+                    className=" absolute bottom-16 right-4 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
+                  >
+                    編輯
+                  </Button>
+
+                  <Button
+                    onClick={() => handleDelete(data.postId)}
+                    className=" absolute bottom-4 right-4 mt-6 block h-10 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg"
+                  >
+                    刪除
+                  </Button>
                 </div>
-
-                <div className="ml-4 pr-4">
-                  <div>
-                    <p
-                      className="my-4 cursor-pointer text-2xl font-black text-[#134f6c]"
-                      onClick={() => {
-                        navigate(`/post/${data.postId}`);
-                      }}
-                    >
-                      {data.title}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center">
-                    <IoRestaurant className="mr-2 text-2xl" />
-                    <p className="text-lg font-bold">{data.name}</p>
-                  </div>
-
-                  <div className="flex items-center">
-                    <IoTimeSharp className="mr-2 text-2xl" />
-                    <p className="text-lg font-bold">{data.date}</p>
-                    <p className="my-4  ml-2 text-lg  font-bold">
-                      {data.start}
-                    </p>
-                  </div>
-
-                  <div className="mb-4 flex items-center">
-                    <FaPenToSquare className="mr-2 text-2xl" />
-                    <p className="mr-2 text-lg font-bold">
-                      {dateFormat(data.createTime.toDate(), "yyyy/mm/dd")}
-                    </p>
-                    <p className="text-lg font-bold">
-                      {dateFormat(data.createTime.toDate(), "HH:MM")}
-                    </p>
-                  </div>
-                </div>
-
-                <Button
-                  onClick={() => {
-                    navigate(`/diner/postedEdit/${data.postId}`);
-                  }}
-                  className=" absolute bottom-16 right-4 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
-                >
-                  編輯
-                </Button>
-
-                <Button
-                  onClick={() => handleDelete(data.postId)}
-                  className=" absolute bottom-4 right-4 mt-6 block h-10 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg"
-                >
-                  刪除
-                </Button>
-              </div>
-            </Card>
+              </Card>
+            </motion.div>
           );
         })
     ) : (
-      <h1 key="no">未有相關資訊</h1>
+      <div key="no" className=" flex h-full justify-center">
+        <Spinner
+          label="加載中"
+          color="warning"
+          labelColor="warning"
+          className="font-black"
+          size="lg"
+        />
+      </div>
     );
 
   return (

@@ -1,3 +1,4 @@
+import { Card, ScrollShadow } from "@nextui-org/react";
 import { useLoadScript } from "@react-google-maps/api";
 import { Button, Form, Input, Radio, Select } from "antd";
 import { doc, updateDoc } from "firebase/firestore";
@@ -82,207 +83,275 @@ function BossInfoEdit() {
   }
 
   return (
-    <>
-      <h2 className="p-6 text-center text-xl">負責人資訊</h2>
-      <Form
-        className="m-4"
-        name="basic"
-        labelCol={{
-          span: 4,
-        }}
-        wrapperCol={{
-          span: 16,
-        }}
-        style={{
-          maxWidth: 600,
-        }}
-        autoComplete="off"
-      >
-        <Form.Item label="姓名">
-          <Input
-            name="userName"
-            onChange={(e) =>
-              setUpdateUser({
-                ...updateUser,
-                userName: e.target.value,
-              })
-            }
-            value={updateUser.userName}
-          />
-        </Form.Item>
-
-        <Form.Item label="性別">
-          <Radio.Group
-            name="gender"
-            onChange={(e) =>
-              setUpdateUser({
-                ...updateUser,
-                gender: e.target.value,
-              })
-            }
-            value={updateUser.gender}
-          >
-            <Radio value="小姐">女</Radio>
-            <Radio value="先生">男</Radio>
-          </Radio.Group>
-        </Form.Item>
-
-        <Form.Item label="手機">
-          <Input
-            name="phone"
-            onChange={(e) =>
-              setUpdateUser({
-                ...updateUser,
-                phone: e.target.value,
-              })
-            }
-            value={updateUser.phone}
-          />
-        </Form.Item>
-
-        <Form.Item label="上傳大頭照" name="picture">
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handlePicture(e)}
-          />
-        </Form.Item>
-
-        <Form.Item
-          wrapperCol={{
-            offset: 8,
-            span: 16,
-          }}
+    <div className="flex h-full items-center justify-center">
+      <Card className="w-2/3">
+        <ScrollShadow
+          size={0}
+          hideScrollBar
+          className=" h-[calc(100vh-300px)] w-full"
         >
-          <Button
-            className="bg-[#1677ff]"
-            onClick={handleUserUpdate}
-            type="primary"
-            htmlType="button"
-          >
-            Submit
-          </Button>
-        </Form.Item>
+          <div className="relative mt-8">
+            <h2 className="mb-2 ml-20 text-2xl font-bold">負責人資訊</h2>
+            <div className="mx-auto w-4/5 border-t-2 border-solid border-gray-400 pb-2"></div>
+            <Form className="ml-20">
+              <div className="flex items-center">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  姓名
+                </h1>
+                <Input
+                  className="h-8 w-28"
+                  onChange={(e) =>
+                    setUpdateUser({
+                      ...updateUser,
+                      userName: e.target.value,
+                    })
+                  }
+                  value={updateUser.userName}
+                />
+              </div>
 
-        <h2 className="p-6 text-center text-xl">餐廳資訊</h2>
+              <div className="flex items-center">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  性別
+                </h1>
+                <Radio.Group
+                  className="font-black"
+                  name="gender"
+                  onChange={(e) =>
+                    setUpdateUser({
+                      ...updateUser,
+                      gender: e.target.value,
+                    })
+                  }
+                  value={updateUser.gender}
+                >
+                  <Radio value="小姐">女</Radio>
+                  <Radio value="先生">男</Radio>
+                </Radio.Group>
+              </div>
 
-        <Form.Item label="餐廳名稱">
-          <Input
-            name="name"
-            onChange={(e) =>
-              setUpdateCompany({ ...updateCompany, name: e.target.value })
-            }
-            value={updateCompany.name}
-          />
-        </Form.Item>
+              <div className="flex items-center">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  手機
+                </h1>
+                <Input
+                  className="h-8 w-64"
+                  name="phone"
+                  onChange={(e) =>
+                    setUpdateUser({
+                      ...updateUser,
+                      phone: e.target.value,
+                    })
+                  }
+                  value={updateUser.phone}
+                />
+              </div>
 
-        <label className="font-[SimSun,sans-serif] text-[#ff4d4f]">* </label>
-        <label className="inline-block">餐廳地址:</label>
+              <div className="mb-4 flex  items-center">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  上傳大頭照
+                </h1>
+                <Input
+                  className="h-8 w-64 text-xs"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handlePicture(e)}
+                />
+              </div>
 
-        <Form.Item label="縣市">
-          <Input
-            className="w-20"
-            name="city"
-            onChange={(e) =>
-              setUpdateCompany({ ...updateCompany, city: e.target.value })
-            }
-            value={updateCompany.city}
-          />
-        </Form.Item>
+              <Form.Item
+                wrapperCol={{
+                  offset: 8,
+                  span: 16,
+                }}
+              >
+                <Button
+                  style={{ background: "#b0aba5", cursor: "pointer" }}
+                  className="absolute bottom-0 right-36  font-bold"
+                  onClick={() => navigate(`/boss/bossInfo/${companyId}`)}
+                  type="primary"
+                  htmlType="button"
+                >
+                  返回
+                </Button>
 
-        <Form.Item label="鄉鎮市區">
-          <Input
-            className="w-20"
-            name="district"
-            onChange={(e) =>
-              setUpdateCompany({ ...updateCompany, district: e.target.value })
-            }
-            value={updateCompany.district}
-          />
-        </Form.Item>
+                <Button
+                  className="absolute bottom-0 right-16 font-bold"
+                  onClick={handleUserUpdate}
+                  type="primary"
+                  htmlType="button"
+                >
+                  更新
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
 
-        <Form.Item label="詳細地址">
-          <Input
-            name="address"
-            onChange={(e) =>
-              setUpdateCompany({ ...updateCompany, address: e.target.value })
-            }
-            value={updateCompany.address}
-          />
-        </Form.Item>
+          <div className="relative">
+            <h2 className="mb-2 ml-20 text-2xl font-bold">餐廳資訊</h2>
+            <div className="mx-auto w-4/5 border-t-2 border-solid border-gray-400 pb-2"></div>
+            <Form className="ml-20">
+              <div className="flex items-center">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  店名
+                </h1>
+                <Input
+                  className="h-8 w-64"
+                  name="name"
+                  onChange={(e) =>
+                    setUpdateCompany({ ...updateCompany, name: e.target.value })
+                  }
+                  value={updateCompany.name}
+                />
+              </div>
 
-        <Form.Item label="餐廳電話">
-          <Input
-            name="telephone"
-            onChange={(e) =>
-              setUpdateCompany({ ...updateCompany, phone: e.target.value })
-            }
-            value={updateCompany.phone}
-          />
-        </Form.Item>
+              <div className="flex items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  地址
+                </h1>
 
-        <Form.Item label="餐廳類別">
-          <Select
-            name="category"
-            onChange={(e) =>
-              setUpdateCompany({ ...updateCompany, category: e })
-            }
-            value={updateCompany.category}
-            showSearch
-            style={{
-              width: 200,
-            }}
-            placeholder="點選類別"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              (option?.label ?? "").includes(input)
-            }
-            options={[
-              {
-                value: "0",
-                label: "火鍋",
-              },
-              {
-                value: "1",
-                label: "燒烤",
-              },
-              {
-                value: "2",
-                label: "牛排",
-              },
-              {
-                value: "3",
-                label: "甜點",
-              },
-              {
-                value: "4",
-                label: "小吃",
-              },
-              {
-                value: "5",
-                label: "早餐",
-              },
-            ]}
-          />
-        </Form.Item>
+                <div className="mr-4">
+                  <h2 className="text-xs text-gray-400">縣市</h2>
+                  <Input
+                    className="w-20"
+                    name="city"
+                    onChange={(e) =>
+                      setUpdateCompany({
+                        ...updateCompany,
+                        city: e.target.value,
+                      })
+                    }
+                    value={updateCompany.city}
+                  />
+                </div>
 
-        <Form.Item
-          wrapperCol={{
-            offset: 8,
-            span: 16,
-          }}
-        >
-          <Button
-            className="bg-[#1677ff]"
-            onClick={handleCompanyUpdate}
-            type="primary"
-            htmlType="button"
-          >
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
-    </>
+                <div className="mr-4">
+                  <h2 className="text-xs text-gray-400">鄉鎮市區</h2>
+                  <Input
+                    className="w-20"
+                    name="district"
+                    onChange={(e) =>
+                      setUpdateCompany({
+                        ...updateCompany,
+                        district: e.target.value,
+                      })
+                    }
+                    value={updateCompany.district}
+                  />
+                </div>
+
+                <div>
+                  <h2 className="text-xs text-gray-400">詳細地址</h2>
+
+                  <Input
+                    className="w-44"
+                    name="address"
+                    onChange={(e) =>
+                      setUpdateCompany({
+                        ...updateCompany,
+                        address: e.target.value,
+                      })
+                    }
+                    value={updateCompany.address}
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  餐廳電話
+                </h1>
+                <Input
+                  className="h-8 w-64"
+                  name="telephone"
+                  onChange={(e) =>
+                    setUpdateCompany({
+                      ...updateCompany,
+                      phone: e.target.value,
+                    })
+                  }
+                  value={updateCompany.phone}
+                />
+              </div>
+
+              <div className="flex items-center">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  類別
+                </h1>
+                <Select
+                  name="category"
+                  onChange={(e) =>
+                    setUpdateCompany({ ...updateCompany, category: e })
+                  }
+                  value={updateCompany.category}
+                  showSearch
+                  style={{
+                    width: 200,
+                  }}
+                  placeholder="點選類別"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "").includes(input)
+                  }
+                  options={[
+                    {
+                      value: "0",
+                      label: "火鍋",
+                    },
+                    {
+                      value: "1",
+                      label: "燒烤",
+                    },
+                    {
+                      value: "2",
+                      label: "牛排",
+                    },
+                    {
+                      value: "3",
+                      label: "甜點",
+                    },
+                    {
+                      value: "4",
+                      label: "小吃",
+                    },
+                    {
+                      value: "5",
+                      label: "早餐",
+                    },
+                  ]}
+                />
+              </div>
+
+              <Form.Item
+                wrapperCol={{
+                  offset: 8,
+                  span: 16,
+                }}
+              >
+                <Button
+                  style={{ background: "#b0aba5", cursor: "pointer" }}
+                  className="absolute bottom-0 right-36  font-bold"
+                  onClick={() => navigate(`/boss/bossInfo/${companyId}`)}
+                  type="primary"
+                  htmlType="button"
+                >
+                  返回
+                </Button>
+
+                <Button
+                  className="absolute bottom-0 right-16 font-bold"
+                  onClick={handleCompanyUpdate}
+                  type="primary"
+                  htmlType="button"
+                >
+                  更新
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
+        </ScrollShadow>
+      </Card>
+    </div>
   );
 }
 

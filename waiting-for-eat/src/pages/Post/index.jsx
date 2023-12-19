@@ -8,6 +8,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { motion } from "framer-motion";
 import { default as React, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
@@ -127,14 +128,19 @@ function Post() {
     .sort((a, b) => (a.createTime > b.createTime ? -1 : 1))
     .map((item) => {
       return (
-        <div
+        <motion.div
+          whileHover={{
+            scale: 1.05,
+            transition: { duration: 0.15 },
+          }}
+          whileTap={{ scale: 0.9 }}
           key={item.userId}
           className="my-4 cursor-pointer"
           onClick={() => {
             navigation(`/post/${item.postId}`);
           }}
         >
-          <Card className="border border-solid border-gray-400 shadow-xl">
+          <Card className="scale-95 border border-solid border-gray-400 shadow-xl">
             <div className="flex items-center justify-center p-2">
               <Image
                 alt="Card background"
@@ -163,7 +169,7 @@ function Post() {
               </div>
             </div>
           </Card>
-        </div>
+        </motion.div>
       );
     });
 
@@ -238,9 +244,9 @@ function Post() {
           </Card>
         </div>
 
-        <div className="sticky top-24 mx-2 h-[calc(100vh-150px)] w-1/4 px-2 shadow-[-4px_0_4px_2px_rgba(0,0,0,0.16)]">
+        <div className="sticky top-28 mx-2 h-[calc(100vh-148px)] w-1/4 px-2 shadow-[-4px_0_4px_2px_rgba(0,0,0,0.16)]">
           <h2 className="mt-2 text-2xl font-bold text-gray-500">相關食記</h2>
-          <ScrollShadow className="h-[calc(100vh-196px)] w-full">
+          <ScrollShadow hideScrollBar className="h-[calc(100vh-196px)] w-full">
             {posts[0] === undefined ? (
               <div className="my-4">
                 <Card className="flex h-36 w-full items-center justify-center border  border-solid border-gray-400 shadow-xl">

@@ -1,16 +1,16 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
-const useDinerStore = create(
+const useBossStore = create(
   immer((set) => ({
-    active: "diner",
+    selected: "boss",
 
-    setActive: (status) => {
+    setSelected: (status) => {
       set((state) => {
-        state.active = status;
+        state.selected = status;
       });
     },
   })),
 );
 
-export default useDinerStore;
+export default useBossStore;

@@ -1,4 +1,4 @@
-import { Image, ScrollShadow } from "@nextui-org/react";
+import { Button, Image, ScrollShadow, Spinner } from "@nextui-org/react";
 import { useLoadScript } from "@react-google-maps/api";
 import { Form, Rate, Select } from "antd";
 import { collection, getDocs, query, where } from "firebase/firestore";
@@ -220,9 +220,13 @@ function Search() {
           return resultArray;
         })
         .then((resultArray) => {
-          const finalArray = resultArray.sort((a, b) =>
-            a.totalStar > b.totalStar ? -1 : 1,
-          );
+          const finalArray = resultArray.sort((a, b) => {
+            if (a.totalStar === b.totalStar) {
+              return a.companyId > b.companyId ? -1 : 1;
+            } else {
+              return a.totalStar > b.totalStar ? -1 : 1;
+            }
+          });
           const first = finalArray[0];
           setCurrentPosition({
             lat: first.lat,
@@ -247,7 +251,11 @@ function Search() {
               </IconContext.Provider>
             </div>
             <p className="mr-1">|</p>
-            <p className="font-semibold">Like</p>
+            <div>
+              <IconContext.Provider value={{ size: "20px" }}>
+                <HiOutlineThumbDown />
+              </IconContext.Provider>
+            </div>
           </div>
         );
 
@@ -255,14 +263,18 @@ function Search() {
         return (
           <div className="flex h-8 w-20 items-center justify-center rounded-xl border border-solid bg-gray-200">
             <div className="mr-1">
+              <IconContext.Provider value={{ size: "20px" }}>
+                <HiOutlineThumbUp title="noLike" />
+              </IconContext.Provider>
+            </div>
+            <p className="mr-1">|</p>
+            <div className="mr-1">
               <IconContext.Provider
                 value={{ size: "20px", backgroundColor: "black" }}
               >
                 <HiThumbDown />
               </IconContext.Provider>
             </div>
-            <p className="mr-1">|</p>
-            <p className="font-semibold">Bad</p>
           </div>
         );
 
@@ -313,12 +325,12 @@ function Search() {
                 options={restaurants}
               />
             </Form.Item>
-            <button
-              className="h-10 rounded-lg border bg-[#ff6e06] px-4 py-1 text-center text-xl font-semibold text-white"
+            <Button
+              className="ml-1 h-10 rounded-lg border bg-[#ff6e06] px-4 py-1 text-center text-xl font-semibold text-white"
               onClick={handleRestaurant}
             >
               搜尋餐廳
-            </button>
+            </Button>
           </Form>
         </div>
 
@@ -342,12 +354,12 @@ function Search() {
                 options={city}
               />
             </Form.Item>
-            <button
-              className="h-10 rounded-lg border bg-[#ff6e06] px-4 py-1 text-center text-xl font-semibold text-white"
+            <Button
+              className="ml-1 h-10 rounded-lg border bg-[#ff6e06] px-4 py-1 text-center text-xl font-semibold text-white"
               onClick={handlePlace}
             >
               搜尋地區
-            </button>
+            </Button>
           </Form>
         </div>
 
@@ -397,8 +409,14 @@ function Search() {
         <div className="shadow-4xl w-[28%]">
           <ScrollShadow className="h-full w-full">
             {searchArray.length === 0 ? (
-              <div className="flex justify-center">
-                <p className="text-xl font-bold">暫無相關餐廳進駐</p>
+              <div className=" flex h-full justify-center">
+                <Spinner
+                  label="加載中"
+                  color="warning"
+                  labelColor="warning"
+                  className="font-black"
+                  size="lg"
+                />
               </div>
             ) : (
               [...searchArray].map((info, index) => {

@@ -147,43 +147,48 @@ function PostedEdit() {
   return (
     <div className="flex w-full justify-center">
       <div className="relative w-full max-w-[1300px] px-20 pb-20 pt-12">
-        <h1 className="mb-4 text-2xl font-black text-red-600">
+        <h1 className="w-88 mb-4 bg-red-600 py-2 text-center text-2xl font-black text-white">
           請直接填寫需要更改的地方
         </h1>
         <div>
           <Form>
-            <Form.Item
-              label="標題"
-              rules={[
-                {
-                  message: "請輸入標題!",
-                },
-              ]}
-            >
+            <div className="mb-6 flex items-center">
+              <h1 className="mr-4 w-24 text-lg font-black text-gray-600 [text-align-last:justify]">
+                標題
+              </h1>
               <Input
+                className="h-10 w-[500px] border border-solid border-gray-600 text-lg"
                 name="title"
                 onChange={(e) => {
                   setTitle(e.target.value);
                 }}
                 value={title}
               />
-            </Form.Item>
-            <div>
-              <img className="w-[500px]" src={post.mainPicture}></img>
             </div>
 
-            <Form.Item label="更改封面照片" className="w-96">
+            <div className="mb-6 flex items-center">
+              <h1 className="mr-4 w-24 text-lg font-black text-gray-600 [text-align-last:justify]">
+                封面照片
+              </h1>
               <Input
+                className="h-10 w-[500px] border border-solid border-gray-600"
                 type="file"
                 accept="image/*"
                 name="picture"
                 onChange={(e) => handleMainPicture(e.target.files[0])}
               />
-            </Form.Item>
+            </div>
+
+            <div>
+              <img
+                className="mb-6 h-[200px] w-[400px] rounded-xl object-cover object-center"
+                src={post.mainPicture}
+              ></img>
+            </div>
           </Form>
         </div>
 
-        <div className="min-h-[400px] border-2 border-solid border-black">
+        <div className="min-h-[400px] border-2 border-solid border-gray-600">
           <Editor
             editorState={editorState}
             toolbarClassName="toolbarClassName"
