@@ -122,7 +122,7 @@ function ActivityEdit() {
         hideScrollBar
         className="flex h-[calc(100vh-300px)] w-full justify-center"
       >
-        <div className="h-[1040px] border-2 border-solid border-black p-4">
+        <div className="h-[1150px] border-2 border-solid border-black p-4">
           <Editor
             editorState={editorState}
             toolbarClassName="toolbarClassName"

@@ -107,9 +107,9 @@ function Header() {
         ));
       case "DinerLogIn":
         return buttonDiner.map((item) => (
-          <button
+          <div
             key={item.displayText}
-            className="m-2.5 rounded-sm border-2 border-solid border-black text-lg"
+            className="m-3 cursor-pointer text-lg font-medium text-gray-600 hover:text-[#ff6e06]"
             onClick={() => {
               if (item.displayText === "登出") {
                 logOut();
@@ -124,13 +124,13 @@ function Header() {
             }}
           >
             {item.displayText}
-          </button>
+          </div>
         ));
       case "BossLogIn":
         return buttonBoss.map((item) => (
           <button
             key={item.displayText}
-            className="m-2.5 rounded-sm border-2 border-solid border-black text-lg"
+            className="m-3 cursor-pointer text-lg font-medium text-gray-600 hover:text-[#ff6e06]"
             onClick={() => {
               if (item.displayText === "登出") {
                 logOut();
@@ -153,7 +153,7 @@ function Header() {
   return (
     <div className="sticky top-0 z-10 flex h-24 items-center justify-between bg-white shadow-[0_0_4px_2px_rgba(0,0,0,0.16)]">
       <Link to="/">
-        <img src={logo} className="ml-16 h-32 w-auto" />
+        <img src={logo} className="ml-16 h-24 w-auto" />
       </Link>
       {/* <div className="flex">
         <img
@@ -163,7 +163,7 @@ function Header() {
         <div>{`${userData.userName} ?. ${userData.userName} : "你好"} ，您好`}</div>
       </div> */}
 
-      <div className="m-16">{renderSwitch("LogOut")}</div>
+      <div className="m-16 flex">{renderSwitch("LogOut")}</div>
     </div>
   );
 }

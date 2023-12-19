@@ -25,7 +25,7 @@ function Photo() {
   }, []);
 
   const mainPicture = companyData.picture ? (
-    <img className="w-96" src={companyData.picture} />
+    <img className="ml-6 w-80" src={companyData.picture} />
   ) : (
     <div>尚無上傳照片</div>
   );
@@ -46,7 +46,7 @@ function Photo() {
         className="flex h-[calc(100vh-300px)] w-full justify-center"
       >
         <div className=" h-5/6 w-5/6">
-          <div>
+          <div className="ml-8">
             <h1 className="text-2xl font-bold">封面照片</h1>
             <div className="w-[700px] border-t-2 border-solid border-gray-300 pb-4"></div>
             <div>{mainPicture}</div>
@@ -58,7 +58,7 @@ function Photo() {
                 <div className=" flex w-[1000px] p-4">
                   {companyData.menu ? (
                     companyData.menu.map((picture, index) => (
-                      <div className="min-w-[200px]" key={index}>
+                      <div className="w-[180px] min-w-[180px]" key={index}>
                         <img
                           className="cursor-pointer px-2"
                           src={picture}
@@ -87,7 +87,7 @@ function Photo() {
 
           <Button
             radius="full"
-            className="absolute bottom-2 right-16 mt-6 block h-11 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
+            className="absolute bottom-2 right-24 mt-6 block h-11 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
             onClick={() => navigate(`/boss/photoUpload/${companyId}`)}
           >
             編輯

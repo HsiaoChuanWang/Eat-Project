@@ -10,6 +10,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   query,
   setDoc,
   updateDoc,
@@ -22,7 +23,7 @@ import "./schedule.css";
 
 function Schedule() {
   const [editable, setEditable] = useState(false);
-  const [active, setActive] = useState(true);
+  const [isSelected, setIsSelected] = useState(false);
   const myRef = useRef();
   const { companyId } = useParams();
   const [tables, setTables] = useState([]);
@@ -82,10 +83,49 @@ function Schedule() {
               combineOrder.push(newData);
             })
             .then(() => {
-              setOrders(combineOrder);
+              setOrders([...combineOrder]);
             });
         });
       });
+
+    const tableSnap = onSnapshot(tableRef, (querySnapshot) => {
+      let seats = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const dataId = doc.id;
+        const combine = { ...data, tableId: dataId };
+        seats.push(combine);
+      });
+      setTables(seats);
+    });
+
+    const orderSnap = onSnapshot(orderq, (querySnapshot) => {
+      let orderList = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const dataId = doc.id;
+        const combine = { ...data, orderId: dataId };
+        orderList.push(combine);
+      });
+
+      let combineOrder = [];
+      orderList.forEach((order) => {
+        getUserInfo(order.userId)
+          .then((data) => {
+            const newData = {
+              ...order,
+              userName: data.userName,
+              phone: data.phone,
+            };
+            combineOrder.push(newData);
+          })
+          .then(() => {
+            setOrders([...combineOrder]);
+          });
+      });
+    });
+
+    return tableSnap, orderSnap;
   }, []);
 
   //左邊列表
@@ -106,11 +146,10 @@ function Schedule() {
     order.tableNumber.map((orderTableNumber) => {
       events.push({
         title:
-          "Name : " +
           order.userName +
-          "\nTel : " +
+          "\n" +
           order.phone +
-          "\n備註 : " +
+          "\n" +
           order.remark +
           "$" +
           order.people +
@@ -125,7 +164,7 @@ function Schedule() {
         id: order.orderId + "$" + orderTableNumber,
         resourceId: orderTableNumber,
         display: "auto",
-        color: "#ff850e",
+        color: "#e0effc",
         //   constraints: "businessHours",//限制時段
       });
     });
@@ -242,6 +281,7 @@ function Schedule() {
 
     setUpdateOrders([]);
     setEditable(false);
+    setIsSelected(false);
   }
 
   async function AddFavorite(orderId, userId) {
@@ -278,15 +318,17 @@ function Schedule() {
     let attend = stringArray[4];
 
     return (
-      <div className="flex justify-between">
-        <div className="ml-2 mt-4 text-base font-medium">
+      <div className="flex justify-between border">
+        <div className="ml-2 mt-4 text-base font-bold text-black">
           {name}
           <br />
           {tel}
         </div>
 
-        <div className="flex w-[80px] items-center justify-center bg-orange-800/50 ">
-          <div>{people}人</div>
+        <div className="flex w-[80px] items-center justify-center ">
+          <div className="flex h-[60px] w-[60px] items-center justify-center rounded bg-[#8ba9ee] text-center">
+            <h1> {people}人</h1>
+          </div>
         </div>
 
         {/* <div>
@@ -298,12 +340,14 @@ function Schedule() {
         <div>
           <div>
             <button
-              className={`my-1 mr-4 h-8 rounded border-2 border-solid border-gray-600 bg-gray-400`}
+              className={`my-1 mr-4 h-8 rounded	bg-[#082567] px-2 ${
+                attend === "no" && "cursor-pointer"
+              }`}
               onClick={() => {
-                // if (editable === true) {
-                AddFavorite(orderId, userId);
-                UpdateAttend(orderId);
-                // }
+                if (editable === true) {
+                  AddFavorite(orderId, userId);
+                  UpdateAttend(orderId);
+                }
               }}
               disabled={attend === "yes"}
             >
@@ -313,7 +357,7 @@ function Schedule() {
 
           <div>
             <button
-              className={`absolute h-8 border-2 border-solid border-black ${
+              className={`absolute h-8 cursor-pointer rounded bg-gray-400 px-2 ${
                 attend === "yes" && "hidden"
               } `}
               onClick={() => {
@@ -332,32 +376,39 @@ function Schedule() {
   return (
     <div className="flex justify-center ">
       <div className="mt-8 w-5/6">
-        {/* <div>
+        <div>
           <button
             onClick={() => {
               setEditable(true);
+              setIsSelected(true);
             }}
-            className="absolute right-0 border-2 border-solid border-black"
+            className={`${
+              isSelected === true && "bg-gray-300"
+            } absolute right-[282px] top-[105px] z-10 rounded bg-[#ff850e] px-4 py-2 font-semibold text-white hover:opacity-80`}
           >
             移動
           </button>
 
           <button
             onClick={save}
-            className="absolute right-16 border-2 border-solid border-black"
+            className={`${
+              isSelected === false && "bg-gray-300"
+            } absolute right-[360px] top-[105px] z-10 rounded bg-[#ff850e] px-4 py-2 font-semibold text-white hover:opacity-80`}
           >
             保存
           </button>
-        </div> */}
 
-        <div>
-          <div className="">
+          <div className="absolute right-[525px] top-[86px]">
             <h1 className="font-bold">選擇日期</h1>
             <DatePicker
-              className="mb-4 border-2 border-solid border-black"
+              className="mb-4 border border-solid border-black"
               onChange={changeStartDate}
             />
           </div>
+        </div>
+
+        <div>
+          <div className="h-[72px]"></div>
 
           <ScrollShadow
             size={0}

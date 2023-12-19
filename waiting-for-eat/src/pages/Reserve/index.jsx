@@ -1,4 +1,10 @@
-import { Button, Card } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  Modal,
+  ModalContent,
+  useDisclosure,
+} from "@nextui-org/react";
 import { DatePicker, Form, Input } from "antd";
 import dayjs from "dayjs";
 import {
@@ -13,9 +19,12 @@ import {
 import { default as React, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
+import useDinerStore from "../../stores/dinerStore";
 import useUserStore from "../../stores/userStore";
+import logologo from "../Post/logologo.jpg";
 
 function Reserve() {
+  const setActive = useDinerStore((state) => state.setActive);
   const navigate = useNavigate();
   const [companyData, setCompanyData] = useState({});
   const [openTime, setOpenTime] = useState([]);
@@ -42,6 +51,7 @@ function Reserve() {
   const openTimeRef = query(collection(companyRef, companyId, "openTime"));
   const tableRef = query(collection(companyRef, companyId, "table"));
   const companyInfoRef = doc(db, "company", companyId);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   useEffect(() => {
     getDoc(companyInfoRef).then((result) => {
@@ -162,8 +172,8 @@ function Reserve() {
       send.tableNumber = tableNumbers;
 
       updateData(send);
-      alert(`預約成功! 請確認訂位資訊，若有任何疑問請洽電。`);
-      navigate(`/diner/reservedShop/${userInfo.userId}`);
+      //   alert(`預約成功! 請確認訂位資訊，若有任何疑問請洽電。`);
+
       setIsSelected("");
     } else {
       alert("請填寫完整資訊");
@@ -274,7 +284,7 @@ function Reserve() {
           </div>
         </div>
 
-        <Card className="mt-20 w-7/12 border-2 border-solid border-gray-300">
+        <Card className="my-16 w-7/12 border-2 border-solid border-gray-300">
           <div>
             <div className="flex justify-center">
               <h2 className="p-6 text-center text-3xl font-black">
@@ -301,7 +311,7 @@ function Reserve() {
                 <div className="mx-6 mb-2 flex items-baseline text-lg font-semibold">
                   <h1>人數</h1>
                   <h1 className="mx-6">|</h1>
-                  <Form>
+                  <Form name="basic" autoComplete="off">
                     <Form.Item
                       rules={[
                         {
@@ -352,7 +362,7 @@ function Reserve() {
                 <div className="mx-6 mb-6 flex text-lg font-semibold">
                   <h1>備註</h1>
                   <h1 className="mx-6">|</h1>
-                  <Form>
+                  <Form name="basic" autoComplete="off">
                     <Form.Item name="remark">
                       <Input
                         className="h-36 w-96"
@@ -374,14 +384,50 @@ function Reserve() {
                   >
                     返回首頁
                   </Button>
-                  <Button
-                    radius="full"
-                    className="block h-11 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
-                    onClick={handleSend}
-                    disabled={checkRef.current}
-                  >
-                    確認訂位
-                  </Button>
+
+                  <>
+                    <Button
+                      radius="full"
+                      className="block h-11 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
+                      onClick={handleSend}
+                      disabled={checkRef.current}
+                      onPress={onOpen}
+                    >
+                      確認訂位
+                    </Button>
+                    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                      <ModalContent className="relative flex h-64">
+                        {(onClose) => (
+                          <>
+                            <div className="mx-10 my-auto font-bold">
+                              <div className="flex justify-center">
+                                <img className="h-auto w-24" src={logologo} />
+                                <div className="px-4">
+                                  <p className="mb-2 text-2xl">預約成功!</p>
+                                  <p>請確認訂位資訊，</p>
+                                  <p className="mb-4">若有任何疑問請洽電。</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <Button
+                              className="absolute bottom-4 right-6 bg-[#ff850e] text-base font-bold"
+                              color="primary"
+                              onPress={onClose}
+                              onClick={() => {
+                                setActive("reserved");
+                                navigate(
+                                  `/diner/reservedShop/${userInfo.userId}`,
+                                );
+                              }}
+                            >
+                              前往
+                            </Button>
+                          </>
+                        )}
+                      </ModalContent>
+                    </Modal>
+                  </>
                 </div>
               </div>
             </div>

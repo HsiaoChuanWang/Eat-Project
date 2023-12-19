@@ -7,4 +7,15 @@
     font-family: "Noto Sans TC", sans-serif;
     box-sizing: border-box;
   }
+
+  body {
+    overflow-x: hidden;
+  }
+}
+
+.card-zoom:hover .card-zoom-image {
+  @apply scale-125;
+}
+.card-zoom:hover .card-zoom-text {
+  @apply scale-100;
 }

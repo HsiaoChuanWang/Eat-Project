@@ -91,7 +91,9 @@ function Like() {
               </IconContext.Provider>
             </div>
             <p className="mr-1">|</p>
-            <p className="font-semibold">Like</p>
+            <IconContext.Provider value={{ size: "30px" }}>
+              <HiOutlineThumbDown onClick={(e) => handleLike("dislike")} />
+            </IconContext.Provider>
           </div>
         );
 
@@ -99,14 +101,21 @@ function Like() {
         return (
           <div className="flex h-10 w-28 items-center justify-center rounded-xl border border-solid bg-gray-200">
             <div className="mr-1">
+              <IconContext.Provider value={{ size: "30px" }}>
+                <HiOutlineThumbUp
+                  title="noLike"
+                  onClick={(e) => handleLike("like")}
+                />
+              </IconContext.Provider>
+            </div>
+            <p className="mr-1">|</p>
+            <div className="mr-1">
               <IconContext.Provider
                 value={{ size: "30px", backgroundColor: "black" }}
               >
                 <HiThumbDown onClick={(e) => handleLike("eaten")} />
               </IconContext.Provider>
             </div>
-            <p className="mr-1">|</p>
-            <p className="font-semibold">Bad</p>
           </div>
         );
 

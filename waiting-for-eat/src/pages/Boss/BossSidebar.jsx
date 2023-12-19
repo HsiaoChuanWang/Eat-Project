@@ -1,97 +1,123 @@
-import React, { useState } from "react";
+import React from "react";
+import { BsPersonFill } from "react-icons/bs";
+import { FaRegCalendarCheck } from "react-icons/fa6";
+import { GiMeal } from "react-icons/gi";
+import { IoTime } from "react-icons/io5";
+import { MdNotificationsActive, MdPhotoLibrary } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
+import useBossStore from "../../stores/bossStore";
 
 function BossSidebar() {
   const { companyId } = useParams();
   const navigate = useNavigate();
-  const [active, setActive] = useState("boss");
+  //   const [active, setActive] = useState("boss");
+  const selected = useBossStore((state) => state.selected);
+  const setSelected = useBossStore((state) => state.setSelected);
 
   return (
     <>
       <div className="w-full">
         <div className="flex flex-wrap bg-zinc-600/70">
           <div
-            className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer justify-center border-b border-solid border-gray-400 text-2xl font-black text-white ${
-              active === "boss"
+            className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
+              selected === "boss"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/boss/bossInfo/${companyId}`);
-              setActive("boss");
+              setSelected("boss");
             }}
           >
-            <button>業者資訊</button>
+            <div>
+              <BsPersonFill className="mx-auto mb-1 text-4xl" />
+              <button>業者資訊</button>
+            </div>
           </div>
 
           <div
-            className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer justify-center border-b border-solid border-gray-400 text-2xl font-black text-white ${
-              active === "photo"
+            className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
+              selected === "photo"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/boss/photo/${companyId}`);
-              setActive("photo");
+              setSelected("photo");
             }}
           >
-            <button>編輯照片</button>
+            <div>
+              <MdPhotoLibrary className="mx-auto mb-1 text-4xl" />
+              <button>編輯照片</button>
+            </div>
           </div>
 
           <div
-            className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer justify-center border-b border-solid border-gray-400 text-2xl font-black text-white ${
-              active === "activity"
+            className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
+              selected === "activity"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/boss/activity/${companyId}`);
-              setActive("activity");
+              setSelected("activity");
             }}
           >
-            <button>編輯活動</button>
+            <div>
+              <MdNotificationsActive className="mx-auto mb-1 text-4xl" />
+              <button>編輯活動</button>
+            </div>
           </div>
 
           <div
-            className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer justify-center border-b border-solid border-gray-400 text-2xl font-black text-white ${
-              active === "openTime"
+            className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
+              selected === "openTime"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/boss/openTime/${companyId}`);
-              setActive("openTime");
+              setSelected("openTime");
             }}
           >
-            <button>用餐時間設定</button>
+            <div>
+              <IoTime className="mx-auto mb-1 text-4xl" />
+              <button>用餐時間設定</button>
+            </div>
           </div>
 
           <div
-            className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer justify-center border-b border-solid border-gray-400 text-2xl font-black text-white ${
-              active === "table"
+            className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
+              selected === "table"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/boss/table/${companyId}`);
-              setActive("table");
+              setSelected("table");
             }}
           >
-            <button>桌位設定</button>
+            <div>
+              <GiMeal className="mx-auto mb-1 text-4xl" />
+              <button>桌位設定</button>
+            </div>
           </div>
 
           <div
-            className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer justify-center border-b border-solid border-gray-400 text-2xl font-black text-white ${
-              active === "schedule"
+            className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
+              selected === "schedule"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/boss/schedule/${companyId}`);
-              setActive("schedule");
+              setSelected("schedule");
             }}
           >
-            <button>預約現況</button>
+            <div>
+              <FaRegCalendarCheck className="mx-auto mb-1 text-4xl" />
+              <button>預約現況</button>
+            </div>
           </div>
         </div>
       </div>

@@ -23,6 +23,8 @@ function OpenTime() {
   const companyRef = collection(db, "company");
   const openTimeRef = query(collection(companyRef, companyId, "openTime"));
   const format = "HH:mm";
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
 
   useEffect(() => {
     getDocs(openTimeRef).then((result) => {
@@ -81,12 +83,12 @@ function OpenTime() {
 
   const MonList = Mon.map((item) => {
     return (
-      <div key={item.timeId} className="flex items-baseline">
-        <h1 className="mx-4">{item.start}</h1>
-        <BsDashLg className="mt-2" />
-        <h1 className="mx-4">{item.end}</h1>
+      <div key={item.timeId} className="mt-2 flex items-center">
+        <h1 className="mr-2 text-lg font-black">{item.start}</h1>
+        <BsDashLg className="text-xl" />
+        <h1 className="ml-2 mr-6 text-lg font-black">{item.end}</h1>
         <FaTrashCan
-          className="mt-4"
+          className="my-4 cursor-pointer"
           onClick={() => handleDelete(item.timeId)}
         />
       </div>
@@ -94,12 +96,12 @@ function OpenTime() {
   });
   const TueList = Tue.map((item) => {
     return (
-      <div key={item.timeId} className="flex items-baseline">
-        <h1 className="mx-4">{item.start}</h1>
-        <BsDashLg className="mt-2" />
-        <h1 className="mx-4">{item.end}</h1>
+      <div key={item.timeId} className="mt-2 flex items-center">
+        <h1 className="mr-2 text-lg font-black">{item.start}</h1>
+        <BsDashLg className="text-xl" />
+        <h1 className="ml-2 mr-6 text-lg font-black">{item.end}</h1>
         <FaTrashCan
-          className="mt-4"
+          className="my-4 cursor-pointer"
           onClick={() => handleDelete(item.timeId)}
         />
       </div>
@@ -108,12 +110,12 @@ function OpenTime() {
 
   const WedList = Wed.map((item) => {
     return (
-      <div key={item.timeId} className="flex items-baseline">
-        <h1 className="mx-4">{item.start}</h1>
-        <BsDashLg className="mt-2" />
-        <h1 className="mx-4">{item.end}</h1>
+      <div key={item.timeId} className="mt-2 flex items-center">
+        <h1 className="mr-2 text-lg font-black">{item.start}</h1>
+        <BsDashLg className="text-xl" />
+        <h1 className="ml-2 mr-6 text-lg font-black">{item.end}</h1>
         <FaTrashCan
-          className="mt-4"
+          className="my-4 cursor-pointer"
           onClick={() => handleDelete(item.timeId)}
         />
       </div>
@@ -122,12 +124,12 @@ function OpenTime() {
 
   const ThrList = Thr.map((item) => {
     return (
-      <div key={item.timeId} className="flex items-baseline">
-        <h1 className="mx-4">{item.start}</h1>
-        <BsDashLg className="mt-2" />
-        <h1 className="mx-4">{item.end}</h1>
+      <div key={item.timeId} className="mt-2 flex items-center">
+        <h1 className="mr-2 text-lg font-black">{item.start}</h1>
+        <BsDashLg className="text-xl" />
+        <h1 className="ml-2 mr-6 text-lg font-black">{item.end}</h1>
         <FaTrashCan
-          className="mt-4"
+          className="my-4 cursor-pointer"
           onClick={() => handleDelete(item.timeId)}
         />
       </div>
@@ -136,12 +138,12 @@ function OpenTime() {
 
   const FriList = Fri.map((item) => {
     return (
-      <div key={item.timeId} className="flex items-baseline">
-        <h1 className="mx-4">{item.start}</h1>
-        <BsDashLg className="mt-2" />
-        <h1 className="mx-4">{item.end}</h1>
+      <div key={item.timeId} className="mt-2 flex items-center">
+        <h1 className="mr-2 text-lg font-black">{item.start}</h1>
+        <BsDashLg className="text-xl" />
+        <h1 className="ml-2 mr-6 text-lg font-black">{item.end}</h1>
         <FaTrashCan
-          className="mt-4"
+          className="my-4 cursor-pointer"
           onClick={() => handleDelete(item.timeId)}
         />
       </div>
@@ -150,12 +152,12 @@ function OpenTime() {
 
   const SatList = Sat.map((item) => {
     return (
-      <div key={item.timeId} className="flex items-baseline">
-        <h1 className="mx-4">{item.start}</h1>
-        <BsDashLg className="mt-2" />
-        <h1 className="mx-4">{item.end}</h1>
+      <div key={item.timeId} className="mt-2 flex items-center">
+        <h1 className="mr-2 text-lg font-black">{item.start}</h1>
+        <BsDashLg className="text-xl" />
+        <h1 className="ml-2 mr-6 text-lg font-black">{item.end}</h1>
         <FaTrashCan
-          className="mt-4"
+          className="my-4 cursor-pointer"
           onClick={() => handleDelete(item.timeId)}
         />
       </div>
@@ -164,12 +166,12 @@ function OpenTime() {
 
   const SunList = Sun.map((item) => {
     return (
-      <div key={item.timeId} className="flex items-baseline">
-        <h1 className="mx-4">{item.start}</h1>
-        <BsDashLg className="mt-2" />
-        <h1 className="mx-4">{item.end}</h1>
+      <div key={item.timeId} className="mt-2 flex items-center">
+        <h1 className="mr-2 text-lg font-black">{item.start}</h1>
+        <BsDashLg className="text-xl" />
+        <h1 className="ml-2 mr-6 text-lg font-black">{item.end}</h1>
         <FaTrashCan
-          className="mt-4"
+          className="my-4 cursor-pointer"
           onClick={() => handleDelete(item.timeId)}
         />
       </div>
@@ -183,6 +185,9 @@ function OpenTime() {
   async function handleAddTime() {
     if (!Object.values(addTime).includes("")) {
       await addDoc(openTimeRef, addTime);
+      setAddTime({ day: "", start: "", end: "" });
+      setStartTime("");
+      setEndTime("");
     } else {
       alert("請填寫完整資訊");
     }
@@ -191,32 +196,27 @@ function OpenTime() {
   return (
     <div className="my-12 flex justify-center ">
       <div className="flex w-full justify-center">
-        <Card className="ml-12 mt-24 h-72 w-1/3 border-2 border-solid border-gray-400 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)]">
+        <Card className="ml-12 h-80 w-1/3 border-2 border-solid border-gray-400 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)]">
           <div className="relative">
-            <h1 className="m-4 text-2xl font-black text-gray-600">
-              新增用餐時段
-            </h1>
+            <div className="flex h-16 items-center justify-center bg-[#292D4F]">
+              <h1 className="text-2xl font-black text-white">新增用餐時段</h1>
+            </div>
 
             <Form>
-              <Form.Item
-                className="mx-6"
-                label="時段"
-                name="category"
-                rules={[
-                  {
-                    required: true,
-                    message: "請點選時段",
-                  },
-                ]}
-              >
+              <div className="mx-6 my-6 flex items-center">
+                <h1 className="mr-4 w-16 text-base font-bold [text-align-last:justify]">
+                  星期
+                </h1>
+
                 <Select
                   name="week"
                   onChange={(e) => setAddTime({ ...addTime, day: e })}
                   showSearch
                   style={{
-                    width: 200,
+                    width: "142px",
                   }}
-                  placeholder="點選"
+                  //   placeholder="請選擇星期"
+                  value={addTime.day}
                   optionFilterProp="children"
                   filterOption={(input, option) =>
                     (option?.label ?? "").includes(input)
@@ -252,52 +252,44 @@ function OpenTime() {
                     },
                   ]}
                 />
-              </Form.Item>
+              </div>
 
-              <Form.Item
-                className="mx-6"
-                label="開始時間"
-                name="start"
-                rules={[
-                  {
-                    required: true,
-                    message: "請選擇開始時間!",
-                  },
-                ]}
-              >
+              <div className="mx-6 mb-6 flex items-center">
+                <h1 className="mr-4 w-16 text-base font-bold [text-align-last:justify]">
+                  開始時間
+                </h1>
                 <TimePicker
+                  value={startTime}
+                  placeholder=""
                   minuteStep={30}
                   format={format}
                   onChange={(e) => {
                     setAddTime({ ...addTime, start: e.format("HH:mm") });
+                    setStartTime(e);
                   }}
                 />
-              </Form.Item>
+              </div>
 
-              <Form.Item
-                className="mx-6"
-                label="結束時間"
-                name="end"
-                rules={[
-                  {
-                    required: true,
-                    message: "請選擇結束時間!",
-                  },
-                ]}
-              >
+              <div className="mx-6 mb-4 flex items-center">
+                <h1 className="mr-4 w-16 text-base font-bold [text-align-last:justify]">
+                  結束時間
+                </h1>
                 <TimePicker
+                  value={endTime}
+                  placeholder=""
                   minuteStep={30}
                   format={format}
-                  onChange={(e) =>
-                    setAddTime({ ...addTime, end: e.format("HH:mm") })
-                  }
+                  onChange={(e) => {
+                    setAddTime({ ...addTime, end: e.format("HH:mm") });
+                    setEndTime(e);
+                  }}
                 />
-              </Form.Item>
+              </div>
             </Form>
           </div>
 
           <Button
-            className="absolute bottom-2 right-4 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
+            className="absolute bottom-6 right-4 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
             onClick={handleAddTime}
             type="primary"
             htmlType="button"
@@ -306,61 +298,143 @@ function OpenTime() {
           </Button>
         </Card>
 
-        <Card className="mx-10 my-6 w-[500px] border-2 border-solid border-gray-400 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)]">
+        <Card className="mx-10  w-[500px] border-2 border-solid border-gray-400 pb-6 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)]">
+          <div className="mb-4 flex h-16 items-center justify-center bg-[#292D4F]">
+            <h1 className="text-2xl font-black text-white">用餐時段</h1>
+          </div>
+
           <ScrollShadow
             size={0}
             hideScrollBar
-            className="h-[calc(100vh-300px)] w-full justify-center"
+            className="h-[calc(100vh-400px)] w-full justify-center"
           >
-            <h1 className="m-4 text-2xl font-black text-gray-600">用餐時段</h1>
-
-            <div className="mx-12 mb-6">
-              <h1 className="w-24 rounded-md bg-amber-800 text-center text-xl font-bold leading-8 text-white">
+            <div className="mx-12 flex">
+              <h1 className="mr-4 mt-4 h-8 w-24 rounded-md bg-gray-400 text-center text-xl font-bold leading-8 text-white">
                 星期一
               </h1>
-              <div>{MonList}</div>
+              <div>
+                {MonList.length === 0 ? (
+                  <div className="mb-4 mt-4 text-lg font-bold leading-8">
+                    無用餐時段
+                  </div>
+                ) : (
+                  <div className="mb-2">{MonList}</div>
+                )}
+              </div>
             </div>
 
-            <div className="mx-12 my-6">
-              <h1 className="w-24 rounded-md bg-amber-800 text-center text-xl font-bold leading-8 text-white">
+            <div className="flex justify-center">
+              <div className="h-4"></div>
+            </div>
+
+            <div className="mx-12 flex">
+              <h1 className="mr-4 mt-4 h-8 w-24 rounded-md bg-gray-400 text-center text-xl font-bold leading-8 text-white">
                 星期二
               </h1>
-              <div>{TueList}</div>
+              <div>
+                {TueList.length === 0 ? (
+                  <div className="mb-4 mt-4 text-lg font-bold leading-8">
+                    無用餐時段
+                  </div>
+                ) : (
+                  <div className="mb-2">{TueList}</div>
+                )}
+              </div>
             </div>
 
-            <div className="mx-12 my-6">
-              <h1 className="w-24 rounded-md bg-amber-800 text-center text-xl font-bold leading-8 text-white">
+            <div className="flex justify-center">
+              <div className="h-4"></div>
+            </div>
+
+            <div className="mx-12 flex">
+              <h1 className="mr-4 mt-4 h-8 w-24 rounded-md bg-gray-400 text-center text-xl font-bold leading-8 text-white">
                 星期三
               </h1>
-              <div>{WedList}</div>
+              <div>
+                {WedList.length === 0 ? (
+                  <div className="mb-4 mt-4 text-lg font-bold leading-8">
+                    無用餐時段
+                  </div>
+                ) : (
+                  <div className="mb-2">{WedList}</div>
+                )}
+              </div>
             </div>
 
-            <div className="mx-12 my-6">
-              <h1 className="w-24 rounded-md bg-amber-800 text-center text-xl font-bold leading-8 text-white">
+            <div className="flex justify-center">
+              <div className="h-4"></div>
+            </div>
+
+            <div className="mx-12 flex">
+              <h1 className="mr-4 mt-4 h-8 w-24 rounded-md bg-gray-400 text-center text-xl font-bold leading-8 text-white">
                 星期四
               </h1>
-              <div>{ThrList}</div>
+              <div>
+                {ThrList.length === 0 ? (
+                  <div className="mb-4 mt-4 text-lg font-bold leading-8">
+                    無用餐時段
+                  </div>
+                ) : (
+                  <div className="mb-2">{ThrList}</div>
+                )}
+              </div>
             </div>
 
-            <div className="mx-12 my-6">
-              <h1 className="w-24 rounded-md bg-amber-800 text-center text-xl font-bold leading-8 text-white">
+            <div className="flex justify-center">
+              <div className="h-4"></div>
+            </div>
+
+            <div className="mx-12 flex">
+              <h1 className="mr-4 mt-4 h-8 w-24 rounded-md bg-gray-400 text-center text-xl font-bold leading-8 text-white">
                 星期五
               </h1>
-              <div>{FriList}</div>
+              <div>
+                {FriList.length === 0 ? (
+                  <div className="mb-4 mt-4 text-lg font-bold leading-8">
+                    無用餐時段
+                  </div>
+                ) : (
+                  <div className="mb-2">{FriList}</div>
+                )}
+              </div>
             </div>
 
-            <div className="mx-12 my-6">
-              <h1 className="w-24 rounded-md bg-amber-800 text-center text-xl font-bold leading-8 text-white">
+            <div className="flex justify-center">
+              <div className="h-4"></div>
+            </div>
+
+            <div className="mx-12 flex">
+              <h1 className="mr-4 mt-4 h-8 w-24 rounded-md bg-gray-400 text-center text-xl font-bold leading-8 text-white">
                 星期六
               </h1>
-              <div>{SatList}</div>
+              <div>
+                {SatList.length === 0 ? (
+                  <div className="mb-4 mt-4 text-lg font-bold leading-8">
+                    無用餐時段
+                  </div>
+                ) : (
+                  <div className="mb-2">{SatList}</div>
+                )}
+              </div>
             </div>
 
-            <div className="mx-12 my-6">
-              <h1 className="w-24 rounded-md bg-amber-800 text-center text-xl font-bold leading-8 text-white">
+            <div className="flex justify-center">
+              <div className="h-4"></div>
+            </div>
+
+            <div className="mx-12 flex">
+              <h1 className="mr-4 mt-4 h-8 w-24 rounded-md bg-gray-400 text-center text-xl font-bold leading-8 text-white">
                 星期日
               </h1>
-              <div>{SunList}</div>
+              <div>
+                {SunList.length === 0 ? (
+                  <div className="mb-4 mt-4 text-lg font-bold leading-8">
+                    無用餐時段
+                  </div>
+                ) : (
+                  <div className="mb-2">{SunList}</div>
+                )}
+              </div>
             </div>
           </ScrollShadow>
         </Card>

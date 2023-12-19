@@ -1,4 +1,4 @@
-import { Card, ScrollShadow } from "@nextui-org/react";
+import { Card, ScrollShadow, Spinner } from "@nextui-org/react";
 import {
   collection,
   doc,
@@ -8,6 +8,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { IconContext } from "react-icons";
 import { HiThumbUp } from "react-icons/hi";
@@ -76,60 +77,74 @@ function LikeShop() {
 
   const companyDatas =
     combineData.length > 0 ? (
-      combineData.map((data) => {
+      combineData.map((data, i) => {
         return (
-          <Card className="mb-8 border-2 border-solid border-gray-800 shadow-[-8px_8px_4px_2px_rgba(0,0,0,0.2)]">
-            <div key={data.favoriteId} className="relative flex items-center">
-              <div className="bg-amber-800/30 py-8 pl-6 pr-10">
-                <div className="flex h-40 w-64 items-center justify-center">
-                  <img
-                    className="h-full w-full cursor-pointer rounded-lg object-cover object-center"
-                    src={data.picture}
-                    onClick={() => {
-                      navigate(`/restaurant/${data.companyId}`);
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div className="ml-4">
-                <div className="flex items-center">
-                  <IoRestaurant className="mr-2 text-2xl" />
-                  <p className="text-lg font-bold">{data.name}</p>
-                </div>
-
-                <div className="mt-4 flex items-center">
-                  <PiPhoneCallFill className="mr-2 text-2xl" />
-                  <p className="text-lg font-bold">{data.phone}</p>
-                </div>
-
-                <div className="mt-4 flex items-center">
-                  <IoMdPin className="mr-2 text-2xl" />
-                  <p className="text-lg font-bold">
-                    {data.city}
-                    {data.district}
-                    {data.address}
-                  </p>
-                </div>
-              </div>
-
-              <div className="absolute right-4 top-4 flex w-24 items-center justify-between">
-                <div className="flex h-10 w-28 items-center justify-center rounded-xl border border-solid bg-gray-200">
-                  <div className="mr-1">
-                    <IconContext.Provider value={{ size: "30px" }}>
-                      <HiThumbUp />
-                    </IconContext.Provider>
+          <motion.div
+            animate={{ x: 0, opacity: 1, transition: { delay: 0.1 * i } }}
+            initial={{ x: -50, opacity: 0 }}
+            key={data.favoriteId}
+          >
+            <Card className="border-2 shadow-xl">
+              <div className="relative flex items-center">
+                <div className="bg-amber-800/30 p-6 py-8">
+                  <div className="flex h-44 w-64 items-center justify-center">
+                    <img
+                      className="h-full w-full cursor-pointer rounded-lg object-cover object-center"
+                      src={data.picture}
+                      onClick={() => {
+                        navigate(`/restaurant/${data.companyId}`);
+                      }}
+                    />
                   </div>
-                  <p className="mr-1">|</p>
-                  <p className="font-semibold">Like</p>
+                </div>
+
+                <div className="ml-4">
+                  <div className="flex items-center">
+                    <IoRestaurant className="mr-2 text-2xl" />
+                    <p className="text-lg font-bold">{data.name}</p>
+                  </div>
+
+                  <div className="mt-4 flex items-center">
+                    <PiPhoneCallFill className="mr-2 text-2xl" />
+                    <p className="text-lg font-bold">{data.phone}</p>
+                  </div>
+
+                  <div className="mt-4 flex items-center">
+                    <IoMdPin className="mr-2 text-2xl" />
+                    <p className="text-lg font-bold">
+                      {data.city}
+                      {data.district}
+                      {data.address}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="absolute right-4 top-4 flex w-24 items-center justify-between">
+                  <div className="flex h-10 w-28 items-center justify-center rounded-xl border border-solid bg-gray-200">
+                    <div className="mr-1">
+                      <IconContext.Provider value={{ size: "30px" }}>
+                        <HiThumbUp />
+                      </IconContext.Provider>
+                    </div>
+                    <p className="mr-1">|</p>
+                    <p className="font-semibold">Like</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </Card>
+            </Card>
+          </motion.div>
         );
       })
     ) : (
-      <h1 key="no">未有相關資訊</h1>
+      <div key="no" className=" flex h-full justify-center">
+        <Spinner
+          label="加載中"
+          color="warning"
+          labelColor="warning"
+          className="font-black"
+          size="lg"
+        />
+      </div>
     );
 
   return (
@@ -139,9 +154,7 @@ function LikeShop() {
         hideScrollBar
         className="flex h-[calc(100vh-300px)] w-full justify-center"
       >
-        <div className="flex h-full w-3/4 justify-center">
-          <div className="w-full">{companyDatas}</div>
-        </div>
+        <div className="flex h-full w-3/4 flex-col gap-12">{companyDatas}</div>
       </ScrollShadow>
     </div>
   );

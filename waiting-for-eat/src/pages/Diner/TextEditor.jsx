@@ -113,39 +113,46 @@ function TextEditor() {
     });
   }
 
+  const onFinish = (values) => {
+    console.log("Success:", values);
+  };
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+
   return (
     <div className="flex w-full justify-center">
       <div className="relative w-full max-w-[1300px] px-20 pb-20 pt-12">
         <div>
           <Form>
-            <Form.Item
-              label="標題"
-              rules={[
-                {
-                  message: "請輸入標題!",
-                },
-              ]}
-            >
+            <div className="mb-6 flex items-center">
+              <h1 className="mr-4 w-24 text-lg font-black text-gray-600 [text-align-last:justify]">
+                標題
+              </h1>
               <Input
-                className="w-96"
+                className="h-10 w-[500px] border border-solid border-gray-600 text-lg"
                 name="title"
                 onChange={(e) => setTitle(e.target.value)}
                 value={title}
               />
-            </Form.Item>
+            </div>
 
-            <Form.Item label="上傳封面照片" className="w-96">
+            <div className="mb-6 flex items-center">
+              <h1 className="mr-4 w-24 text-lg font-black text-gray-600 [text-align-last:justify]">
+                封面照片
+              </h1>
               <Input
+                className="h-10 w-[500px] border border-solid border-gray-600"
                 type="file"
                 accept="image/*"
                 name="picture"
                 onChange={(e) => handleMainPicture(e.target.files[0])}
               />
-            </Form.Item>
+            </div>
           </Form>
         </div>
 
-        <div className="min-h-[400px] border-2 border-solid border-black">
+        <div className="min-h-[400px] border-2 border-solid border-gray-400">
           <Editor
             editorState={editorState}
             toolbarClassName="toolbarClassName"
@@ -202,7 +209,7 @@ function TextEditor() {
         <Button
           className="absolute bottom-4 right-48 mt-8 block h-10 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg"
           onClick={() => {
-            navigate(`/diner/posted/${orderData.userId}`);
+            navigate(`/diner/eatenShop/${orderData.userId}`);
           }}
         >
           返回
