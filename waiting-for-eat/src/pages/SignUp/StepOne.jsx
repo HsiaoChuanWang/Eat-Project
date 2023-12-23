@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
+import { Bs1CircleFill } from "react-icons/bs";
+import boss from "./signUpPictures/boss.png";
+import diner from "./signUpPictures/diner.png";
+import stepOne from "./signUpPictures/stepOne.jpg";
 
-function StepOne({ setActive, setType, type }) {
-  const [colorChange, setColorChange] = useState(true);
-
-  function handleType(e) {
-    setType(e.target.name);
-    setColorChange(true);
+function StepOne({ setActive, identity, setIdentity }) {
+  function saveIdentity(identity) {
+    setIdentity(identity);
   }
 
-  function handleNext() {
-    if (type === "") {
+  function nextStep() {
+    if (identity === "") {
       alert("請點選註冊類別");
     } else {
       setActive("StepTwo");
@@ -17,38 +18,52 @@ function StepOne({ setActive, setType, type }) {
   }
 
   return (
-    <>
-      <div className="flex flex-col">
-        <h2 className="m-4 py-8 text-center text-2xl">請選擇註冊類別</h2>
-        <button
-          className={` m-4 block  border border-solid border-black py-8 text-2xl ${
-            colorChange && type === "食客" ? " bg-red-300" : " bg-sky-200"
-          }`}
-          name="食客"
-          onClick={(e) => handleType(e)}
-        >
-          食客
-        </button>
+    <div className="relative flex h-[calc(100vh-96px)] w-screen">
+      <img src={stepOne} className="h-full w-3/5 object-cover object-center" />
 
-        <button
-          className={` m-4 block  border border-solid border-black py-8 text-2xl ${
-            colorChange && type === "餐廳業主" ? " bg-red-300" : " bg-sky-200"
-          }`}
-          name="餐廳業主"
-          onClick={(e) => handleType(e)}
+      <div className="flex h-full w-2/5 items-center justify-center">
+        <div
+          className={`flex h-[520px] w-[450px] flex-col items-center justify-center rounded-2xl`}
         >
-          餐廳業主
-        </button>
+          <div className="mb-12 flex items-center gap-2 text-3xl font-black text-[#ff850e]">
+            <Bs1CircleFill />
+            <h1>請選擇登入身份</h1>
+          </div>
+          <div
+            onClick={() => saveIdentity("diner")}
+            className={`${
+              identity === "diner" && "bg-slate-300"
+            } mb-8 flex cursor-pointer items-center rounded-lg bg-slate-100 hover:bg-slate-200 hover:text-gray-600`}
+          >
+            <img src={diner} className="h-32" />
+            <div className="mr-8 w-32 text-center">
+              <h2 className="text-2xl font-bold">食客</h2>
+              <h3 className=" text-base font-bold">Foodie</h3>
+            </div>
+          </div>
+
+          <div
+            onClick={() => saveIdentity("boss")}
+            className={`${
+              identity === "boss" && "bg-slate-300"
+            } flex cursor-pointer items-center rounded-lg bg-slate-100 hover:bg-slate-200 hover:text-gray-600`}
+          >
+            <div className="ml-8 w-32 text-center">
+              <h2 className="text-2xl font-bold">餐廳業者</h2>
+              <h3 className=" text-base font-bold">Owner</h3>
+            </div>
+            <img src={boss} className="h-32" />
+          </div>
+
+          <button
+            className="mr-8 mt-16 h-10 w-20 self-end rounded-lg bg-[#ff850e] font-bold text-white hover:bg-[#ff850e]/80"
+            onClick={nextStep}
+          >
+            下一步
+          </button>
+        </div>
       </div>
-
-      <button
-        className="my-8 ml-48 border-2 border-solid border-black text-xl"
-        name="next"
-        onClick={handleNext}
-      >
-        下一步
-      </button>
-    </>
+    </div>
   );
 }
 

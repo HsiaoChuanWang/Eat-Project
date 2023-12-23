@@ -1,8 +1,10 @@
-import { Button, Form, Input, Radio } from "antd";
+import { Form, Input, Radio } from "antd";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useRef, useState } from "react";
+import { Bs3CircleFill } from "react-icons/bs";
 import { storage } from "../../firebase";
 import useUserStore from "../../stores/userStore";
+import stepThree from "./signUpPictures/stepThree.jpg";
 
 function StepThreeDiner({ setActive }) {
   const userInfo = useUserStore((state) => state.userInfo);
@@ -48,7 +50,7 @@ function StepThreeDiner({ setActive }) {
     }
   };
 
-  async function handleNext() {
+  async function nextStep() {
     if (detail.userName != "" && detail.gender != "" && detail.phone != "") {
       checkRef.current = false;
       await getDetailInfo(detail);
@@ -59,125 +61,86 @@ function StepThreeDiner({ setActive }) {
     }
   }
 
-  const onFinish = (values) => {
-    console.log("Success:", values);
-  };
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
-
   return (
-    <>
-      <h2 className="p-6 text-center text-xl">基本資料</h2>
-      <Form
-        className="m-4"
-        name="basic"
-        labelCol={{
-          span: 8,
-        }}
-        wrapperCol={{
-          span: 16,
-        }}
-        style={{
-          maxWidth: 600,
-        }}
-        initialValues={{
-          remember: true,
-        }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="姓名"
-          name="userName"
-          rules={[
-            {
-              required: true,
-              message: "請輸入姓名!",
-            },
-          ]}
-        >
-          <Input
-            name="userName"
-            onChange={(e) => handleData(e)}
-            value={detail.userName}
-          />
-        </Form.Item>
+    <div className="relative flex h-[calc(100vh-96px)] w-screen">
+      <img
+        src={stepThree}
+        className="h-full w-3/5 object-cover object-center"
+      />
 
-        <Form.Item
-          label="性別"
-          name="gender"
-          rules={[
-            {
-              required: true,
-              message: "請點選性別!",
-            },
-          ]}
+      <div className="flex h-full w-2/5 flex-col items-center justify-center">
+        <div
+          className={`flex h-[520px] w-[450px] flex-col items-center justify-center rounded-2xl bg-white`}
         >
-          <Radio.Group
-            name="gender"
-            onChange={(e) => handleData(e)}
-            value={detail.gender}
+          <div className=" mb-8 flex items-center gap-2 text-3xl font-black text-[#ff850e]">
+            <Bs3CircleFill />
+            <h1>填寫資訊，上架你的餐廳。</h1>
+          </div>
+
+          <Form autoComplete="off" className="mb-8">
+            <div className="flex items-center">
+              <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                姓名
+              </h1>
+              <Input
+                className="h-8 w-28"
+                name="userName"
+                onChange={(e) => handleData(e)}
+                value={detail.userName}
+              />
+            </div>
+
+            <div className="flex items-center">
+              <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                性別
+              </h1>
+
+              <Radio.Group
+                name="gender"
+                onChange={(e) => handleData(e)}
+                value={detail.gender}
+              >
+                <Radio value="小姐">女</Radio>
+                <Radio value="先生">男</Radio>
+              </Radio.Group>
+            </div>
+
+            <div className="flex items-center">
+              <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                手機
+              </h1>
+              <Input
+                className="h-8 w-64"
+                name="phone"
+                onChange={(e) => handleData(e)}
+                value={detail.phone}
+                placeholder="0911-654-987"
+              />
+            </div>
+
+            <div className="mb-4 flex  items-center">
+              <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                上傳大頭照
+              </h1>
+              <Input
+                className="h-8 w-64 text-xs"
+                type="file"
+                accept="image/*"
+                name="picture"
+                onChange={(e) => handleData(e)}
+              />
+            </div>
+          </Form>
+
+          <button
+            className="mr-8 h-10 w-20 self-end rounded-lg bg-[#ff850e] font-bold text-white hover:bg-[#ff850e]/80"
+            onClick={nextStep}
           >
-            <Radio value="小姐">女</Radio>
-            <Radio value="先生">男</Radio>
-          </Radio.Group>
-        </Form.Item>
-
-        <Form.Item
-          label="手機"
-          name="phone"
-          rules={[
-            {
-              required: true,
-              message: "請輸入手機!",
-            },
-          ]}
-        >
-          <Input
-            name="phone"
-            onChange={(e) => handleData(e)}
-            value={detail.phone}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="上傳大頭照"
-          name="picture"
-          rules={[
-            {
-              required: false,
-              message: "請輸入姓名!",
-            },
-          ]}
-        >
-          <Input
-            type="file"
-            accept="image/*"
-            name="picture"
-            onChange={(e) => handleData(e)}
-          />
-        </Form.Item>
-
-        <Form.Item
-          wrapperCol={{
-            offset: 8,
-            span: 16,
-          }}
-        >
-          <Button
-            className="bg-[#1677ff]"
-            onClick={handleNext}
-            disabled={checkRef.current}
-            type="primary"
-            htmlType="button"
-          >
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
-    </>
+            下一步
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -229,7 +192,7 @@ export default StepThreeDiner;
       <h2 className="ml-1 py-12 text-2xl text-red-600">*必填項目</h2>
       <button
         className="my-8 ml-48 border-2 border-solid border-black text-xl"
-        onClick={handleNext}
+        onClick={nextStep}
         disabled={checkRef}
       >
         送出

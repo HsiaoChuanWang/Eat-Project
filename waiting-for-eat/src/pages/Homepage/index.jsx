@@ -9,17 +9,14 @@ import db from "../../firebase";
 import useSearchStore from "../../stores/searchStore";
 import useUserStore from "../../stores/userStore";
 import Carousel from "./Carousel";
-import banner01 from "./banner01.jpg";
-import banner02 from "./banner02.jpg";
-import banner03 from "./banner03.jpg";
-import bbq from "./bbq.jpg";
-import boss from "./boss.png";
-import breakfast2 from "./breakfast2.jpg";
-import diner from "./diner.png";
-import hotpot from "./hotpot.jpg";
-import smalleat from "./smalleat.jpg";
-import steak from "./steak.jpg";
-import sweet from "./sweet.jpg";
+import bbq from "./homepagePictures/bbq.jpg";
+import boss from "./homepagePictures/boss.png";
+import breakfast from "./homepagePictures/breakfast.jpg";
+import diner from "./homepagePictures/diner.png";
+import hotpot from "./homepagePictures/hotpot.jpg";
+import steak from "./homepagePictures/steak.jpg";
+import streetFood from "./homepagePictures/streetFood.jpg";
+import sweet from "./homepagePictures/sweet.jpg";
 
 function HomePage() {
   const setSearchArray = useSearchStore((state) => state.setSearchArray);
@@ -31,7 +28,6 @@ function HomePage() {
   const companyRef = collection(db, "company");
   const navigate = useNavigate();
   const scrollRef = useRef();
-  const banners = [banner01, banner02, banner03];
 
   useEffect(() => {
     let companyList = [];
@@ -226,10 +222,9 @@ function HomePage() {
         transition={{
           ease: "linear",
           duration: 0.5,
-          //   x: { duration: 1 },
         }}
         initial={{ x: -50, opacity: 0 }}
-        className="my-16 flex items-center justify-center"
+        className="mt-24 flex items-center justify-center"
       >
         <div>
           <img className="h-[240px]" src={diner}></img>
@@ -254,10 +249,9 @@ function HomePage() {
         transition={{
           ease: "linear",
           duration: 0.5,
-          //   x: { duration: 1 },
         }}
         initial={{ x: 50, opacity: 0 }}
-        className="my-16  flex items-center justify-center"
+        className="mt-24 flex items-center justify-center"
       >
         <div className="mr-16 leading-8">
           <div className="mb-2 text-2xl font-bold">
@@ -420,7 +414,7 @@ function HomePage() {
           >
             <img
               className="card-zoom-image absolute h-full w-full transform transition-all duration-500 ease-in-out"
-              src={smalleat}
+              src={streetFood}
             />
             <div className="absolute h-full w-full bg-black/40"></div>
             <div className="card-zoom-text absolute scale-150 transform text-center text-white transition-all duration-500 ease-in-out">
@@ -435,7 +429,7 @@ function HomePage() {
           >
             <img
               className="card-zoom-image absolute h-full w-full transform transition-all duration-500 ease-in-out"
-              src={breakfast2}
+              src={breakfast}
             />
             <div className="absolute h-full w-full bg-black/40"></div>
             <div className="card-zoom-text absolute scale-150 transform text-center text-white transition-all duration-500 ease-in-out">

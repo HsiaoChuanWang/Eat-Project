@@ -1,9 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { wrap } from "popmotion";
 import React, { useEffect, useState } from "react";
-import banner01 from "./banner01.jpg";
-import banner02 from "./banner02.jpg";
-import banner03 from "./banner03.jpg";
+import banner01 from "./homepagePictures/banner01.jpg";
+import banner02 from "./homepagePictures/banner02.jpg";
+import banner03 from "./homepagePictures/banner03.jpg";
 
 const variants = {
   enter: (direction) => {

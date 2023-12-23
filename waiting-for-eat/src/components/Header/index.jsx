@@ -72,7 +72,7 @@ function Header() {
         return buttonSignUp.map((item) => (
           <button
             key={item.displayText}
-            className="m-2.5 rounded-sm border-2 border-solid border-black text-lg"
+            className="m-3 cursor-pointer text-lg font-medium text-gray-600 hover:text-[#ff6e06]"
             onClick={() => {
               window.scrollTo({
                 top: 0,
@@ -91,7 +91,7 @@ function Header() {
         return buttonLogOut.map((item) => (
           <button
             key={item.displayText}
-            className="m-2.5 rounded-sm border-2 border-solid border-black text-lg"
+            className="m-3 cursor-pointer text-lg font-medium text-gray-600 hover:text-[#ff6e06]"
             onClick={() => {
               window.scrollTo({
                 top: 0,
@@ -155,14 +155,6 @@ function Header() {
       <Link to="/">
         <img src={logo} className="ml-16 h-24 w-auto" />
       </Link>
-      {/* <div className="flex">
-        <img
-          src={userData.picture ? userData.picture : { fake }}
-          className="w-20"
-        ></img>
-        <div>{`${userData.userName} ?. ${userData.userName} : "你好"} ，您好`}</div>
-      </div> */}
-
       <div className="m-16 flex">{renderSwitch("LogOut")}</div>
     </div>
   );

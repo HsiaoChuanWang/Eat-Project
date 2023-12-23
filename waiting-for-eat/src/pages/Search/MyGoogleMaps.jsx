@@ -34,6 +34,7 @@ function MyGoogleMaps({ currentPosition, mapRef, map, setMap, onLoad }) {
     }
 
     const infoWindow = new window.google.maps.InfoWindow();
+    console.log(searchArray);
     searchArray.map((markInfo, index) => {
       const lat = markInfo.lat;
       const lng = markInfo.lng;
