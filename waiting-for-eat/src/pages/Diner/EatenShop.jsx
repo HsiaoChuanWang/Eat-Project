@@ -65,9 +65,11 @@ function EatenShop() {
       if (doc.exists()) {
         const result = false;
         resultList.push(result);
+        console.log(resultList);
       } else {
         const result = true;
         resultList.push(result);
+        console.log(resultList);
       }
     });
 
@@ -116,25 +118,21 @@ function EatenShop() {
 
       Promise.all(
         favoriteList.map((item) => {
-          return getCompanyInfo(item.companyId).then((data) => {
-            const newItem = Object.assign(item, data);
-            return getPostInfo(newItem.orderId)
-              .then((data) => {
-                const newnewItem = { ...newItem, canWritePost: data };
-                return newnewItem;
-              })
-              .then((newnewItem) => {
-                return getCommentInfo(newItem.orderId).then((data) => {
-                  const newnewnewItem = {
-                    ...newnewItem,
-                    canWriteComment: data,
-                  };
-                  return newnewnewItem;
-                });
-              });
+          return Promise.all([
+            getCompanyInfo(item.companyId),
+            getPostInfo(item.orderId),
+            getCommentInfo(item.orderId),
+          ]).then(([companyInfo, postInfo, commentInfo]) => {
+            const newItem = {
+              ...item,
+              ...companyInfo,
+              canWritePost: postInfo,
+              canWriteComment: commentInfo,
+            };
+            return newItem;
           });
         }),
-      ).then((value) => setCombineData([...value]));
+      ).then((value) => setCombineData(value));
     });
 
     return favoriteSnap;

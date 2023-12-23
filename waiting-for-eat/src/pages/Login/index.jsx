@@ -1,19 +1,26 @@
+import { Input } from "@nextui-org/react";
 import {
   getAuth,
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
 import { default as React, useEffect, useState } from "react";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { provider } from "../../firebase";
 import useUserStore from "../../stores/userStore";
-import googlelogo from "../SignUp/googleLogo.png";
+import googleLogo from "../SignUp/signUpPictures/GoogleLogo.png";
+import boss from "../SignUp/signUpPictures/boss.png";
+import cook from "../SignUp/signUpPictures/cook.png";
+import diner from "../SignUp/signUpPictures/diner.png";
+import loginBackground from "./loginBackground.jpg";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [emailBoss, setEmailBoss] = useState("");
-  const [passwordBoss, setPasswordBoss] = useState("");
+  const [identity, setIdentity] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleVisibility = () => setIsVisible(!isVisible);
   const navigate = useNavigate();
   const detailInfo = useUserStore((state) => state.detailInfo);
   const getUserInfo = useUserStore((state) => state.getUserInfo);
@@ -26,32 +33,17 @@ function Login() {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log("Login successfully!");
         getUserInfo(user.providerId, user.uid);
         getUserFirestore(user.uid);
         alert("登入成功");
         setIsLogin();
-        navigate("/");
+        console.log(identity);
+        if (identity === "diner") {
+          navigate("/");
+        } else {
+          navigate(`/boss/bossInfo/${detailInfo.companyId}`);
+        }
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert("請確認email及密碼是否輸入正確");
-        console.log((errorCode, "=", errorMessage));
-      });
-  }
-
-  function nativeLoginBoss() {
-    signInWithEmailAndPassword(auth, emailBoss, passwordBoss)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log("Login successfully!");
-        getUserInfo(user.providerId, user.uid);
-        getUserFirestore(user.uid);
-        alert("登入成功");
-        setIsLogin();
-      })
-
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -86,106 +78,121 @@ function Login() {
       });
   };
 
-  const googleLoginBoss = async () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        console.log("Google login successfully!");
-        getUserInfo(user.providerId, user.uid);
-        getUserFirestore(user.uid);
-        alert("登入成功");
-        setIsLogin();
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log((errorCode, "=", errorMessage));
-      });
-  };
+  function saveIdentity(identity) {
+    setIdentity(identity);
+  }
 
   return (
-    <div className="flex">
-      <div className="m-4 w-96 border-2 border-solid border-black">
-        <h1 className="text-2xl font-semibold">食客登入</h1>
-        <div className="flex">
-          <h2 className="ml-4 py-12 text-center text-2xl">email</h2>
+    <div className="relative flex h-[calc(100vh-96px)] w-screen">
+      <img
+        src={loginBackground}
+        className="h-full w-3/5 object-cover object-center"
+      />
 
-          <input
-            className="m-8 border-2 border-solid border-black text-xl"
-            placeholder="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></input>
-        </div>
-
-        <div className="flex">
-          <h2 className="ml-4 py-12 text-center text-2xl">密碼</h2>
-
-          <input
-            className="m-8 border-2 border-solid border-black text-xl"
-            placeholder="請輸入至少6碼"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          ></input>
-        </div>
-
-        <div>
-          <button
-            className="my-8 ml-48 border-2 border-solid border-black text-xl"
-            onClick={nativeLogin}
+      <div className="flex h-full w-2/5 items-center justify-center">
+        <div
+          className={`${
+            identity !== "" && "hidden"
+          } flex h-[520px] w-[450px] flex-col items-center justify-center rounded-2xl bg-white`}
+        >
+          <h1 className="mb-12 text-3xl font-black text-[#ff850e]">
+            請選擇登入身份
+          </h1>
+          <div
+            onClick={() => saveIdentity("diner")}
+            className="mb-8 flex cursor-pointer items-center rounded-lg bg-slate-100 hover:bg-slate-200 hover:text-gray-600"
           >
-            登入
-          </button>
-        </div>
+            <img src={diner} className="h-32" />
+            <div className="mr-8 w-32 text-center">
+              <h2 className="text-2xl font-bold">食客</h2>
+              <h3 className=" text-base font-bold">Foodie</h3>
+            </div>
+          </div>
 
-        <span className="h-20">------or------</span>
-        <div className="flex w-36 border-2 border-solid border-red-800 ">
-          <img src={googlelogo} className="h-8 w-8" />
-          <button onClick={googleLogin} className="ml-4">
-            Google登入
-          </button>
-        </div>
-      </div>
-
-      <div className="w-96 border-2 border-solid border-black">
-        <h1 className="text-2xl font-semibold">餐廳業主登入</h1>
-        <div className="flex">
-          <h2 className="ml-4 py-12 text-center text-2xl">email</h2>
-
-          <input
-            className="m-8 border-2 border-solid border-black text-xl"
-            placeholder="email"
-            value={emailBoss}
-            onChange={(e) => setEmailBoss(e.target.value)}
-          ></input>
-        </div>
-
-        <div className="flex">
-          <h2 className="ml-4 py-12 text-center text-2xl">密碼</h2>
-
-          <input
-            className="m-8 border-2 border-solid border-black text-xl"
-            placeholder="請輸入至少6碼"
-            value={passwordBoss}
-            onChange={(e) => setPasswordBoss(e.target.value)}
-          ></input>
-        </div>
-
-        <div>
-          <button
-            className="my-8 ml-48 border-2 border-solid border-black text-xl"
-            onClick={nativeLoginBoss}
+          <div
+            onClick={() => saveIdentity("boss")}
+            className="flex cursor-pointer items-center rounded-lg bg-slate-100 hover:bg-slate-200 hover:text-gray-600"
           >
-            登入
-          </button>
+            <div className="ml-8 w-32 text-center">
+              <h2 className="text-2xl font-bold">餐廳業者</h2>
+              <h3 className=" text-base font-bold">Owner</h3>
+            </div>
+            <img src={boss} className="h-32" />
+          </div>
         </div>
 
-        <span className="h-20">------or------</span>
-        <div className="flex w-36 border-2 border-solid border-red-800 ">
-          <img src={googlelogo} className="h-8 w-8" />
-          <button onClick={googleLoginBoss} className="ml-4">
-            Google登入
-          </button>
+        <div
+          className={`${
+            identity === "" && "hidden"
+          } flex h-[520px] w-[450px] flex-col items-center justify-center rounded-2xl bg-white`}
+        >
+          <div className="mt-1 flex w-full items-center">
+            <img src={cook} className="w-56" />
+            <div>
+              <h1 className="mb-1 text-2xl font-black">Waiting for eat</h1>
+              <h1 className="mb-1 font-bold">期待與你一起</h1>
+              <h1 className="text-base font-bold">食不相瞞 口耳相傳</h1>
+            </div>
+          </div>
+
+          <div className="flex h-11 w-80 items-center justify-center gap-2 rounded-lg bg-slate-100 shadow-sm hover:cursor-pointer hover:bg-slate-200">
+            <img src={googleLogo} className="h-6 w-6" />
+            <button onClick={googleLogin} className=" font-semibold">
+              使用Google登入
+            </button>
+          </div>
+
+          <div className="my-4 flex w-80 items-center">
+            <div className="w-full border-t border-solid border-gray-800"></div>
+            <span className="px-2 text-sm text-gray-500">or</span>
+            <div className="w-full border-t border-solid border-gray-500"></div>
+          </div>
+
+          <div className="w-80">
+            <Input
+              type="email"
+              variant="bordered"
+              labelPlacement="outside"
+              color={"warning"}
+              label="Email"
+              placeholder="test@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="mb-12 hover:border-red-300"
+            />
+
+            <Input
+              label="Password"
+              variant="bordered"
+              labelPlacement="outside"
+              color={"warning"}
+              placeholder="請輸入至少6碼"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              endContent={
+                <button
+                  className="focus:outline-none"
+                  type="button"
+                  onClick={toggleVisibility}
+                >
+                  {isVisible ? (
+                    <FiEye className="pointer-events-none text-xl text-default-400" />
+                  ) : (
+                    <FiEyeOff className="pointer-events-none text-xl text-default-400" />
+                  )}
+                </button>
+              }
+              type={isVisible ? "text" : "password"}
+              className="mb-8"
+            />
+
+            <button
+              className="mb-8 h-10 w-full rounded-lg bg-[#ff850e] font-bold text-white hover:bg-[#ff850e]/80"
+              onClick={nativeLogin}
+            >
+              登入
+            </button>
+          </div>
         </div>
       </div>
     </div>

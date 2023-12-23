@@ -147,7 +147,27 @@ function Like() {
     }
   };
 
-  return <>{favoriteState()}</>;
+  return (
+    <div className="flex h-10 w-28 items-center justify-center rounded-xl border border-solid bg-gray-200">
+      <div className="mr-1">
+        <IconContext.Provider value={{ size: "30px" }}>
+          {like === "like" ? (
+            <HiThumbUp onClick={() => handleLike("eaten")} />
+          ) : (
+            <HiOutlineThumbUp onClick={(e) => handleLike("like")} />
+          )}
+        </IconContext.Provider>
+      </div>
+      <p className="mr-1">|</p>
+      <IconContext.Provider value={{ size: "30px" }}>
+        {like === "dislike" ? (
+          <HiThumbDown onClick={(e) => handleLike("eaten")} />
+        ) : (
+          <HiOutlineThumbDown onClick={(e) => handleLike("dislike")} />
+        )}
+      </IconContext.Provider>
+    </div>
+  );
 }
 
 export default Like;

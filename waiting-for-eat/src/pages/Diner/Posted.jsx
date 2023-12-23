@@ -175,9 +175,7 @@ function Posted() {
         hideScrollBar
         className="flex h-[calc(100vh-300px)] w-full justify-center"
       >
-        <div className="flex h-full w-3/4 justify-center">
-          <div className="w-full">{printDatas}</div>
-        </div>
+        <div className="flex h-full w-3/4 flex-col gap-12">{printDatas}</div>
       </ScrollShadow>
     </div>
   );

@@ -1,9 +1,12 @@
+import { ScrollShadow } from "@nextui-org/react";
 import { useLoadScript } from "@react-google-maps/api";
-import { Button, Form, Input, Radio, Select } from "antd";
+import { Form, Input, Radio, Select } from "antd";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useRef, useState } from "react";
+import { Bs3CircleFill } from "react-icons/bs";
 import { storage } from "../../firebase";
 import useUserStore from "../../stores/userStore";
+import stepThree from "./signUpPictures/stepThree.jpg";
 
 function StepThreeBoss({ setActive }) {
   useLoadScript({
@@ -114,7 +117,7 @@ function StepThreeBoss({ setActive }) {
     }
   };
 
-  async function handleNext() {
+  async function nextStep() {
     if (
       detail.userName != "" &&
       detail.gender != "" &&
@@ -133,264 +136,205 @@ function StepThreeBoss({ setActive }) {
   }
 
   return (
-    <>
-      <h2 className="p-6 text-center text-xl">負責人資訊</h2>
-      <Form
-        className="m-4"
-        name="basic"
-        labelCol={{
-          span: 4,
-        }}
-        wrapperCol={{
-          span: 16,
-        }}
-        style={{
-          maxWidth: 600,
-        }}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="姓名"
-          name="userName"
-          rules={[
-            {
-              required: true,
-              message: "請輸入姓名!",
-            },
-          ]}
-        >
-          <Input
-            name="userName"
-            onChange={(e) => handleData(e)}
-            value={detail.userName}
-          />
-        </Form.Item>
+    <div className="relative flex h-[calc(100vh-96px)] w-screen">
+      <img
+        src={stepThree}
+        className="h-full w-3/5 object-cover object-center"
+      />
 
-        <Form.Item
-          label="性別"
-          name="gender"
-          rules={[
-            {
-              required: true,
-              message: "請點選性別!",
-            },
-          ]}
-        >
-          <Radio.Group
-            name="gender"
-            onChange={(e) => handleData(e)}
-            value={detail.gender}
+      <div className="flex h-full w-2/5 flex-col items-center justify-center py-8">
+        <div className=" mb-8 flex items-center gap-2 text-3xl font-black text-[#ff850e]">
+          <Bs3CircleFill />
+          <h1>填寫資訊，上架你的餐廳。</h1>
+        </div>
+
+        <ScrollShadow size={0} className="h-[450px] w-[500px] ">
+          <div
+            className={`flex flex-col items-center justify-center rounded-2xl`}
           >
-            <Radio value="小姐">女</Radio>
-            <Radio value="先生">男</Radio>
-          </Radio.Group>
-        </Form.Item>
+            <h2 className="mb-2 text-2xl font-bold">負責人資訊</h2>
+            <div className="mx-auto w-4/5 border-t-2 border-solid border-gray-400 pb-2"></div>
+            <Form autoComplete="off" className="mb-8">
+              <div className="flex items-center">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  姓名
+                </h1>
+                <Input
+                  className="h-8 w-28"
+                  name="userName"
+                  onChange={(e) => handleData(e)}
+                  value={detail.userName}
+                />
+              </div>
 
-        <Form.Item
-          label="手機"
-          name="phone"
-          rules={[
-            {
-              required: true,
-              message: "請輸入手機!",
-            },
-          ]}
-        >
-          <Input
-            name="phone"
-            onChange={(e) => handleData(e)}
-            value={detail.phone}
-          />
-        </Form.Item>
+              <div className="flex items-center">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  性別
+                </h1>
 
-        <Form.Item
-          label="上傳大頭照"
-          name="picture"
-          rules={[
-            {
-              required: false,
-            },
-          ]}
-        >
-          <Input
-            type="file"
-            accept="image/*"
-            name="picture"
-            onChange={(e) => handleData(e)}
-          />
-        </Form.Item>
+                <Radio.Group
+                  name="gender"
+                  onChange={(e) => handleData(e)}
+                  value={detail.gender}
+                >
+                  <Radio value="小姐">女</Radio>
+                  <Radio value="先生">男</Radio>
+                </Radio.Group>
+              </div>
 
-        <h2 className="p-6 text-center text-xl">餐廳資訊</h2>
+              <div className="flex items-center">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  手機
+                </h1>
+                <Input
+                  className="h-8 w-64"
+                  name="phone"
+                  onChange={(e) => handleData(e)}
+                  value={detail.phone}
+                />
+              </div>
 
-        <Form.Item
-          label="餐廳名稱"
-          name="name"
-          rules={[
-            {
-              required: true,
-              message: "請輸入餐廳名稱!",
-            },
-          ]}
-        >
-          <Input
-            name="name"
-            onChange={(e) => handleCompany(e)}
-            value={company.name}
-          />
-        </Form.Item>
+              <div className="mb-4 flex  items-center">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  上傳大頭照
+                </h1>
+                <Input
+                  className="h-8 w-64 text-xs"
+                  type="file"
+                  accept="image/*"
+                  name="picture"
+                  onChange={(e) => handleData(e)}
+                />
+              </div>
+            </Form>
 
-        <label className="font-[SimSun,sans-serif] text-[#ff4d4f]">* </label>
-        <label className="inline-block">餐廳地址:</label>
+            <h2 className="mb-2 text-2xl font-bold">餐廳資訊</h2>
+            <div className="mx-auto w-4/5 border-t-2 border-solid border-gray-400 pb-2"></div>
+            <Form autoComplete="off" className="mb-8">
+              <div className="flex items-center">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  店名
+                </h1>
+                <Input
+                  className="h-8 w-64"
+                  name="name"
+                  onChange={(e) => handleCompany(e)}
+                  value={company.name}
+                />
+              </div>
 
-        <Form.Item
-          label="縣市"
-          name="city"
-          rules={[
-            {
-              required: true,
-              message: "請輸入縣市!",
-            },
-          ]}
-        >
-          <Input
-            className="w-20"
-            name="city"
-            onChange={(e) => handleCompany(e)}
-            value={company.city}
-            placeholder="台北市"
-          />
-        </Form.Item>
+              <div className="my-4 flex ">
+                <h1 className="mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  地址
+                </h1>
 
-        <Form.Item
-          label="鄉鎮市區"
-          name="district"
-          rules={[
-            {
-              required: true,
-              message: "請輸入地區!",
-            },
-          ]}
-        >
-          <Input
-            className="w-20"
-            name="district"
-            onChange={(e) => handleCompany(e)}
-            value={company.district}
-            placeholder="中山區"
-          />
-        </Form.Item>
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <h2 className="text-xs text-gray-400">縣市</h2>
+                    <Input
+                      className="w-20"
+                      name="city"
+                      onChange={(e) => handleCompany(e)}
+                      value={company.city}
+                      placeholder="台北市"
+                    />
+                  </div>
 
-        <Form.Item
-          label="詳細地址"
-          name="address"
-          rules={[
-            {
-              required: true,
-              message: "請輸入詳細地址!",
-            },
-          ]}
-        >
-          <Input
-            name="address"
-            onChange={(e) => handleCompany(e)}
-            value={company.address}
-            placeholder="南京西路12巷13弄9號"
-          />
-        </Form.Item>
+                  <div>
+                    <h2 className="text-xs text-gray-400">鄉鎮市區</h2>
+                    <Input
+                      className="w-20"
+                      name="district"
+                      onChange={(e) => handleCompany(e)}
+                      value={company.district}
+                      placeholder="中山區"
+                    />
+                  </div>
 
-        <Form.Item
-          label="餐廳電話"
-          name="telephone"
-          rules={[
-            {
-              required: true,
-              message: "請輸入餐廳電話!",
-            },
-          ]}
-        >
-          <Input
-            name="telephone"
-            onChange={(e) => handleCompany(e)}
-            value={company.phone}
-            placeholder="02-2556-5354"
-          />
-        </Form.Item>
+                  <div>
+                    <h2 className="text-xs text-gray-400">詳細地址</h2>
 
-        <Form.Item
-          label="餐廳類別"
-          name="category"
-          rules={[
-            {
-              required: true,
-              message: "請點選類別",
-            },
-          ]}
-        >
-          <Select
-            name="category"
-            onChange={(e) => setCompany({ ...company, category: e })}
-            value={company.category}
-            showSearch
-            style={{
-              width: 200,
-            }}
-            placeholder="點選類別"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              (option?.label ?? "").includes(input)
-            }
-            // filterSort={(optionA, optionB) =>
-            //   (optionA?.label ?? "")
-            //     .toLowerCase()
-            //     .localeCompare((optionB?.label ?? "").toLowerCase())
-            // }
-            options={[
-              {
-                value: "0",
-                label: "火鍋",
-              },
-              {
-                value: "1",
-                label: "燒烤",
-              },
-              {
-                value: "2",
-                label: "牛排",
-              },
-              {
-                value: "3",
-                label: "甜點",
-              },
-              {
-                value: "4",
-                label: "小吃",
-              },
-              {
-                value: "5",
-                label: "早餐",
-              },
-            ]}
-          />
-        </Form.Item>
+                    <Input
+                      className="w-44"
+                      name="address"
+                      onChange={(e) => handleCompany(e)}
+                      value={company.address}
+                      placeholder="南京西路12巷13弄9號"
+                    />
+                  </div>
+                </div>
+              </div>
 
-        <Form.Item
-          wrapperCol={{
-            offset: 8,
-            span: 16,
-          }}
-        >
-          <Button
-            className="bg-[#1677ff]"
-            onClick={handleNext}
-            disabled={checkRef.current}
-            type="primary"
-            htmlType="button"
-          >
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
-    </>
+              <div className="flex items-center">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  餐廳電話
+                </h1>
+                <Input
+                  className="h-8 w-64"
+                  name="telephone"
+                  onChange={(e) => handleCompany(e)}
+                  value={company.phone}
+                  placeholder="02-2556-5354"
+                />
+              </div>
+
+              <div className="flex items-center">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+                  類別
+                </h1>
+                <Select
+                  name="category"
+                  onChange={(e) => setCompany({ ...company, category: e })}
+                  value={company.category}
+                  showSearch
+                  style={{
+                    width: 200,
+                  }}
+                  placeholder="點選類別"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "").includes(input)
+                  }
+                  options={[
+                    {
+                      value: "0",
+                      label: "火鍋",
+                    },
+                    {
+                      value: "1",
+                      label: "燒烤",
+                    },
+                    {
+                      value: "2",
+                      label: "牛排",
+                    },
+                    {
+                      value: "3",
+                      label: "甜點",
+                    },
+                    {
+                      value: "4",
+                      label: "小吃",
+                    },
+                    {
+                      value: "5",
+                      label: "早餐",
+                    },
+                  ]}
+                />
+              </div>
+            </Form>
+
+            <button
+              className="mr-8 h-10 w-20 self-end rounded-lg bg-[#ff850e] font-bold text-white hover:bg-[#ff850e]/80"
+              onClick={nextStep}
+            >
+              下一步
+            </button>
+          </div>
+        </ScrollShadow>
+      </div>
+    </div>
   );
 }
 
