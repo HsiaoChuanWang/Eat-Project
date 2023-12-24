@@ -14,8 +14,8 @@ function SignUp() {
     StepOne: (
       <StepOne
         setActive={setActive}
-        // identity={identity}
-        // setIdentity={setIdentity}
+        identity={identity}
+        setIdentity={setIdentity}
       />
     ),
     StepTwo: <StepTwo setActive={setActive} identity={identity} />,

@@ -17,10 +17,12 @@ import {
   where,
 } from "firebase/firestore";
 import { default as React, useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import Alert from "../../components/Alert/index.jsx";
 import db from "../../firebase";
 import useDinerStore from "../../stores/dinerStore.js";
-import useUserStore from "../../stores/userStore";
+import useUserStore from "../../stores/userStore.js";
 import logologo from "../Post/logologo.jpg";
 
 function Reserve() {
@@ -33,11 +35,11 @@ function Reserve() {
   const [orders, setOrders] = useState([]);
   const [tables, setTables] = useState([]);
   const [isSelected, setIsSelected] = useState("");
-  const userInfo = useUserStore((state) => state.userInfo);
+  const userId = useUserStore((state) => state.userId);
   const { companyId } = useParams();
   const [send, setSend] = useState({
     companyId: companyId,
-    userId: userInfo.userId,
+    userId: userId,
     date: "",
     start: "",
     end: "",
@@ -85,10 +87,10 @@ function Reserve() {
   }, []);
 
   useEffect(() => {
-    if (userInfo.userId != "") {
-      setSend({ ...send, userId: userInfo.userId });
+    if (userId != "") {
+      setSend({ ...send, userId: userId });
     }
-  }, [userInfo.userId]);
+  }, [userId]);
 
   //不能選今天之前的日期
   const disabledDate = (current) => {
@@ -161,7 +163,7 @@ function Reserve() {
         });
 
         if (parseInt(send.people) > peopleCount) {
-          alert("座位不足");
+          toast.error("座位不足");
           return false;
         }
 
@@ -174,11 +176,9 @@ function Reserve() {
       send.tableNumber = tableNumbers;
 
       updateData(send);
-      //   alert(`預約成功! 請確認訂位資訊，若有任何疑問請洽電。`);
-
       setIsSelected("");
     } else {
-      alert("請填寫完整資訊");
+      toast.error("請填寫完整資訊");
     }
   }
   openTime.sort((firstItem, secondItem) =>
@@ -268,6 +268,7 @@ function Reserve() {
 
   return (
     <div className="flex justify-center">
+      <Alert />
       <div className="flex max-w-[1400px] justify-between">
         <div className="mt-44 w-4/12">
           <img
@@ -418,9 +419,7 @@ function Reserve() {
                               onPress={onClose}
                               onClick={() => {
                                 setSelectedDinerBar("reserved");
-                                navigate(
-                                  `/diner/reservedShop/${userInfo.userId}`,
-                                );
+                                navigate(`/diner/reservedShop/${userId}`);
                               }}
                             >
                               前往

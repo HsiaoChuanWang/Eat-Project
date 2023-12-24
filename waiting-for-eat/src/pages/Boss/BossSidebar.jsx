@@ -20,7 +20,8 @@ function BossSidebar() {
         <div className="flex flex-wrap bg-zinc-600/70">
           <div
             className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              selectedBossBar === "bossInfo"
+              selectedBossBar === "bossInfo" ||
+              selectedBossBar === "bossInfoEdit"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
@@ -37,7 +38,7 @@ function BossSidebar() {
 
           <div
             className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              selectedBossBar === "photo"
+              selectedBossBar === "photo" || selectedBossBar === "photoUpload"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
@@ -54,7 +55,8 @@ function BossSidebar() {
 
           <div
             className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              selectedBossBar === "activity"
+              selectedBossBar === "activity" ||
+              selectedBossBar === "activityEdit"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}

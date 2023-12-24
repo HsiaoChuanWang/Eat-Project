@@ -19,7 +19,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import db from "../../firebase";
 import useSearchStore from "../../stores/searchStore";
-import useUserStore from "../../stores/userStore";
+import useUserStore from "../../stores/userStore.js";
 import MyGoogleMaps from "./MyGoogleMaps";
 import tasty from "./tasty.jpg";
 
@@ -27,7 +27,7 @@ const libraries = ["places"];
 
 function Search() {
   //   const [redPin, setRedPin] = useState([]);
-  const userInfo = useUserStore((state) => state.userInfo);
+  const userId = useUserStore((state) => state.userId);
   const searchArray = useSearchStore((state) => state.searchArray);
   const setSearchArray = useSearchStore((state) => state.setSearchArray);
   const navigation = useNavigate();
@@ -36,7 +36,7 @@ function Search() {
     const favoriteq = query(
       collection(db, "favorite"),
       where("companyId", "==", companyId),
-      where("userId", "==", userInfo.userId),
+      where("userId", "==", userId),
     );
 
     let resultList = [];
@@ -82,6 +82,7 @@ function Search() {
   // map是google map的物件，設置state的變化去追蹤它的變化
   const [searchName, setSearchName] = useState("");
   const [searchPlace, setSearchPlace] = useState("");
+  const [searchCategory, setSearchCategory] = useState("");
   const [map, setMap] = useState(null);
   const [currentPosition, setCurrentPosition] = useState(defaultCenter);
   const [restaurants, setRestaurants] = useState([]);
@@ -194,9 +195,9 @@ function Search() {
   }
 
   //取得所有種類
-  function handleCategory(e) {
+  function handleCategory() {
     setSearchArray([]);
-    getCategory(e);
+    getCategory(searchCategory);
   }
 
   async function getCategory(item) {
@@ -311,7 +312,11 @@ function Search() {
               <Select
                 className="h-10 rounded-lg border-2 border-solid border-[#ff6e06]"
                 name="category"
-                onChange={(e) => setSearchName(e)}
+                onChange={(e) => {
+                  setSearchName(e);
+                  setSearchPlace("");
+                  setSearchCategory("");
+                }}
                 value={searchName}
                 showSearch
                 style={{
@@ -340,7 +345,11 @@ function Search() {
               <Select
                 className="h-10 rounded-lg border-2 border-solid border-[#ff6e06]"
                 name="category"
-                onChange={(e) => setSearchPlace(e)}
+                onChange={(e) => {
+                  setSearchPlace(e);
+                  setSearchName("");
+                  setSearchCategory("");
+                }}
                 value={searchPlace}
                 showSearch
                 style={{
@@ -363,46 +372,63 @@ function Search() {
           </Form>
         </div>
 
-        <Select
-          className="mx-4 h-10 rounded-lg border-2 border-solid border-[#ff6e06] placeholder-black"
-          name="category"
-          onChange={(e) => handleCategory(e)}
-          showSearch
-          style={{
-            width: 200,
-          }}
-          placeholder="點選類別"
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.label ?? "").includes(input)
-          }
-          options={[
-            {
-              value: "0",
-              label: "火鍋",
-            },
-            {
-              value: "1",
-              label: "燒烤",
-            },
-            {
-              value: "2",
-              label: "牛排",
-            },
-            {
-              value: "3",
-              label: "甜點",
-            },
-            {
-              value: "4",
-              label: "小吃",
-            },
-            {
-              value: "5",
-              label: "早餐",
-            },
-          ]}
-        />
+        <div>
+          <Form className="mx-4 flex">
+            <Form.Item>
+              <Select
+                className="h-10 rounded-lg border-2 border-solid border-[#ff6e06]"
+                name="category"
+                onChange={(e) => {
+                  setSearchCategory(e);
+                  setSearchName("");
+                  setSearchPlace("");
+                }}
+                value={searchCategory}
+                showSearch
+                style={{
+                  width: 200,
+                }}
+                placeholder="搜尋餐廳"
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.label ?? "").includes(input)
+                }
+                options={[
+                  {
+                    value: "0",
+                    label: "火鍋",
+                  },
+                  {
+                    value: "1",
+                    label: "燒烤",
+                  },
+                  {
+                    value: "2",
+                    label: "牛排",
+                  },
+                  {
+                    value: "3",
+                    label: "甜點",
+                  },
+                  {
+                    value: "4",
+                    label: "小吃",
+                  },
+                  {
+                    value: "5",
+                    label: "早餐",
+                  },
+                ]}
+              />
+            </Form.Item>
+            <Button
+              className="ml-1 h-10 rounded-lg border bg-[#ff6e06] px-4 py-1 text-center text-xl font-semibold text-white"
+              onClick={handleCategory}
+            >
+              搜尋類別
+            </Button>
+          </Form>
+        </div>
       </div>
 
       <div className="flex h-[calc(100vh-200px)] justify-center shadow-[0px_0px_0px_1px_rgba(0,0,0,0.16)]">

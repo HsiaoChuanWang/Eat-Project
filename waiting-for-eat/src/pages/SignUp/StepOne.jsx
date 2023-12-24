@@ -1,21 +1,19 @@
 import React from "react";
+import toast from "react-hot-toast";
 import { Bs1CircleFill } from "react-icons/bs";
-import useUserStore from "../../stores/userStore";
+import Alert from "../../components/Alert/index.jsx";
 import boss from "./signUpPictures/boss.png";
 import diner from "./signUpPictures/diner.png";
 import stepOne from "./signUpPictures/stepOne.jpg";
 
-function StepOne({ setActive }) {
-  const identity = useUserStore((state) => state.identity);
-  const setIdentity = useUserStore((state) => state.setIdentity);
-
+function StepOne({ setActive, identity, setIdentity }) {
   function saveIdentity(identity) {
     setIdentity(identity);
   }
 
   function nextStep() {
     if (identity === "") {
-      alert("請點選註冊身份");
+      toast.error("請點選註冊身份");
     } else {
       setActive("StepTwo");
     }
@@ -23,6 +21,7 @@ function StepOne({ setActive }) {
 
   return (
     <div className="relative flex h-[calc(100vh-96px)] w-screen">
+      <Alert />
       <img src={stepOne} className="h-full w-3/5 object-cover object-center" />
 
       <div className="flex h-full w-2/5 items-center justify-center">

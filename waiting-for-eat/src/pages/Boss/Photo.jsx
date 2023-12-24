@@ -3,7 +3,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
-import useUserStore from "../../stores/userStore";
+import useUserStore from "../../stores/userStore.js";
 
 function Photo() {
   const { companyId } = useParams();

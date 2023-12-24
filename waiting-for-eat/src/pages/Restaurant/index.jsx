@@ -10,10 +10,12 @@ import {
 } from "firebase/firestore";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import Alert from "../../components/Alert/index.jsx";
 import Comment from "../../components/Comment";
 import db from "../../firebase";
-import useUserStore from "../../stores/userStore";
+import useUserStore from "../../stores/userStore.js";
 import Like from "./Like";
 import Menu from "./Menu";
 
@@ -25,7 +27,7 @@ function Restaurant() {
   const [post, setPost] = useState([]);
   const [position, setPosition] = useState(0);
   const [display, setDisplay] = useState(false);
-  const userInfo = useUserStore((state) => state.userInfo);
+  const userId = useUserStore((state) => state.userId);
   const postq = query(
     collection(db, "post"),
     where("companyId", "==", companyId),
@@ -139,6 +141,7 @@ function Restaurant() {
 
   return (
     <div className=" mb-4 flex justify-center">
+      <Alert />
       <div className="m-8 flex w-full max-w-[1400px] justify-between">
         <div className="mr-8 w-3/4">
           <div className="pb-6">
@@ -237,8 +240,8 @@ function Restaurant() {
         <div className="h-12 w-[calc(75%-24px)] bg-white">
           <Button
             onClick={() => {
-              if (userInfo.userId === "") {
-                alert("請登入以進行預約");
+              if (userId === "") {
+                toast.error("請登入以進行預約");
               } else {
                 navigation(`/reserve/${companyId}`);
               }

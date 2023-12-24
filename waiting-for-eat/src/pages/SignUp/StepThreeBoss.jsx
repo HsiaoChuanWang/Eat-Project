@@ -3,21 +3,25 @@ import { useLoadScript } from "@react-google-maps/api";
 import { Form, Input, Radio, Select } from "antd";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { Bs3CircleFill } from "react-icons/bs";
+import Alert from "../../components/Alert/index.jsx";
 import { storage } from "../../firebase";
-import useUserStore from "../../stores/userStore";
+import useUserStore from "../../stores/userStore.js";
 import stepThree from "./signUpPictures/stepThree.jpg";
 
 function StepThreeBoss({ setActive }) {
   useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_API_KEY,
   });
-  const userInfo = useUserStore((state) => state.userInfo);
-  const getDetailInfo = useUserStore((state) => state.getDetailInfo);
-  const sendUserFirestore = useUserStore((state) => state.sendUserFirestore);
-  const getCompanyInfo = useUserStore((state) => state.getCompanyInfo);
-  const sendCompanyFirestore = useUserStore(
-    (state) => state.sendCompanyFirestore,
+  const userId = useUserStore((state) => state.userId);
+  const setDetailInfo = useUserStore((state) => state.setDetailInfo);
+  const sendUserInfoToFirestore = useUserStore(
+    (state) => state.sendUserInfoToFirestore,
+  );
+  const setCompanyInfo = useUserStore((state) => state.setCompanyInfo);
+  const sendCompanyInfoToFirestore = useUserStore(
+    (state) => state.sendCompanyInfoToFirestore,
   );
 
   const checkRef = useRef(false);
@@ -43,7 +47,7 @@ function StepThreeBoss({ setActive }) {
   });
 
   async function handlePicture(picture) {
-    const storageRef = ref(storage, userInfo.userId);
+    const storageRef = ref(storage, userId);
     await uploadBytes(storageRef, picture);
     const downloadURL = await getDownloadURL(storageRef);
     setDetail({ ...detail, picture: downloadURL });
@@ -65,12 +69,12 @@ function StepThreeBoss({ setActive }) {
         let obj = company;
         obj.lat = lat;
         obj.lng = lng;
-        getCompanyInfo(company);
-        sendCompanyFirestore();
+        setCompanyInfo(company);
+        sendCompanyInfoToFirestore();
       } else {
         console.log("error");
         console.log(`Geocode + ${status}`);
-        alert("請確認地址已填寫且地址正確");
+        toast.error("請確認地址已填寫且地址正確");
       }
     });
   }
@@ -127,16 +131,17 @@ function StepThreeBoss({ setActive }) {
       checkRef.current = false;
       await getLocation();
       if (company.lat !== "") {
-        await getDetailInfo(detail);
+        await setDetailInfo(detail);
         setActive("StepFourBoss");
       }
     } else {
-      alert("請填寫完整資訊");
+      toast.error("請填寫完整資訊");
     }
   }
 
   return (
     <div className="relative flex h-[calc(100vh-96px)] w-screen">
+      <Alert />
       <img
         src={stepThree}
         className="h-full w-3/5 object-cover object-center"

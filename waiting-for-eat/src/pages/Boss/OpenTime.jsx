@@ -10,9 +10,11 @@ import {
   query,
 } from "firebase/firestore";
 import { default as React, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { BsDashLg } from "react-icons/bs";
 import { FaTrashCan } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
+import Alert from "../../components/Alert/index.jsx";
 import db from "../../firebase";
 import "./openTime.css";
 
@@ -189,12 +191,13 @@ function OpenTime() {
       setStartTime("");
       setEndTime("");
     } else {
-      alert("請填寫完整資訊");
+      toast.error("請填寫完整資訊");
     }
   }
 
   return (
     <div className="my-12 flex justify-center ">
+      <Alert />
       <div className="flex w-full justify-center">
         <Card className="ml-12 h-80 w-1/3 border-2 border-solid border-gray-400 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)]">
           <div className="relative">

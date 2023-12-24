@@ -7,7 +7,7 @@ const useDinerStore = create(
 
     setSelectedDinerBar: (status) => {
       set((state) => {
-        state.active = status;
+        state.selectedDinerBar = status;
       });
     },
   })),

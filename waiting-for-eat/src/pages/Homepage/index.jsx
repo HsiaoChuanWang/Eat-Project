@@ -7,7 +7,7 @@ import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import db from "../../firebase";
 import useSearchStore from "../../stores/searchStore";
-import useUserStore from "../../stores/userStore";
+import useUserStore from "../../stores/userStore.js";
 import Carousel from "./Carousel";
 import bbq from "./homepagePictures/bbq.jpg";
 import boss from "./homepagePictures/boss.png";
@@ -24,7 +24,7 @@ function HomePage() {
   const [searchPlace, setSearchPlace] = useState("");
   const [restaurants, setRestaurants] = useState([]);
   const [city, setCity] = useState([]);
-  const userInfo = useUserStore((state) => state.userInfo);
+  const userId = useUserStore((state) => state.userId);
   const companyRef = collection(db, "company");
   const navigate = useNavigate();
   const scrollRef = useRef();
@@ -56,7 +56,7 @@ function HomePage() {
     const favoriteq = query(
       collection(db, "favorite"),
       where("companyId", "==", companyId),
-      where("userId", "==", userInfo.userId),
+      where("userId", "==", userId),
     );
 
     let resultList = [];
@@ -189,7 +189,6 @@ function HomePage() {
   }
 
   const handleClick = () => {
-    console.log(scrollRef);
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -291,7 +290,10 @@ function HomePage() {
                 <Select
                   placeholder="搜尋餐廳"
                   className="h-10"
-                  onChange={(e) => setSearchName(e)}
+                  onChange={(e) => {
+                    setSearchName(e);
+                    setSearchPlace("");
+                  }}
                   value={searchName}
                   showSearch
                   style={{
@@ -319,7 +321,10 @@ function HomePage() {
                 <Select
                   className="h-10"
                   name="category"
-                  onChange={(e) => setSearchPlace(e)}
+                  onChange={(e) => {
+                    setSearchPlace(e);
+                    setSearchName("");
+                  }}
                   value={searchPlace}
                   showSearch
                   style={{

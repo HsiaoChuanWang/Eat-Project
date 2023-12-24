@@ -144,6 +144,13 @@ function PostedEdit() {
     }
   }
 
+  const editorStyle = {
+    height: "calc(100vh - 300px)",
+    overflow: "auto",
+    marginBottom: "5px",
+    border: "1px solid #ddd",
+  };
+
   return (
     <div className="flex w-full justify-center">
       <div className="relative w-full max-w-[1300px] px-20 pb-20 pt-12">
@@ -190,6 +197,7 @@ function PostedEdit() {
 
         <div className="min-h-[400px] border-2 border-solid border-gray-600">
           <Editor
+            editorStyle={editorStyle}
             editorState={editorState}
             toolbarClassName="toolbarClassName"
             wrapperClassName="wrapperClassName"

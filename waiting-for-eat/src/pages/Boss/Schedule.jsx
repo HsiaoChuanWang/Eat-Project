@@ -35,7 +35,7 @@ function Schedule() {
   const orderRef = query(collection(db, "order"));
   const orderq = query(orderRef, where("companyId", "==", companyId));
 
-  async function getUserInfo(userId) {
+  async function setUserId(userId) {
     const docRef = doc(db, "user", userId);
     const docSnap = await getDoc(docRef);
 
@@ -73,7 +73,7 @@ function Schedule() {
       .then((orderList) => {
         let combineOrder = [];
         orderList.forEach((order) => {
-          getUserInfo(order.userId)
+          setUserId(order.userId)
             .then((data) => {
               const newData = {
                 ...order,
@@ -110,7 +110,7 @@ function Schedule() {
 
       let combineOrder = [];
       orderList.forEach((order) => {
-        getUserInfo(order.userId)
+        setUserId(order.userId)
           .then((data) => {
             const newData = {
               ...order,
@@ -221,20 +221,6 @@ function Schedule() {
       updateOrder.end = endTime;
       updateOrder.newtableNumber = newtableNumber;
     }
-    // alert(
-    //   "ID: " +
-    //     orderId +
-    //     "\n桌號: " +
-    //     newtableNumber +
-    //     "\n開始: " +
-    //     startDay +
-    //     " " +
-    //     startTime +
-    //     "\n結束: " +
-    //     endDay +
-    //     " " +
-    //     endTime,
-    // );
   }
 
   //datePicker選用時間
@@ -374,41 +360,42 @@ function Schedule() {
   }
 
   return (
-    <div className="flex justify-center ">
+    <div className="flex justify-center">
       <div className="mt-8 w-5/6">
-        <div>
-          <button
-            onClick={() => {
-              setEditable(true);
-              setIsSelected(true);
-            }}
-            className={`${
-              isSelected === true && "bg-gray-300"
-            } absolute right-[282px] top-[105px] z-10 rounded bg-[#ff850e] px-4 py-2 font-semibold text-white hover:opacity-80`}
-          >
-            移動
-          </button>
-
-          <button
-            onClick={save}
-            className={`${
-              isSelected === false && "bg-gray-300"
-            } absolute right-[360px] top-[105px] z-10 rounded bg-[#ff850e] px-4 py-2 font-semibold text-white hover:opacity-80`}
-          >
-            保存
-          </button>
-
-          <div className="absolute right-[525px] top-[86px]">
+        <div className="flex items-center justify-between">
+          <div className="">
             <h1 className="font-bold">選擇日期</h1>
             <DatePicker
               className="mb-4 border border-solid border-black"
               onChange={changeStartDate}
             />
           </div>
-        </div>
 
+          <div className="mr-4">
+            <button
+              onClick={() => {
+                setEditable(true);
+                setIsSelected(true);
+              }}
+              className={`${
+                isSelected === true && "bg-gray-300"
+              } mr-4 rounded bg-[#ff850e] px-4 font-semibold leading-10 text-white hover:opacity-80`}
+            >
+              移動
+            </button>
+
+            <button
+              onClick={save}
+              className={`${
+                isSelected === false && "bg-gray-300"
+              } rounded bg-[#ff850e] px-4 font-semibold leading-10 text-white hover:opacity-80`}
+            >
+              保存
+            </button>
+          </div>
+        </div>
         <div>
-          <div className="h-[72px]"></div>
+          {/* <div className="h-[72px]"></div> */}
 
           <ScrollShadow
             size={0}
@@ -444,28 +431,3 @@ function Schedule() {
 }
 
 export default Schedule;
-
-//   function MyAddEvent(e) {
-//     console.log(e.resource.id);
-//     var event1 = {
-//       title: "MyEvent",
-//       start: e.date,
-//       id: "a",
-//       resourceId: e.resource.id,
-//       display: "auto",
-//       title: "Auditorium A",
-//       color: "#ff9f89",
-//     };
-//     myRef.current.getApi().addEvent(event1);
-//   }
-
-//   function MyEventClick(info) {
-//     console.log(info.view);
-//     console.log(info);
-//     console.log(info.el.fcSeg);
-//     const startDay = dateFormat(info.event.start, "yyyy/mm/dd");
-//     const startTime = dateFormat(info.event.start, "HH:ss");
-//     const endDay = dateFormat(info.event.end, "yyyy/mm/dd");
-//     const endTime = dateFormat(info.event.end, "HH:ss");
-//     alert(startDay + " " + startTime + " - " + endDay + " " + endTime);
-//   }

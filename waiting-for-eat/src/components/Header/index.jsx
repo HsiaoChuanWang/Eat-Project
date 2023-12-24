@@ -1,38 +1,40 @@
 import { getAuth, signOut } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import db from "../../firebase";
 import useHeaderStore from "../../stores/headerStore";
-import useUserStore from "../../stores/userStore";
+import useUserStore from "../../stores/userStore.js";
+import Alert from "../Alert/index.jsx";
 import logo from "./logo.png";
 
 function Header() {
   const navigate = useNavigate();
   const [userData, setUserData] = useState({});
   const setIsLogout = useUserStore((state) => state.setIsLogout);
-  const userInfo = useUserStore((state) => state.userInfo);
+  const userId = useUserStore((state) => state.userId);
   const detailInfo = useUserStore((state) => state.detailInfo);
   const situation = useHeaderStore((state) => state.situation);
   const setHeader = useHeaderStore((state) => state.setHeader);
   const auth = getAuth();
 
   useEffect(() => {
-    if (userInfo.userId) {
-      const userSnap = onSnapshot(doc(db, "user", userInfo.userId), (doc) => {
+    if (userId) {
+      const userSnap = onSnapshot(doc(db, "user", userId), (doc) => {
         const data = doc.data();
         setUserData(data);
       });
       return userSnap;
     }
-  }, [userInfo.userId]);
+  }, [userId]);
 
   function logOut() {
     signOut(auth)
       .then(() => {
         setIsLogout();
-        alert("已登出");
-        console.log("LoginOut successfully!");
+        toast.success("登出成功");
+        navigate("/");
       })
       .catch((error) => {
         console.log("LoginOut failed!", "=", error);
@@ -50,7 +52,7 @@ function Header() {
 
   const buttonDiner = [
     {
-      link: `diner/dinerInfo/${userInfo.userId}`,
+      link: `diner/dinerInfo/${userId}`,
       displayText: "食客專區",
       status: "DinerLogIn",
     },
@@ -152,6 +154,7 @@ function Header() {
 
   return (
     <div className="sticky top-0 z-10 flex h-24 items-center justify-between bg-white shadow-[0_0_4px_2px_rgba(0,0,0,0.16)]">
+      <Alert />
       <Link to="/">
         <img src={logo} className="ml-16 h-24 w-auto" />
       </Link>

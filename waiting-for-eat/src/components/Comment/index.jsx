@@ -20,7 +20,7 @@ function Comment() {
   const [show, setShow] = useState(false);
   const q = query(collection(db, "star"), where("companyId", "==", companyId));
 
-  async function getUserInfo(userId) {
+  async function setUserId(userId) {
     const docRef = doc(db, "user", userId);
     const docSnap = await getDoc(docRef);
 
@@ -45,7 +45,7 @@ function Comment() {
       .then((comments) => {
         let combineComment = [];
         comments.forEach((comment) => {
-          getUserInfo(comment.userId)
+          setUserId(comment.userId)
             .then((data) => {
               const newData = {
                 ...comment,

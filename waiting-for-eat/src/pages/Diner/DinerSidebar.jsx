@@ -23,7 +23,8 @@ function DinerSidebar() {
         <div className="flex flex-wrap bg-zinc-600/70">
           <div
             className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              selectedDinerBar === "dinerInfo"
+              selectedDinerBar === "dinerInfo" ||
+              selectedDinerBar === "dinerInfoEdit"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
@@ -125,7 +126,8 @@ function DinerSidebar() {
 
           <div
             className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              selectedDinerBar === "commented"
+              selectedDinerBar === "commented" ||
+              selectedDinerBar === "starEdit"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}

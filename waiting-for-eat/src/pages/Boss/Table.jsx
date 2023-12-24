@@ -11,8 +11,10 @@ import {
   query,
 } from "firebase/firestore";
 import { default as React, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FaTrashCan } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
+import Alert from "../../components/Alert/index.jsx";
 import db from "../../firebase";
 import "./table.css";
 
@@ -124,13 +126,14 @@ function Table() {
       await addDoc(tableRef, addTable);
       setAddTable({ number: "", people: "" });
     } else {
-      alert("請填寫完整資訊");
+      toast.error("請填寫完整資訊");
     }
   }
 
   return (
     <>
       <div className="my-12 flex justify-center ">
+        <Alert />
         <div className="flex w-full justify-center">
           <Card className="ml-12 h-64 w-1/3 border-2 border-solid border-gray-400 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)]">
             <div className="relative">
@@ -180,7 +183,7 @@ function Table() {
             </Button>
           </Card>
 
-          <Card className="mx-10 h-[500px] w-[400px] border-2 border-solid border-gray-400 pb-6 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)]">
+          <Card className="mx-10 h-[calc(100vh-280px)] w-[400px] border-2 border-solid border-gray-400 pb-6 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)]">
             <div className="flex h-16 items-center justify-center bg-[#292D4F]">
               <h1 className="border-gray-100 text-2xl font-black text-white">
                 桌位列表
@@ -190,7 +193,7 @@ function Table() {
             <ScrollShadow
               size={0}
               hideScrollBar
-              className="mt-6 h-[380px] w-full justify-center"
+              className="mt-6 h-[100vh-400px] w-full justify-center"
             >
               <div className="flex justify-center">
                 <Menu

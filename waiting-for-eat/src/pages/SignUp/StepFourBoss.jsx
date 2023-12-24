@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import useUserStore from "../../stores/userStore";
+import useUserStore from "../../stores/userStore.js";
 import cook from "./signUpPictures/cook.png";
 import stepFour from "./signUpPictures/stepFour.jpg";
 

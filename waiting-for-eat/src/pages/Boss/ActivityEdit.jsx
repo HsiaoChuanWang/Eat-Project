@@ -1,4 +1,4 @@
-import { Button, ScrollShadow } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { ContentState, EditorState, convertToRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
@@ -10,6 +10,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import db from "../../firebase";
+// import { Button, ScrollShadow } from "@nextui-org/react";
 
 //解決因為圖片死去的問題
 function myBlockRenderer(contentBlock) {
@@ -115,86 +116,89 @@ function ActivityEdit() {
     });
   }
 
+  const editorStyle = {
+    height: "calc(100vh - 350px)",
+    overflow: "auto",
+    marginBottom: "5px",
+    border: "1px solid #ddd",
+  };
+
   return (
-    <div className="relative p-20">
-      <ScrollShadow
-        size={0}
-        hideScrollBar
-        className="flex h-[calc(100vh-300px)] w-full justify-center"
-      >
-        <div className="h-[1150px] border-2 border-solid border-black p-4">
-          <Editor
-            editorState={editorState}
-            toolbarClassName="toolbarClassName"
-            wrapperClassName="wrapperClassName"
-            editorClassName="editorClassName"
-            onEditorStateChange={onEditorStateChange}
-            customBlockRenderFunc={myBlockRenderer}
-            toolbar={{
-              options: [
-                "inline",
-                "blockType",
-                "fontSize",
-                "textAlign",
-                "history",
-                "colorPicker",
-                "emoji",
-                "image",
-                "remove",
-              ],
-              inline: {
-                options: ["bold", "italic", "underline", "strikethrough"],
-                bold: { className: "demo-option-custom" },
-                italic: { className: "demo-option-custom" },
-                underline: { className: "demo-option-custom" },
-                strikethrough: { className: "demo-option-custom" },
-                monospace: { className: "demo-option-custom" },
-                superscript: { className: "demo-option-custom" },
-                subscript: { className: "demo-option-custom" },
+    <div className="flex h-full w-full p-12">
+      <div className="h-full w-5/6 border-2 border-solid border-black p-4">
+        <Editor
+          editorStyle={editorStyle}
+          editorState={editorState}
+          toolbarClassName="toolbarClassName"
+          wrapperClassName="wrapperClassName"
+          editorClassName="editorClassName"
+          onEditorStateChange={onEditorStateChange}
+          customBlockRenderFunc={myBlockRenderer}
+          toolbar={{
+            options: [
+              "inline",
+              "blockType",
+              "fontSize",
+              "textAlign",
+              "history",
+              "colorPicker",
+              "emoji",
+              "image",
+              "remove",
+            ],
+            inline: {
+              options: ["bold", "italic", "underline", "strikethrough"],
+              bold: { className: "demo-option-custom" },
+              italic: { className: "demo-option-custom" },
+              underline: { className: "demo-option-custom" },
+              strikethrough: { className: "demo-option-custom" },
+              monospace: { className: "demo-option-custom" },
+              superscript: { className: "demo-option-custom" },
+              subscript: { className: "demo-option-custom" },
+            },
+            blockType: {
+              options: ["Normal", "H1", "H2", "H3", "H4", "H5", "H6"],
+              className: "demo-option-custom-wide",
+              dropdownClassName: "demo-dropdown-custom",
+            },
+            fontSize: { className: "demo-option-custom-medium" },
+            image: {
+              urlEnabled: true,
+              uploadEnabled: true,
+              alignmentEnabled: false, // 是否顯示圖片排列置中與否，相當於text-align
+              uploadCallback: _uploadImageCallBack,
+              previewImage: true,
+              inputAccept: "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+              alt: { present: false, mandatory: false, previewImage: true },
+              defaultSize: {
+                height: "auto",
+                width: "200px",
               },
-              blockType: {
-                options: ["Normal", "H1", "H2", "H3", "H4", "H5", "H6"],
-                className: "demo-option-custom-wide",
-                dropdownClassName: "demo-dropdown-custom",
-              },
-              fontSize: { className: "demo-option-custom-medium" },
-              image: {
-                urlEnabled: true,
-                uploadEnabled: true,
-                alignmentEnabled: false, // 是否顯示圖片排列置中與否，相當於text-align
-                uploadCallback: _uploadImageCallBack,
-                previewImage: true,
-                inputAccept:
-                  "image/gif,image/jpeg,image/jpg,image/png,image/svg",
-                alt: { present: false, mandatory: false, previewImage: true },
-                defaultSize: {
-                  height: "auto",
-                  width: "200px",
-                },
-              },
-            }}
-          />
-        </div>
-      </ScrollShadow>
+            },
+          }}
+        />
+      </div>
 
-      <Button
-        className="absolute bottom-24 right-16 mt-6 block h-11 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg "
-        onClick={() => {
-          navigate(`/boss/activity/${companyId}`);
-        }}
-      >
-        取消
-      </Button>
+      <div className="w-1/6 self-end pl-12">
+        <Button
+          className="block h-11 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
+          onClick={() => {
+            handleSend();
+            navigate(`/boss/activity/${companyId}`);
+          }}
+        >
+          保存
+        </Button>
 
-      <Button
-        className="absolute bottom-40 right-16 mt-6 block h-11 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
-        onClick={() => {
-          handleSend();
-          navigate(`/boss/activity/${companyId}`);
-        }}
-      >
-        保存
-      </Button>
+        <Button
+          className="mt-4 block h-11 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg "
+          onClick={() => {
+            navigate(`/boss/activity/${companyId}`);
+          }}
+        >
+          取消
+        </Button>
+      </div>
     </div>
   );
 }
