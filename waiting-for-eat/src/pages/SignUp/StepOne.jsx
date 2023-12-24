@@ -1,17 +1,21 @@
 import React from "react";
 import { Bs1CircleFill } from "react-icons/bs";
+import useUserStore from "../../stores/userStore";
 import boss from "./signUpPictures/boss.png";
 import diner from "./signUpPictures/diner.png";
 import stepOne from "./signUpPictures/stepOne.jpg";
 
-function StepOne({ setActive, identity, setIdentity }) {
+function StepOne({ setActive }) {
+  const identity = useUserStore((state) => state.identity);
+  const setIdentity = useUserStore((state) => state.setIdentity);
+
   function saveIdentity(identity) {
     setIdentity(identity);
   }
 
   function nextStep() {
     if (identity === "") {
-      alert("請點選註冊類別");
+      alert("請點選註冊身份");
     } else {
       setActive("StepTwo");
     }
@@ -27,7 +31,7 @@ function StepOne({ setActive, identity, setIdentity }) {
         >
           <div className="mb-12 flex items-center gap-2 text-3xl font-black text-[#ff850e]">
             <Bs1CircleFill />
-            <h1>請選擇登入身份</h1>
+            <h1>請選擇註冊身份</h1>
           </div>
           <div
             onClick={() => saveIdentity("diner")}

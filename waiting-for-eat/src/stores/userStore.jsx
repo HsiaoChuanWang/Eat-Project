@@ -51,6 +51,14 @@ const useUserStore = create(
       });
     },
 
+    identity: "",
+
+    setIdentity: (identity) => {
+      set((state) => {
+        state.identity = identity;
+      });
+    },
+
     userInfo: {
       providerId: "",
       userId: "",

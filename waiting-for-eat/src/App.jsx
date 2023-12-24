@@ -9,6 +9,7 @@ import Header from "./components/Header";
 
 function App() {
   const auth = getAuth();
+  const identity = useUserStore((state) => state.identity);
   const detailInfo = useUserStore((state) => state.detailInfo);
   const getUserInfo = useUserStore((state) => state.getUserInfo);
   const getUserFirestore = useUserStore((state) => state.getUserFirestore);
@@ -49,39 +50,27 @@ function App() {
     }
   }, [detailInfo.companyId]);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
-    <>
-      <ConfigProvider
-        theme={{
-          token: {
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: "#ff850e",
+          algorithm: true,
+        },
+        components: {
+          Menu: {
             colorPrimary: "#ff850e",
+            itemBg: "#e5e7eb",
+            subMenuItemBg: "#f3f4f6",
             algorithm: true,
-            // colorBgContainer: "black",
-            // colorBorder: "gray",
-
-            // fontSize: "3xl",
           },
-          components: {
-            Menu: {
-              //   colorItemText: "white",
-              //   itemColor: "red",
-              colorPrimary: "#ff850e",
-              colorItemBg: "#e5e7eb",
-              colorSubItemBg: "#f3f4f6",
-              algorithm: true, // 启用算法
-            },
-          },
-        }}
-      >
-        <Header />
-        <Outlet />
-        <Footer />
-      </ConfigProvider>
-    </>
+        },
+      }}
+    >
+      <Header />
+      <Outlet />
+      <Footer />
+    </ConfigProvider>
   );
 }
 

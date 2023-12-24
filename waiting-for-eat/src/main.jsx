@@ -37,69 +37,58 @@ import Search from "./pages/Search";
 import SignUp from "./pages/SignUp";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  //   <React.StrictMode>
-  <NextUIProvider>
-    <BrowserRouter>
-      <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<App />}>
-          <Route index element={<Homepage />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/restaurant/:companyId" element={<Restaurant />} />
-          <Route path="/reserve/:companyId" element={<Reserve />} />
+  <React.StrictMode>
+    <NextUIProvider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route index element={<Homepage />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/restaurant/:companyId" element={<Restaurant />} />
+            <Route path="/reserve/:companyId" element={<Reserve />} />
 
-          <Route path="/diner" element={<Diner />}>
-            <Route path="/diner/dinerInfo/:userId" element={<DinerInfo />} />
-            <Route
-              path="/diner/dinerInfoEdit/:userId"
-              element={<DinerInfoEdit />}
-            />
-            <Route
-              path="/diner/reservedShop/:userId"
-              element={<ReservedShop />}
-            />
-            <Route path="/diner/eatenShop/:userId" element={<EatenShop />} />
-            <Route path="/diner/likeShop/:userId" element={<LikeShop />} />
-            <Route
-              path="/diner/dislikeShop/:userId"
-              element={<DislikeShop />}
-            />
-            <Route path="/diner/posted/:userId" element={<Posted />} />
-            <Route path="/diner/commented/:userId" element={<Commented />} />
-            <Route path="/diner/addStar/:userId" element={<AddStar />} />
-            <Route path="/diner/starEdit/:userId" element={<StarEdit />} />
+            <Route path="/diner" element={<Diner />}>
+              <Route path="dinerInfo/:userId" element={<DinerInfo />} />
+              <Route path="dinerInfoEdit/:userId" element={<DinerInfoEdit />} />
+              <Route path="reservedShop/:userId" element={<ReservedShop />} />
+              <Route path="eatenShop/:userId" element={<EatenShop />} />
+              <Route path="likeShop/:userId" element={<LikeShop />} />
+              <Route path="dislikeShop/:userId" element={<DislikeShop />} />
+              <Route path="posted/:userId" element={<Posted />} />
+              <Route path="commented/:userId" element={<Commented />} />
+              <Route path="addStar/:userId" element={<AddStar />} />
+              <Route path="starEdit/:userId" element={<StarEdit />} />
+            </Route>
+
+            <Route path="/diner/textEditor/:orderId" element={<TextEditor />} />
+            <Route path="/diner/postedEdit/:postId" element={<PostedEdit />} />
+
+            <Route path="/post/:postId" element={<Post />} />
+
+            <Route path="/boss" element={<Boss />}>
+              <Route path="bossInfo/:companyId" element={<BossInfo />} />
+              <Route
+                path="bossInfoEdit/:companyId"
+                element={<BossInfoEdit />}
+              />
+              <Route path="photo/:companyId" element={<Photo />} />
+              <Route path="photoUpload/:companyId" element={<PhotoUpload />} />
+              <Route path="openTime/:companyId" element={<OpenTime />} />
+              <Route path="activity/:companyId" element={<Activity />} />
+              <Route
+                path="activityEdit/:companyId"
+                element={<ActivityEdit />}
+              />
+              <Route path="table/:companyId" element={<Table />} />
+              <Route path="schedule/:companyId" element={<Schedule />} />
+            </Route>
           </Route>
-
-          <Route path="/diner/textEditor/:orderId" element={<TextEditor />} />
-          <Route path="/diner/postedEdit/:postId" element={<PostedEdit />} />
-
-          <Route path="/post/:postId" element={<Post />} />
-
-          <Route path="/boss" element={<Boss />}>
-            <Route path="/boss/bossInfo/:companyId" element={<BossInfo />} />
-            <Route
-              path="/boss/bossInfoEdit/:companyId"
-              element={<BossInfoEdit />}
-            />
-            <Route path="/boss/photo/:companyId" element={<Photo />} />
-            <Route
-              path="/boss/photoUpload/:companyId"
-              element={<PhotoUpload />}
-            />
-            <Route path="/boss/openTime/:companyId" element={<OpenTime />} />
-            <Route path="/boss/activity/:companyId" element={<Activity />} />
-            <Route
-              path="/boss/activityEdit/:companyId"
-              element={<ActivityEdit />}
-            />
-            <Route path="/boss/table/:companyId" element={<Table />} />
-            <Route path="/boss/schedule/:companyId" element={<Schedule />} />
-          </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  </NextUIProvider>,
-  //   </React.StrictMode>,
+        </Routes>
+      </BrowserRouter>
+    </NextUIProvider>
+    ,
+  </React.StrictMode>,
 );

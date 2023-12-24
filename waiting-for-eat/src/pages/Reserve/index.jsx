@@ -19,12 +19,14 @@ import {
 import { default as React, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
-import useDinerStore from "../../stores/dinerStore";
+import useDinerStore from "../../stores/dinerStore.js";
 import useUserStore from "../../stores/userStore";
 import logologo from "../Post/logologo.jpg";
 
 function Reserve() {
-  const setActive = useDinerStore((state) => state.setActive);
+  const setSelectedDinerBar = useDinerStore(
+    (state) => state.setSelectedDinerBar,
+  );
   const navigate = useNavigate();
   const [companyData, setCompanyData] = useState({});
   const [openTime, setOpenTime] = useState([]);
@@ -415,7 +417,7 @@ function Reserve() {
                               color="primary"
                               onPress={onClose}
                               onClick={() => {
-                                setActive("reserved");
+                                setSelectedDinerBar("reserved");
                                 navigate(
                                   `/diner/reservedShop/${userInfo.userId}`,
                                 );
