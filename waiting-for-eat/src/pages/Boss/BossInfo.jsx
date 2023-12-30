@@ -8,13 +8,16 @@ import { MdAdsClick, MdFastfood } from "react-icons/md";
 import { PiPhoneCallFill } from "react-icons/pi";
 import { TbGenderFemale } from "react-icons/tb";
 import { useNavigate, useParams } from "react-router-dom";
+import IsLoading from "../../components/IsLoading/index.jsx";
 import db from "../../firebase";
 import useUserStore from "../../stores/userStore.js";
+import boss from "../SignUp/signUpPictures/boss.png";
 
 function BossInfo() {
   const { companyId } = useParams();
   const navigate = useNavigate();
   const [type, setType] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const userId = useUserStore((state) => state.userId);
   const [userData, setUserData] = useState({});
   const [companyData, setCompanyData] = useState({});
@@ -41,11 +44,16 @@ function BossInfo() {
         setCompanyData(data);
         const category = data.category;
         getCategory(category);
+        setIsLoading(false);
       });
 
       return companySnap, userSnap;
     }
   }, [userId]);
+
+  if (isLoading) {
+    return <IsLoading />;
+  }
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
@@ -65,7 +73,10 @@ function BossInfo() {
             <div className="relative flex h-2/3 w-full items-center justify-center bg-[#ece0ca] ">
               <div className="ml-12 flex h-48 w-48 items-center justify-center rounded-full border-8 border-double border-gray-200 bg-white ">
                 {userData.picture === "" ? (
-                  <p>尚無上傳照片</p>
+                  <img
+                    className="h-full w-full rounded-full object-cover object-center"
+                    src={boss}
+                  />
                 ) : (
                   <img
                     className="h-full w-full rounded-full object-cover object-center"

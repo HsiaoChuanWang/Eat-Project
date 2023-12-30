@@ -2,23 +2,22 @@ import { Button, ScrollShadow } from "@nextui-org/react";
 import { doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import IsLoading from "../../components/IsLoading/index.jsx";
 import db from "../../firebase";
-import useUserStore from "../../stores/userStore.js";
+import noMenu from "../Restaurant/restaurantPictures/noMenu.png";
+import boss from "../SignUp/signUpPictures/boss.png";
 
 function Photo() {
   const { companyId } = useParams();
   const navigate = useNavigate();
   const [companyData, setCompanyData] = useState({});
-  const detailInfo = useUserStore((state) => state.detailInfo);
-  const companyInfo = useUserStore((state) => state.companyInfo);
-  const companyRef = doc(db, "company", companyId);
-  const [position, setPosition] = useState(0);
-  const [display, setDisplay] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const companySnap = onSnapshot(doc(db, "company", companyId), (result) => {
       const data = result.data();
       setCompanyData(data);
+      setIsLoading(false);
     });
 
     return companySnap;
@@ -27,16 +26,15 @@ function Photo() {
   const mainPicture = companyData.picture ? (
     <img className="ml-6 w-80" src={companyData.picture} />
   ) : (
-    <div>尚無上傳照片</div>
+    <div className="mb-8 flex items-center">
+      <img className="w-48" src={boss} />
+      <h1 className="text-xl font-bold text-gray-600">尚未上傳封面照片</h1>
+    </div>
   );
 
-  const menus = companyData.menu ? (
-    companyData.menu.map((picture, index) => {
-      return <img className="w-36" src={picture} key={index} />;
-    })
-  ) : (
-    <div>尚無上傳照片</div>
-  );
+  if (isLoading) {
+    return <IsLoading />;
+  }
 
   return (
     <div className="relative my-16 flex justify-center">
@@ -70,19 +68,16 @@ function Photo() {
                       </div>
                     ))
                   ) : (
-                    <h4>暫無上傳菜單</h4>
+                    <div className="flex items-center">
+                      <img className="w-48" src={noMenu} />
+                      <h1 className="text-xl font-bold text-gray-600">
+                        尚無上傳菜單照片
+                      </h1>
+                    </div>
                   )}
                 </div>
               </ScrollShadow>
             </div>
-
-            {/* <div className={`${display === false && "hidden"}`}>
-              <Menu
-                images={companyData.menu}
-                position={position}
-                setDisplay={setDisplay}
-              />
-            </div> */}
           </div>
 
           <Button

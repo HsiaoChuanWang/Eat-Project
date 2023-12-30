@@ -1,4 +1,4 @@
-import { Card, ScrollShadow, Spinner } from "@nextui-org/react";
+import { Card, ScrollShadow } from "@nextui-org/react";
 import {
   collection,
   doc,
@@ -15,13 +15,16 @@ import { IoMdPin } from "react-icons/io";
 import { IoRestaurant } from "react-icons/io5";
 import { PiPhoneCallFill } from "react-icons/pi";
 import { useNavigate, useParams } from "react-router-dom";
+import IsLoading from "../../components/IsLoading/index.jsx";
 import db from "../../firebase";
+import noData from "./noData.png";
 
 function DislikeShop() {
   const navigate = useNavigate();
   const { userId } = useParams();
   const [favorites, setFavorites] = useState([]);
   const [combineData, setCombineData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const favoriteq = query(
     collection(db, "favorite"),
     where("userId", "==", userId),
@@ -51,16 +54,21 @@ function DislikeShop() {
       });
       setFavorites(favoriteList);
 
-      let companyList = [];
-      favoriteList.forEach((item) => {
-        getCompanyInfo(item.companyId)
-          .then((data) => {
-            const newData = Object.assign(item, data);
-            companyList.push(newData);
-          })
-          .then(() => {
-            setCombineData([...companyList]);
-          });
+      Promise.all(
+        favoriteList.map((item) => {
+          return Promise.all([getCompanyInfo(item.companyId)]).then(
+            ([companyInfo]) => {
+              const newItem = {
+                ...item,
+                ...companyInfo,
+              };
+              return newItem;
+            },
+          );
+        }),
+      ).then((value) => {
+        setCombineData(value);
+        setIsLoading(false);
       });
     });
 
@@ -128,16 +136,15 @@ function DislikeShop() {
         );
       })
     ) : (
-      <div key="no" className=" flex h-full justify-center">
-        <Spinner
-          label="加載中"
-          color="warning"
-          labelColor="warning"
-          className="font-black"
-          size="lg"
-        />
+      <div key="no" className="mr-8 flex h-full items-center justify-center">
+        <img className="w-72" src={noData} />
+        <h1 className="text-2xl font-bold text-gray-600">尚無相關資訊</h1>
       </div>
     );
+
+  if (isLoading) {
+    return <IsLoading />;
+  }
 
   return (
     <div className="justify-cente flex h-full items-center">

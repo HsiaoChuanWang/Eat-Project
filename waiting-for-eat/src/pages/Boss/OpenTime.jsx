@@ -5,7 +5,6 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDocs,
   onSnapshot,
   query,
 } from "firebase/firestore";
@@ -15,6 +14,7 @@ import { BsDashLg } from "react-icons/bs";
 import { FaTrashCan } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
 import Alert from "../../components/Alert/index.jsx";
+import IsLoading from "../../components/IsLoading/index.jsx";
 import db from "../../firebase";
 import "./openTime.css";
 
@@ -22,6 +22,7 @@ function OpenTime() {
   const { companyId } = useParams();
   const [openTime, setOpenTime] = useState([]);
   const [addTime, setAddTime] = useState({ day: "", start: "", end: "" });
+  const [isLoading, setIsLoading] = useState(true);
   const companyRef = collection(db, "company");
   const openTimeRef = query(collection(companyRef, companyId, "openTime"));
   const format = "HH:mm";
@@ -29,16 +30,16 @@ function OpenTime() {
   const [endTime, setEndTime] = useState("");
 
   useEffect(() => {
-    getDocs(openTimeRef).then((result) => {
-      let openTimes = [];
-      result.forEach((doc) => {
-        const data = doc.data();
-        const dataId = doc.id;
-        const combine = { ...data, timeId: dataId };
-        openTimes.push(combine);
-      });
-      setOpenTime(openTimes);
-    });
+    // getDocs(openTimeRef).then((result) => {
+    //   let openTimes = [];
+    //   result.forEach((doc) => {
+    //     const data = doc.data();
+    //     const dataId = doc.id;
+    //     const combine = { ...data, timeId: dataId };
+    //     openTimes.push(combine);
+    //   });
+    //   setOpenTime(openTimes);
+    // });
 
     onSnapshot(openTimeRef, (querySnapshot) => {
       let openTimes = [];
@@ -49,6 +50,7 @@ function OpenTime() {
         openTimes.push(combine);
       });
       setOpenTime(openTimes);
+      setIsLoading(false);
     });
   }, []);
 
@@ -193,6 +195,10 @@ function OpenTime() {
     } else {
       toast.error("請填寫完整資訊");
     }
+  }
+
+  if (isLoading) {
+    return <IsLoading />;
   }
 
   return (

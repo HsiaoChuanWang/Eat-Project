@@ -1,4 +1,4 @@
-import { Button, Card, ScrollShadow, Spinner } from "@nextui-org/react";
+import { Button, Card, ScrollShadow } from "@nextui-org/react";
 import dateFormat from "dateformat";
 import {
   collection,
@@ -14,12 +14,15 @@ import React, { useEffect, useState } from "react";
 import { FaPenToSquare } from "react-icons/fa6";
 import { IoRestaurant, IoTimeSharp } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
+import IsLoading from "../../components/IsLoading/index.jsx";
 import db from "../../firebase";
+import noData from "./noData.png";
 
 function Posted() {
   const navigate = useNavigate();
   const { userId } = useParams();
   const [combineData, setCombineData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const postq = query(collection(db, "post"), where("userId", "==", userId));
 
   async function getCompanyInfo(companyId) {
@@ -64,6 +67,7 @@ function Posted() {
             const newnewItem = Object.assign(newItem, data);
             orderList.push(newnewItem);
             setCombineData([...orderList]);
+            setIsLoading(false);
           });
         });
       });
@@ -157,16 +161,15 @@ function Posted() {
           );
         })
     ) : (
-      <div key="no" className=" flex h-full justify-center">
-        <Spinner
-          label="加載中"
-          color="warning"
-          labelColor="warning"
-          className="font-black"
-          size="lg"
-        />
+      <div key="no" className="mr-8 flex h-full items-center justify-center">
+        <img className="w-72" src={noData} />
+        <h1 className="text-2xl font-bold text-gray-600">尚無相關資訊</h1>
       </div>
     );
+
+  if (isLoading) {
+    return <IsLoading />;
+  }
 
   return (
     <div className="justify-cente flex h-full items-center">

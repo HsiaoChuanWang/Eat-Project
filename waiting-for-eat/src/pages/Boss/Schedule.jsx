@@ -18,7 +18,9 @@ import {
 } from "firebase/firestore";
 import { default as React, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import IsLoading from "../../components/IsLoading/index.jsx";
 import db from "../../firebase";
+import noSchedule from "./noSchedule.png";
 import "./schedule.css";
 
 function Schedule() {
@@ -30,6 +32,7 @@ function Schedule() {
   const [orders, setOrders] = useState([]);
   const [updateOrders, setUpdateOrders] = useState([]);
   const [finalUpdateOrders, setFinalUpdateOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const companyRef = collection(db, "company");
   const tableRef = query(collection(companyRef, companyId, "table"));
   const orderRef = query(collection(db, "order"));
@@ -121,6 +124,7 @@ function Schedule() {
           })
           .then(() => {
             setOrders([...combineOrder]);
+            setIsLoading(false);
           });
       });
     });
@@ -149,8 +153,6 @@ function Schedule() {
           order.userName +
           "\n" +
           order.phone +
-          "\n" +
-          order.remark +
           "$" +
           order.people +
           "$" +
@@ -297,7 +299,6 @@ function Schedule() {
     let titleArray = stringArray[0].split("\n");
     let name = titleArray[0];
     let tel = titleArray[1];
-    let remark = titleArray[2];
     let people = stringArray[1];
     let orderId = stringArray[2];
     let userId = stringArray[3];
@@ -316,12 +317,6 @@ function Schedule() {
             <h1> {people}人</h1>
           </div>
         </div>
-
-        {/* <div>
-          <button className={` h-8 border-2 border-solid border-black `}>
-            已出席
-          </button>
-        </div> */}
 
         <div>
           <div>
@@ -359,73 +354,85 @@ function Schedule() {
     );
   }
 
+  if (isLoading) {
+    return <IsLoading />;
+  }
+
   return (
-    <div className="flex justify-center">
-      <div className="mt-8 w-5/6">
-        <div className="flex items-center justify-between">
-          <div className="">
-            <h1 className="font-bold">選擇日期</h1>
-            <DatePicker
-              className="mb-4 border border-solid border-black"
-              onChange={changeStartDate}
-            />
-          </div>
-
-          <div className="mr-4">
-            <button
-              onClick={() => {
-                setEditable(true);
-                setIsSelected(true);
-              }}
-              className={`${
-                isSelected === true && "bg-gray-300"
-              } mr-4 rounded bg-[#ff850e] px-4 font-semibold leading-10 text-white hover:opacity-80`}
-            >
-              移動
-            </button>
-
-            <button
-              onClick={save}
-              className={`${
-                isSelected === false && "bg-gray-300"
-              } rounded bg-[#ff850e] px-4 font-semibold leading-10 text-white hover:opacity-80`}
-            >
-              保存
-            </button>
+    <div className="flex h-full justify-center">
+      {tables.length === 0 ? (
+        <div className="flex h-full items-center justify-center">
+          <div>
+            <img src={noSchedule} className="h-52" />
+            <h1 className="text-center text-xl font-bold text-gray-600">
+              請先設定桌位以顯示預約日曆
+            </h1>
           </div>
         </div>
-        <div>
-          {/* <div className="h-[72px]"></div> */}
+      ) : (
+        <div className="mt-8 w-5/6">
+          <div className="flex items-center justify-between">
+            <div className="">
+              <h1 className="font-bold">選擇日期</h1>
+              <DatePicker
+                className="mb-4 border border-solid border-black"
+                onChange={changeStartDate}
+              />
+            </div>
 
-          <ScrollShadow
-            size={0}
-            hideScrollBar
-            orientation="horizontal"
-            className="flex h-[calc(100vh-300px)] w-[850px] justify-center"
-          >
-            <FullCalendar
-              //   themeSystem="asd"
-              resourceAreaWidth={150}
-              contentHeight={"auto"}
-              slotMinWidth={80} //欄位寬度
-              height={"auto"}
-              ref={myRef}
-              schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
-              plugins={[resourceTimelinePlugin, interactionPlugin]}
-              initialView="resourceTimeline"
-              //   selectable={true}
-              editable={editable}
-              events={events}
-              eventContent={eventContent}
-              eventDrop={MyDropEvent}
-              //   dateClick={MyAddEvent}
-              //   eventClick={MyEventClick}
-              resources={resources}
-              resourceAreaHeaderContent={"桌位/時間"} //title名
-            />
-          </ScrollShadow>
+            <div className="mr-4">
+              <button
+                onClick={() => {
+                  setEditable(true);
+                  setIsSelected(true);
+                }}
+                className={`${
+                  isSelected === true && "bg-gray-300"
+                } mr-4 rounded bg-[#ff850e] px-4 font-semibold leading-10 text-white hover:opacity-80`}
+              >
+                移動
+              </button>
+
+              <button
+                onClick={save}
+                className={`${
+                  isSelected === false && "bg-gray-300"
+                } rounded bg-[#ff850e] px-4 font-semibold leading-10 text-white hover:opacity-80`}
+              >
+                保存
+              </button>
+            </div>
+          </div>
+          <div>
+            <ScrollShadow
+              size={0}
+              hideScrollBar
+              orientation="horizontal"
+              className="flex h-[calc(100vh-300px)] w-[850px] justify-center"
+            >
+              <FullCalendar
+                resourceAreaWidth={150}
+                contentHeight={"auto"}
+                slotMinWidth={80} //欄位寬度
+                height={"auto"}
+                ref={myRef}
+                schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
+                plugins={[resourceTimelinePlugin, interactionPlugin]}
+                initialView="resourceTimeline"
+                //   selectable={true}
+                editable={editable}
+                events={events}
+                eventContent={eventContent}
+                eventDrop={MyDropEvent}
+                //   dateClick={MyAddEvent}
+                //   eventClick={MyEventClick}
+                resources={resources}
+                resourceAreaHeaderContent={"桌位/時間"} //title名
+              />
+            </ScrollShadow>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

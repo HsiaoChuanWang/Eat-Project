@@ -1,4 +1,4 @@
-import { Button, Image, ScrollShadow, Spinner } from "@nextui-org/react";
+import { Button, Image, ScrollShadow } from "@nextui-org/react";
 import { useLoadScript } from "@react-google-maps/api";
 import { Form, Rate, Select } from "antd";
 import { collection, getDocs, query, where } from "firebase/firestore";
@@ -17,6 +17,8 @@ import {
   HiThumbUp,
 } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
+import IsLoading from "../../components/IsLoading";
+import NoItem from "../../components/NoItem";
 import db from "../../firebase";
 import useSearchStore from "../../stores/searchStore";
 import useUserStore from "../../stores/userStore.js";
@@ -26,7 +28,7 @@ import tasty from "./tasty.jpg";
 const libraries = ["places"];
 
 function Search() {
-  //   const [redPin, setRedPin] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const userId = useUserStore((state) => state.userId);
   const searchArray = useSearchStore((state) => state.searchArray);
   const setSearchArray = useSearchStore((state) => state.setSearchArray);
@@ -69,7 +71,7 @@ function Search() {
     mapRef.current = map;
   }, []);
 
-  //四、設定初使地圖畫面之經緯度，使用useMemo(dependencies[])控制只渲染一次
+  //四、設定初始地圖畫面之經緯度，使用useMemo(dependencies[])控制只渲染一次
   const defaultCenter = useMemo(
     () => ({
       lat: 25.0492576,
@@ -109,6 +111,7 @@ function Search() {
         new Set(cityList.map((item) => JSON.stringify(item))),
       ).map((item) => JSON.parse(item));
       setCity(newCityList);
+      setIsLoading(false);
     });
   }, []);
 
@@ -238,9 +241,6 @@ function Search() {
     });
   }
 
-  //二、提醒使用者正在載入，使用<GoogleMap></GoogleMap>來載入地圖
-  if (!isLoaded) return <div>Loading...</div>;
-
   const favoriteState = (status) => {
     switch (status) {
       case "like":
@@ -302,6 +302,10 @@ function Search() {
         return;
     }
   };
+
+  if (isLoading) {
+    return <IsLoading />;
+  }
 
   return (
     <div>
@@ -435,15 +439,12 @@ function Search() {
         <div className="shadow-4xl w-[28%]">
           <ScrollShadow className="h-full w-full">
             {searchArray.length === 0 ? (
-              <div className=" flex h-full justify-center">
-                <Spinner
-                  label="加載中"
-                  color="warning"
-                  labelColor="warning"
-                  className="font-black"
-                  size="lg"
-                />
-              </div>
+              <NoItem
+                content="尚無相關餐廳進駐"
+                distance="calc(100%-36px)"
+                pictureWidth="w-44"
+                textSize="lg"
+              />
             ) : (
               [...searchArray].map((info, index) => {
                 return (

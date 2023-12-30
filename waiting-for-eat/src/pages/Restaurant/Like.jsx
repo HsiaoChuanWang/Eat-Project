@@ -35,6 +35,8 @@ function Like() {
     where("companyId", "==", companyId),
   );
 
+  console.log(favoriteData);
+
   useEffect(() => {
     if (userId) {
       getDocs(favoriteq)

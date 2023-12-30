@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import db from "../../firebase";
+import noComment from "./noComment.png";
 
 function Comment() {
   const { companyId } = useParams();
@@ -115,10 +116,17 @@ function Comment() {
     });
 
   return (
-    <div className="flex w-full justify-center">
-      <ScrollShadow hideScrollBar className="h-[720px] w-full">
-        <div className="flex flex-wrap">{comments}</div>
-      </ScrollShadow>
+    <div className="flex w-full">
+      {comment.length > 0 ? (
+        <ScrollShadow hideScrollBar className="h-[720px] w-full">
+          <div className="flex flex-wrap">{comments}</div>
+        </ScrollShadow>
+      ) : (
+        <div className="flex h-52 items-center self-start">
+          <img src={noComment} className="h-32" />
+          <h1 className="text-lg font-bold text-gray-600">暫無相關評論</h1>
+        </div>
+      )}
     </div>
   );
 }

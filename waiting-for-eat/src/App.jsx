@@ -9,13 +9,10 @@ import Header from "./components/Header";
 
 function App() {
   const auth = getAuth();
-  const identity = useUserStore((state) => state.identity);
-  const detailInfo = useUserStore((state) => state.detailInfo);
   const setUserId = useUserStore((state) => state.setUserId);
   const getUserInfoFromFirestoreAndSave = useUserStore(
     (state) => state.getUserInfoFromFirestoreAndSave,
   );
-  const isLogin = useUserStore((state) => state.isLogin);
   const getCompanyInfoFromFirestoreAndSave = useUserStore(
     (state) => state.getCompanyInfoFromFirestoreAndSave,
   );
@@ -27,7 +24,6 @@ function App() {
     const pathParts = location.pathname.split("/");
     const firstParam = pathParts[1];
     const thirdParam = pathParts[3];
-    console.log(thirdParam);
 
     onAuthStateChanged(auth, (user) => {
       if (user === null) {
@@ -41,8 +37,6 @@ function App() {
       if (user) {
         const user = auth.currentUser;
         const userId = user.uid;
-        console.log(userId);
-
         Promise.all([
           setUserId(userId),
           getUserInfoFromFirestoreAndSave(userId),
@@ -50,8 +44,10 @@ function App() {
           if (userInfo.companyId === "") {
             setHeader("DinerLogIn");
 
-            firstParam?.includes("boss") ||
-              (!thirdParam?.includes(userId) && navigate("/"));
+            firstParam?.includes("boss") && navigate("/");
+            if (thirdParam) {
+              !thirdParam.includes(userId) && navigate("/");
+            }
           } else if (userInfo.companyId !== "") {
             setHeader("BossLogIn");
             getCompanyInfoFromFirestoreAndSave(userInfo.companyId);

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import IsLoading from "../../components/IsLoading/index.jsx";
 import db from "../../firebase";
 import useSearchStore from "../../stores/searchStore";
 import useUserStore from "../../stores/userStore.js";
@@ -20,6 +21,7 @@ import sweet from "./homepagePictures/sweet.jpg";
 
 function HomePage() {
   const setSearchArray = useSearchStore((state) => state.setSearchArray);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchName, setSearchName] = useState("");
   const [searchPlace, setSearchPlace] = useState("");
   const [restaurants, setRestaurants] = useState([]);
@@ -49,6 +51,7 @@ function HomePage() {
         new Set(cityList.map((item) => JSON.stringify(item))),
       ).map((item) => JSON.parse(item));
       setCity(newCityList);
+      setIsLoading(false);
     });
   }, []);
 
@@ -191,6 +194,10 @@ function HomePage() {
   const handleClick = () => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  if (isLoading) {
+    return <IsLoading />;
+  }
 
   return (
     <div>

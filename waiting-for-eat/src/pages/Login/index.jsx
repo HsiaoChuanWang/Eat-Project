@@ -29,7 +29,6 @@ function Login() {
   const getUserInfoFromFirestoreAndSave = useUserStore(
     (state) => state.getUserInfoFromFirestoreAndSave,
   );
-  const setIsLogin = useUserStore((state) => state.setIsLogin);
 
   //native login
   const auth = getAuth();
@@ -42,7 +41,6 @@ function Login() {
           getUserInfoFromFirestoreAndSave(user.uid),
         ]).then(([_, userInfo]) => {
           if (userInfo.companyId === "") {
-            setIsLogin();
             navigate("/");
           } else {
             navigate(`/boss/bossInfo/${userInfo.companyId}`);
@@ -68,7 +66,6 @@ function Login() {
           getUserInfoFromFirestoreAndSave(user.uid),
         ]).then(([_, userInfo]) => {
           if (userInfo.companyId === "") {
-            setIsLogin();
             navigate("/");
           } else {
             navigate(`/boss/bossInfo/${userInfo.companyId}`);

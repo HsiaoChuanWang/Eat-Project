@@ -14,14 +14,20 @@ import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import Alert from "../../components/Alert/index.jsx";
 import Comment from "../../components/Comment";
+import IsLoading from "../../components/IsLoading/index.jsx";
+import NoItem from "../../components/NoItem/index.jsx";
 import db from "../../firebase";
 import useUserStore from "../../stores/userStore.js";
+import tasty from "../Search/tasty.jpg";
 import Like from "./Like";
 import Menu from "./Menu";
+import noActivity from "./restaurantPictures/noActivity.png";
+import noMenu from "./restaurantPictures/noMenu.png";
 
 function Restaurant() {
   const navigation = useNavigate();
   const { companyId } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
   const [menu, setMenu] = useState([]);
   const [post, setPost] = useState([]);
@@ -87,57 +93,77 @@ function Restaurant() {
               setPost([...combinePosts]);
             });
         });
+        setIsLoading(false);
       });
   }, []);
 
-  const posts = post
-    .sort((a, b) => (a.createTime > b.createTime ? -1 : 1))
-    .map((item) => {
-      return (
-        <motion.div
-          whileHover={{
-            scale: 1.05,
-            transition: { duration: 0.15 },
-          }}
-          whileTap={{ scale: 0.9 }}
-          key={item.userId}
-          className="my-4 cursor-pointer"
-          onClick={() => {
-            navigation(`/post/${item.postId}`);
-          }}
-        >
-          <Card className="scale-95 border border-solid border-gray-400 shadow-xl">
-            <div className="flex items-center justify-center p-2">
-              <Image
-                alt="Card background"
-                style={{ width: "100px", height: "100px" }}
-                className="rounded-xl object-cover object-center"
-                src={item.mainPicture}
-              />
-
-              <div className="mx-2 w-44 py-2">
-                <div className="flex justify-end">
-                  <p className="text-tiny font-bold">
-                    {dateFormat(item.createTime.toDate(), "yyyy/mm/dd HH:MM")}
-                  </p>
-                </div>
-                <div className="flex items-center">
-                  <User
-                    avatarProps={{
-                      src: item.picture,
-                      className: "border-2 border-solid border-gray-400",
-                    }}
+  const posts =
+    post.length > 0 ? (
+      post
+        .sort((a, b) => (a.createTime > b.createTime ? -1 : 1))
+        .map((item) => {
+          return (
+            <motion.div
+              whileHover={{
+                scale: 1.05,
+                transition: { duration: 0.15 },
+              }}
+              whileTap={{ scale: 0.9 }}
+              key={item.userId}
+              className="my-4 cursor-pointer"
+              onClick={() => {
+                navigation(`/post/${item.postId}`);
+              }}
+            >
+              <Card className="scale-95 border border-solid border-gray-400 shadow-xl">
+                <div className="flex items-center justify-center p-2">
+                  <Image
+                    alt="Card background"
+                    style={{ width: "100px", height: "100px" }}
+                    className="rounded-xl object-cover object-center"
+                    src={item.mainPicture}
                   />
-                  <h3 className="font-bold">{item.userName}</h3>
-                </div>
 
-                <h1 className="line-clamp-2 text-xl font-bold">{item.title}</h1>
-              </div>
-            </div>
-          </Card>
-        </motion.div>
-      );
-    });
+                  <div className="mx-2 w-44 py-2">
+                    <div className="flex justify-end">
+                      <p className="text-tiny font-bold">
+                        {dateFormat(
+                          item.createTime.toDate(),
+                          "yyyy/mm/dd HH:MM",
+                        )}
+                      </p>
+                    </div>
+                    <div className="flex items-center">
+                      <User
+                        avatarProps={{
+                          src: item.picture,
+                          className: "border-2 border-solid border-gray-400",
+                        }}
+                      />
+                      <h3 className="font-bold">{item.userName}</h3>
+                    </div>
+
+                    <h1 className="line-clamp-2 text-xl font-bold">
+                      {item.title}
+                    </h1>
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+          );
+        })
+    ) : (
+      <NoItem
+        content="暫無相關食記"
+        distance="calc(100%-24px)"
+        pictureWidth="w-36"
+        textSize="lg"
+      />
+    );
+
+  if (isLoading) {
+    return <IsLoading />;
+  }
 
   return (
     <div className=" mb-4 flex justify-center">
@@ -147,7 +173,7 @@ function Restaurant() {
           <div className="pb-6">
             <div>
               <img
-                src={data.picture}
+                src={data.picture !== "" ? data.picture : tasty}
                 className="h-96 w-full object-cover object-center"
               />
             </div>
@@ -163,7 +189,7 @@ function Restaurant() {
                 <h2 className="mt-2">{data.phone}</h2>
               </div>
 
-              <div className="mt-8 flex">
+              <div className={`mt-8 flex ${userId === "" && "hidden"}`}>
                 <Like />
               </div>
             </div>
@@ -192,7 +218,12 @@ function Restaurant() {
                     </div>
                   ))
                 ) : (
-                  <h4>暫無上傳菜單</h4>
+                  <div className="flex h-32 items-center">
+                    <img src={noMenu} className="h-28" />
+                    <h4 className="text-lg font-bold text-gray-600">
+                      暫無上傳菜單
+                    </h4>
+                  </div>
                 )}
               </div>
             </ScrollShadow>
@@ -204,26 +235,25 @@ function Restaurant() {
 
           <div className="mt-2 border-t-2 border-solid border-gray-300 pb-6">
             <h1 className="text-2xl font-bold text-[#ff6e06]">現熱活動</h1>
-            <div
-              className="mx-4 mt-4"
-              dangerouslySetInnerHTML={{ __html: data.description }}
-            ></div>
-          </div>
-
-          {/* <div className="flex justify-center">
-            <Card className="w-2/3 p-16">
+            {data.description ? (
               <div
-                className="text-large font-bold"
+                className="mx-4 mt-4"
                 dangerouslySetInnerHTML={{ __html: data.description }}
               ></div>
-            </Card>
-          </div> */}
+            ) : (
+              <div className="mx-4 mb-2 mt-8 flex h-32 items-center">
+                <img src={noActivity} className="h-28" />
+                <h1 className="text-lg font-bold text-gray-600">暫無活動</h1>
+              </div>
+            )}
+          </div>
 
           <div className="mt-2 border-t-2 border-solid border-gray-300 pb-6">
             <h1 className="text-2xl font-bold text-[#ff6e06]">相關評論</h1>
             <h1 className="text-base font-bold text-gray-400">
               點選評論以展開內容
             </h1>
+
             <Comment />
           </div>
         </div>

@@ -6,7 +6,6 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDocs,
   onSnapshot,
   query,
 } from "firebase/firestore";
@@ -15,7 +14,9 @@ import toast from "react-hot-toast";
 import { FaTrashCan } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
 import Alert from "../../components/Alert/index.jsx";
+import IsLoading from "../../components/IsLoading/index.jsx";
 import db from "../../firebase";
+import noTable from "./noTable.png";
 import "./table.css";
 
 const rootSubmenuKeys = [];
@@ -25,20 +26,21 @@ function Table() {
   const [openKeys, setOpenKeys] = useState(["sub1"]);
   const [tables, setTables] = useState([]);
   const [addTable, setAddTable] = useState({ number: "", people: "" });
+  const [isLoading, setIsLoading] = useState(true);
   const companyRef = collection(db, "company");
   const tableRef = query(collection(companyRef, companyId, "table"));
 
   useEffect(() => {
-    getDocs(tableRef).then((result) => {
-      let seats = [];
-      result.forEach((doc) => {
-        const data = doc.data();
-        const dataId = doc.id;
-        const combine = { ...data, tableId: dataId };
-        seats.push(combine);
-      });
-      setTables(seats);
-    });
+    // getDocs(tableRef).then((result) => {
+    //   let seats = [];
+    //   result.forEach((doc) => {
+    //     const data = doc.data();
+    //     const dataId = doc.id;
+    //     const combine = { ...data, tableId: dataId };
+    //     seats.push(combine);
+    //   });
+    //   setTables(seats);
+    // });
 
     onSnapshot(tableRef, (querySnapshot) => {
       let seats = [];
@@ -49,6 +51,7 @@ function Table() {
         seats.push(combine);
       });
       setTables(seats);
+      setIsLoading(false);
     });
   }, []);
 
@@ -130,6 +133,10 @@ function Table() {
     }
   }
 
+  if (isLoading) {
+    return <IsLoading />;
+  }
+
   return (
     <>
       <div className="my-12 flex justify-center ">
@@ -196,17 +203,26 @@ function Table() {
               className="mt-6 h-[100vh-400px] w-full justify-center"
             >
               <div className="flex justify-center">
-                <Menu
-                  className="text-base font-black"
-                  mode="inline"
-                  openKeys={openKeys}
-                  onOpenChange={onOpenChange}
-                  style={{
-                    width: 256,
-                    border: "none",
-                  }}
-                  items={items}
-                />
+                {items.length === 0 ? (
+                  <div className="mt-4">
+                    <img src={noTable} className="h-36" />
+                    <h1 className="text-center text-lg font-bold text-gray-600">
+                      尚未設定桌位
+                    </h1>
+                  </div>
+                ) : (
+                  <Menu
+                    className="text-base font-black"
+                    mode="inline"
+                    openKeys={openKeys}
+                    onOpenChange={onOpenChange}
+                    style={{
+                      width: 256,
+                      border: "none",
+                    }}
+                    items={items}
+                  />
+                )}
               </div>
             </ScrollShadow>
           </Card>

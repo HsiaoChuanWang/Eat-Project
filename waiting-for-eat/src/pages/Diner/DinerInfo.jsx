@@ -4,21 +4,29 @@ import React, { useEffect, useState } from "react";
 import { BsTelephoneFill } from "react-icons/bs";
 import { TbGenderFemale } from "react-icons/tb";
 import { useNavigate, useParams } from "react-router-dom";
+import IsLoading from "../../components/IsLoading/index.jsx";
 import db from "../../firebase";
+import diner from "../SignUp/signUpPictures/diner.png";
 
 function DinerInfo() {
   const { userId } = useParams();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
     const userSnap = onSnapshot(doc(db, "user", userId), (doc) => {
       const data = doc.data();
       setUserData(data);
+      setIsLoading(false);
     });
 
     return userSnap;
   }, []);
+
+  if (isLoading) {
+    return <IsLoading />;
+  }
 
   return (
     <div className="flex h-full justify-center">
@@ -30,7 +38,10 @@ function DinerInfo() {
         <div className="relative flex h-2/3 w-full items-center justify-center bg-[#ece0ca] ">
           <div className="ml-12 flex h-48 w-48 items-center justify-center rounded-full border-8 border-double border-gray-200 bg-white ">
             {userData.picture === "" ? (
-              <p>尚無上傳照片</p>
+              <img
+                className="h-full w-full rounded-full object-cover object-left"
+                src={diner}
+              />
             ) : (
               <img
                 className="h-full w-full rounded-full object-cover object-right"
