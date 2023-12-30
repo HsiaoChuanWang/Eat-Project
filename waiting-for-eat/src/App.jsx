@@ -1,35 +1,87 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { ConfigProvider } from "antd";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useEffect } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import useHeaderStore from "../src/stores/headerStore";
+import useUserStore from "../src/stores/userStore.js";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const auth = getAuth();
+  const setUserId = useUserStore((state) => state.setUserId);
+  const getUserInfoFromFirestoreAndSave = useUserStore(
+    (state) => state.getUserInfoFromFirestoreAndSave,
+  );
+  const getCompanyInfoFromFirestoreAndSave = useUserStore(
+    (state) => state.getCompanyInfoFromFirestoreAndSave,
+  );
+  const setHeader = useHeaderStore((state) => state.setHeader);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const pathParts = location.pathname.split("/");
+    const firstParam = pathParts[1];
+    const thirdParam = pathParts[3];
+
+    onAuthStateChanged(auth, (user) => {
+      if (user === null) {
+        setHeader("LogOut");
+        const logOutCannotEnterPath = ["reserve", "diner", "boss"];
+        if (logOutCannotEnterPath.some((path) => firstParam?.includes(path))) {
+          navigate("/");
+        }
+      }
+
+      if (user) {
+        const user = auth.currentUser;
+        const userId = user.uid;
+        Promise.all([
+          setUserId(userId),
+          getUserInfoFromFirestoreAndSave(userId),
+        ]).then(([_, userInfo]) => {
+          if (userInfo.companyId === "") {
+            setHeader("DinerLogIn");
+
+            firstParam?.includes("boss") && navigate("/");
+            if (thirdParam) {
+              !thirdParam.includes(userId) && navigate("/");
+            }
+          } else if (userInfo.companyId !== "") {
+            setHeader("BossLogIn");
+            getCompanyInfoFromFirestoreAndSave(userInfo.companyId);
+
+            !thirdParam?.includes(userInfo.companyId) &&
+              navigate(`/boss/bossInfo/${userInfo.companyId}`);
+          }
+        });
+      }
+    });
+  }, [location.pathname]);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: "#ff850e",
+          algorithm: true,
+        },
+        components: {
+          Menu: {
+            colorPrimary: "#ff850e",
+            itemBg: "#e5e7eb",
+            subMenuItemBg: "#f3f4f6",
+            algorithm: true,
+          },
+        },
+      }}
+    >
+      <Header />
+      <Outlet />
+      <Footer />
+    </ConfigProvider>
+  );
 }
 
-export default App
+export default App;
