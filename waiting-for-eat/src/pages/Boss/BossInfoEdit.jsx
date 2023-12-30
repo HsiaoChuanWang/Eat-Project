@@ -4,9 +4,11 @@ import { Button, Form, Input, Radio, Select } from "antd";
 import { doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import Alert from "../../components/Alert/index.jsx";
 import db, { storage } from "../../firebase";
-import useUserStore from "../../stores/userStore";
+import useUserStore from "../../stores/userStore.js";
 
 function BossInfoEdit() {
   useLoadScript({
@@ -14,7 +16,7 @@ function BossInfoEdit() {
   });
   const { companyId } = useParams();
   const navigate = useNavigate();
-  const userInfo = useUserStore((state) => state.userInfo);
+  const userId = useUserStore((state) => state.userId);
   const detailInfo = useUserStore((state) => state.detailInfo);
   const [updateUser, setUpdateUser] = useState({
     userName: detailInfo.userName,
@@ -34,14 +36,14 @@ function BossInfoEdit() {
 
   //user
   async function handlePicture(picture) {
-    const storageRef = ref(storage, userInfo.userId);
+    const storageRef = ref(storage, userId);
     await uploadBytes(storageRef, picture);
     const downloadURL = await getDownloadURL(storageRef);
     setUpdateUser({ ...updateUser, picture: downloadURL });
   }
 
   async function handleUserUpdate() {
-    const userRef = doc(db, "user", userInfo.userId);
+    const userRef = doc(db, "user", userId);
     await updateDoc(userRef, updateUser);
     navigate(`/boss/bossInfo/${companyId}`);
   }
@@ -70,7 +72,7 @@ function BossInfoEdit() {
       } else {
         console.log("error");
         console.log(`Geocode + ${status}`);
-        alert("請確認地址已填寫且地址正確");
+        toast.error("請確認地址已填寫且地址正確");
       }
     });
   }
@@ -84,6 +86,7 @@ function BossInfoEdit() {
 
   return (
     <div className="flex h-full items-center justify-center">
+      <Alert />
       <Card className="w-2/3">
         <ScrollShadow
           size={0}

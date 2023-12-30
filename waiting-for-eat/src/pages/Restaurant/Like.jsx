@@ -17,17 +17,17 @@ import {
 } from "react-icons/hi";
 import { useParams } from "react-router-dom";
 import db from "../../firebase";
-import useUserStore from "../../stores/userStore";
+import useUserStore from "../../stores/userStore.js";
 
 function Like() {
   const { companyId } = useParams();
   const [totalLike, setTotalLike] = useState(0);
   const [like, setLike] = useState("");
   const [favoriteData, setFavoriteData] = useState({});
-  const userInfo = useUserStore((state) => state.userInfo);
+  const userId = useUserStore((state) => state.userId);
   const favoriteq = query(
     collection(db, "favorite"),
-    where("userId", "==", userInfo.userId),
+    where("userId", "==", userId),
     where("companyId", "==", companyId),
   );
   const companyq = query(
@@ -35,8 +35,10 @@ function Like() {
     where("companyId", "==", companyId),
   );
 
+  console.log(favoriteData);
+
   useEffect(() => {
-    if (userInfo) {
+    if (userId) {
       getDocs(favoriteq)
         .then((quarySnaps) => {
           let favorites = [];
@@ -71,7 +73,7 @@ function Like() {
         setTotalLike(likes);
       });
     }
-  }, [userInfo]);
+  }, [userId]);
 
   const handleLike = async (change) => {
     const favoriteRef = doc(db, "favorite", favoriteData.favoriteId);

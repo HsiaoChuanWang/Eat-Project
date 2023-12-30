@@ -17,31 +17,34 @@ import {
   where,
 } from "firebase/firestore";
 import { default as React, useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import Alert from "../../components/Alert/index.jsx";
 import db from "../../firebase";
-import useDinerStore from "../../stores/dinerStore";
-import useUserStore from "../../stores/userStore";
-import logologo from "../Post/logologo.jpg";
+import useDinerStore from "../../stores/dinerStore.js";
+import useUserStore from "../../stores/userStore.js";
+import success from "./success.png";
 
 function Reserve() {
-  const setActive = useDinerStore((state) => state.setActive);
+  const setSelectedDinerBar = useDinerStore(
+    (state) => state.setSelectedDinerBar,
+  );
   const navigate = useNavigate();
   const [companyData, setCompanyData] = useState({});
   const [openTime, setOpenTime] = useState([]);
   const [orders, setOrders] = useState([]);
   const [tables, setTables] = useState([]);
   const [isSelected, setIsSelected] = useState("");
-  const userInfo = useUserStore((state) => state.userInfo);
+  const userId = useUserStore((state) => state.userId);
   const { companyId } = useParams();
   const [send, setSend] = useState({
     companyId: companyId,
-    userId: userInfo.userId,
+    userId: userId,
     date: "",
     start: "",
     end: "",
     people: "",
     attend: "no",
-    remark: "無",
   });
   const weekRef = useRef(null);
   const detailInfo = useUserStore((state) => state.detailInfo);
@@ -83,10 +86,10 @@ function Reserve() {
   }, []);
 
   useEffect(() => {
-    if (userInfo.userId != "") {
-      setSend({ ...send, userId: userInfo.userId });
+    if (userId != "") {
+      setSend({ ...send, userId: userId });
     }
-  }, [userInfo.userId]);
+  }, [userId]);
 
   //不能選今天之前的日期
   const disabledDate = (current) => {
@@ -159,7 +162,7 @@ function Reserve() {
         });
 
         if (parseInt(send.people) > peopleCount) {
-          alert("座位不足");
+          toast.error("座位不足");
           return false;
         }
 
@@ -172,11 +175,9 @@ function Reserve() {
       send.tableNumber = tableNumbers;
 
       updateData(send);
-      //   alert(`預約成功! 請確認訂位資訊，若有任何疑問請洽電。`);
-
       setIsSelected("");
     } else {
-      alert("請填寫完整資訊");
+      toast.error("請填寫完整資訊");
     }
   }
   openTime.sort((firstItem, secondItem) =>
@@ -240,6 +241,9 @@ function Reserve() {
       }
     }
   });
+
+  const isNoTime = !timeList.some((time) => time !== undefined);
+
   async function changeDate(e) {
     let date = null;
     if (e != null) date = e.$y + "/" + (e.$M + 1) + "/" + e.$D;
@@ -266,6 +270,7 @@ function Reserve() {
 
   return (
     <div className="flex justify-center">
+      <Alert />
       <div className="flex max-w-[1400px] justify-between">
         <div className="mt-44 w-4/12">
           <img
@@ -284,7 +289,7 @@ function Reserve() {
           </div>
         </div>
 
-        <Card className="my-16 w-7/12 border-2 border-solid border-gray-300">
+        <Card className="my-12 w-7/12 border-2 border-solid border-gray-300">
           <div>
             <div className="flex justify-center">
               <h2 className="p-6 text-center text-3xl font-black">
@@ -308,26 +313,18 @@ function Reserve() {
                   <h1>{detailInfo.phone}</h1>
                 </div>
 
-                <div className="mx-6 mb-2 flex items-baseline text-lg font-semibold">
+                <div className="mx-6 mb-8 flex items-baseline text-lg font-semibold">
                   <h1>人數</h1>
                   <h1 className="mx-6">|</h1>
                   <Form name="basic" autoComplete="off">
-                    <Form.Item
-                      rules={[
-                        {
-                          message: "請輸入人數!",
-                        },
-                      ]}
-                    >
-                      <Input
-                        name="people"
-                        className="h-10 w-20"
-                        onChange={(e) =>
-                          setSend({ ...send, people: e.target.value })
-                        }
-                        value={send.people}
-                      />
-                    </Form.Item>
+                    <Input
+                      name="people"
+                      className="h-10 w-20"
+                      onChange={(e) =>
+                        setSend({ ...send, people: e.target.value })
+                      }
+                      value={send.people}
+                    />
                   </Form>
                   <h1 className="mx-2 text-lg font-semibold">人</h1>
                 </div>
@@ -343,11 +340,11 @@ function Reserve() {
                   />
                 </div>
 
-                <div className="mx-6 mb-4 flex text-lg font-semibold">
+                <div className="mx-6 mb-8 flex text-lg font-semibold">
                   <h1>時間</h1>
                   <h1 className="mx-6">|</h1>
                   <div className="flex w-96 flex-wrap">
-                    {send.date === "" ? (
+                    {isNoTime === true ? (
                       <div
                         className={`mb-3 mr-3 h-10 w-36 rounded border border-solid border-gray-400 text-center leading-[40px] text-gray-500`}
                       >
@@ -359,27 +356,10 @@ function Reserve() {
                   </div>
                 </div>
 
-                <div className="mx-6 mb-6 flex text-lg font-semibold">
-                  <h1>備註</h1>
-                  <h1 className="mx-6">|</h1>
-                  <Form name="basic" autoComplete="off">
-                    <Form.Item name="remark">
-                      <Input
-                        className="h-36 w-96"
-                        name="remark"
-                        onChange={(e) =>
-                          setSend({ ...send, remark: e.target.value })
-                        }
-                        value={send.remark}
-                      />
-                    </Form.Item>
-                  </Form>
-                </div>
-
                 <div className="mb-8 flex justify-end">
                   <Button
                     radius="full"
-                    className="mr-8 block h-11 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg"
+                    className="mr-6 block h-11 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg"
                     onClick={() => navigate(`/`)}
                   >
                     返回首頁
@@ -390,22 +370,28 @@ function Reserve() {
                       radius="full"
                       className="block h-11 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
                       onClick={handleSend}
-                      disabled={checkRef.current}
-                      onPress={onOpen}
+                      onPress={
+                        !Object.values(send).includes("") ? onOpen : null
+                      }
                     >
                       確認訂位
                     </Button>
-                    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                    <Modal
+                      isOpen={isOpen}
+                      onOpenChange={onOpenChange}
+                      isDismissable={false}
+                      hideCloseButton={true}
+                    >
                       <ModalContent className="relative flex h-64">
                         {(onClose) => (
                           <>
                             <div className="mx-10 my-auto font-bold">
-                              <div className="flex justify-center">
-                                <img className="h-auto w-24" src={logologo} />
+                              <div className="flex items-center justify-center">
+                                <img className="h-auto w-28" src={success} />
                                 <div className="px-4">
                                   <p className="mb-2 text-2xl">預約成功!</p>
                                   <p>請確認訂位資訊，</p>
-                                  <p className="mb-4">若有任何疑問請洽電。</p>
+                                  <p className="mb-2">若有任何疑問請洽電。</p>
                                 </div>
                               </div>
                             </div>
@@ -415,10 +401,8 @@ function Reserve() {
                               color="primary"
                               onPress={onClose}
                               onClick={() => {
-                                setActive("reserved");
-                                navigate(
-                                  `/diner/reservedShop/${userInfo.userId}`,
-                                );
+                                setSelectedDinerBar("reserved");
+                                navigate(`/diner/reservedShop/${userId}`);
                               }}
                             >
                               前往

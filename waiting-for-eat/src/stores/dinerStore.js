@@ -3,11 +3,11 @@ import { immer } from "zustand/middleware/immer";
 
 const useDinerStore = create(
   immer((set) => ({
-    active: "diner",
+    selectedDinerBar: "",
 
-    setActive: (status) => {
+    setSelectedDinerBar: (status) => {
       set((state) => {
-        state.active = status;
+        state.selectedDinerBar = status;
       });
     },
   })),

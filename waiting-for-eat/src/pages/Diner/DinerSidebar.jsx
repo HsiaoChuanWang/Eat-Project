@@ -6,14 +6,16 @@ import { FaCalendarCheck } from "react-icons/fa";
 import { HiThumbDown, HiThumbUp } from "react-icons/hi";
 import { PiForkKnifeFill } from "react-icons/pi";
 import { useNavigate, useParams } from "react-router-dom";
-import useDinerStore from "../../stores/dinerStore";
+import useDinerStore from "../../stores/dinerStore.js";
 
 function DinerSidebar() {
   const { userId } = useParams();
   const navigate = useNavigate();
-  //   const [active, setActive] = useState("");
-  const active = useDinerStore((state) => state.active);
-  const setActive = useDinerStore((state) => state.setActive);
+  //   const [selectedDinerBar, setSelectedDinerBar] = useState("");
+  const selectedDinerBar = useDinerStore((state) => state.selectedDinerBar);
+  const setSelectedDinerBar = useDinerStore(
+    (state) => state.setSelectedDinerBar,
+  );
 
   return (
     <>
@@ -21,13 +23,14 @@ function DinerSidebar() {
         <div className="flex flex-wrap bg-zinc-600/70">
           <div
             className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              active === "diner"
+              selectedDinerBar === "dinerInfo" ||
+              selectedDinerBar === "dinerInfoEdit"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/diner/dinerInfo/${userId}`);
-              setActive("diner");
+              setSelectedDinerBar("diner");
             }}
           >
             <div>
@@ -38,13 +41,13 @@ function DinerSidebar() {
 
           <div
             className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              active === "reserved"
+              selectedDinerBar === "reservedShop"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/diner/reservedShop/${userId}`);
-              setActive("reserved");
+              setSelectedDinerBar("reserved");
             }}
           >
             <div>
@@ -55,13 +58,13 @@ function DinerSidebar() {
 
           <div
             className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              active === "eaten"
+              selectedDinerBar === "eatenShop"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/diner/eatenShop/${userId}`);
-              setActive("eaten");
+              setSelectedDinerBar("eaten");
             }}
           >
             <div>
@@ -72,13 +75,13 @@ function DinerSidebar() {
 
           <div
             className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              active === "like"
+              selectedDinerBar === "likeShop"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/diner/likeShop/${userId}`);
-              setActive("like");
+              setSelectedDinerBar("like");
             }}
           >
             <div>
@@ -89,13 +92,13 @@ function DinerSidebar() {
 
           <div
             className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              active === "dislike"
+              selectedDinerBar === "dislikeShop"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/diner/dislikeShop/${userId}`);
-              setActive("dislike");
+              setSelectedDinerBar("dislike");
             }}
           >
             <div>
@@ -106,13 +109,13 @@ function DinerSidebar() {
 
           <div
             className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              active === "posted"
+              selectedDinerBar === "posted"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/diner/posted/${userId}`);
-              setActive("posted");
+              setSelectedDinerBar("posted");
             }}
           >
             <div>
@@ -123,13 +126,14 @@ function DinerSidebar() {
 
           <div
             className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              active === "commented"
+              selectedDinerBar === "commented" ||
+              selectedDinerBar === "starEdit"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/diner/commented/${userId}`);
-              setActive("commented");
+              setSelectedDinerBar("commented");
             }}
           >
             <div>

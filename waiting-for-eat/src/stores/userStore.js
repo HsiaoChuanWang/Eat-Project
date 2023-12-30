@@ -1,27 +1,17 @@
-import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import db from "../firebase";
+import {
+  getCompanyInfoFromFirestore,
+  getUserInfoFromFirestore,
+} from "../utils/fireStore";
 
 const useUserStore = create(
   immer((set, get) => ({
-    isLogin: false,
-
-    setIsLogin: () => {
-      set((state) => {
-        state.isLogin = true;
-      });
-    },
-
     setIsLogout: () => {
       set((state) => {
-        state.isLogin = false;
-      });
-      set((state) => {
-        state.userInfo = {
-          providerId: "",
-          userId: "",
-        };
+        state.userId = "";
       });
       set((state) => {
         state.detailInfo = {
@@ -51,10 +41,7 @@ const useUserStore = create(
       });
     },
 
-    userInfo: {
-      providerId: "",
-      userId: "",
-    },
+    userId: "",
 
     detailInfo: {
       userName: "",
@@ -80,55 +67,45 @@ const useUserStore = create(
       menu: [],
     },
 
-    getUserInfo: (providerId, userId) => {
+    setUserId: (userId) => {
       set((state) => {
-        state.userInfo.providerId = providerId;
-        state.userInfo.userId = userId;
+        state.userId = userId;
       });
     },
 
-    getDetailInfo: (data) => {
+    setDetailInfo: (data) => {
       set((state) => {
         state.detailInfo = data;
       });
     },
 
-    sendUserFirestore: () => {
+    sendUserInfoToFirestore: () => {
       const detailInfo = get().detailInfo;
-      const userId = get().userInfo.userId;
+      const userId = get().userId;
       async function sendfirestore(data) {
         await setDoc(doc(db, "user", userId), data);
       }
       sendfirestore(detailInfo);
     },
 
-    getUserFirestore: (userId) => {
-      async function getfirestore() {
-        const docRef = doc(db, "user", userId);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const result = docSnap.data();
-          set((state) => {
-            state.detailInfo = result;
-          });
-        } else {
-          console.log("No such userInfo document!");
-        }
-      }
-      getfirestore();
+    getUserInfoFromFirestoreAndSave: (userId) => {
+      return getUserInfoFromFirestore(userId).then((userInfo) => {
+        set((state) => {
+          state.detailInfo = userInfo;
+        });
+        return userInfo;
+      });
     },
 
-    getCompanyInfo: (data) => {
+    setCompanyInfo: (data) => {
       set((state) => {
         state.companyInfo = data;
       });
     },
 
-    sendCompanyFirestore: () => {
+    sendCompanyInfoToFirestore: () => {
       const companyInfo = get().companyInfo;
-      const sendUserFirestore = get().sendUserFirestore;
-      console.log("1");
+      const sendUserInfoToFirestore = get().sendUserInfoToFirestore;
 
       async function sendfirestore(data) {
         const docRef = await addDoc(collection(db, "company"), data);
@@ -136,28 +113,17 @@ const useUserStore = create(
         set((state) => {
           state.detailInfo.companyId = companyId;
         });
-        sendUserFirestore();
+        sendUserInfoToFirestore();
       }
       sendfirestore(companyInfo);
     },
 
-    getCompanyFirestore: () => {
-      const companyId = get().detailInfo.companyId;
-
-      async function getfirestore() {
-        const docRef = doc(db, "company", companyId);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const result = docSnap.data();
-          set((state) => {
-            state.companyInfo = result;
-          });
-        } else {
-          console.log("No such document!");
-        }
-      }
-      getfirestore();
+    getCompanyInfoFromFirestoreAndSave: (companyId) => {
+      getCompanyInfoFromFirestore(companyId).then((companyInfo) => {
+        set((state) => {
+          state.companyInfo = companyInfo;
+        });
+      });
     },
   })),
 );

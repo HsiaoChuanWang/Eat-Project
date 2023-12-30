@@ -1,87 +1,86 @@
 import { ConfigProvider } from "antd";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import useHeaderStore from "../src/stores/headerStore";
-import useUserStore from "../src/stores/userStore";
+import useUserStore from "../src/stores/userStore.js";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 
 function App() {
   const auth = getAuth();
-  const detailInfo = useUserStore((state) => state.detailInfo);
-  const getUserInfo = useUserStore((state) => state.getUserInfo);
-  const getUserFirestore = useUserStore((state) => state.getUserFirestore);
-  const isLogin = useUserStore((state) => state.isLogin);
-  const getCompanyFirestore = useUserStore(
-    (state) => state.getCompanyFirestore,
+  const setUserId = useUserStore((state) => state.setUserId);
+  const getUserInfoFromFirestoreAndSave = useUserStore(
+    (state) => state.getUserInfoFromFirestoreAndSave,
+  );
+  const getCompanyInfoFromFirestoreAndSave = useUserStore(
+    (state) => state.getCompanyInfoFromFirestoreAndSave,
   );
   const setHeader = useHeaderStore((state) => state.setHeader);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
+    const pathParts = location.pathname.split("/");
+    const firstParam = pathParts[1];
+    const thirdParam = pathParts[3];
+
     onAuthStateChanged(auth, (user) => {
+      if (user === null) {
+        setHeader("LogOut");
+        const logOutCannotEnterPath = ["reserve", "diner", "boss"];
+        if (logOutCannotEnterPath.some((path) => firstParam?.includes(path))) {
+          navigate("/");
+        }
+      }
+
       if (user) {
         const user = auth.currentUser;
-        console.log("登入中");
-        getUserInfo(user.providerId, user.uid);
-        getUserFirestore(user.uid);
-        if (detailInfo.companyId === "") {
-          setHeader("DinerLogIn");
-        } else {
-          setHeader("BossLogIn");
-          getCompanyFirestore();
-        }
-      } else {
-        console.log("已登出");
-        setHeader("LogOut");
+        const userId = user.uid;
+        Promise.all([
+          setUserId(userId),
+          getUserInfoFromFirestoreAndSave(userId),
+        ]).then(([_, userInfo]) => {
+          if (userInfo.companyId === "") {
+            setHeader("DinerLogIn");
+
+            firstParam?.includes("boss") && navigate("/");
+            if (thirdParam) {
+              !thirdParam.includes(userId) && navigate("/");
+            }
+          } else if (userInfo.companyId !== "") {
+            setHeader("BossLogIn");
+            getCompanyInfoFromFirestoreAndSave(userInfo.companyId);
+
+            !thirdParam?.includes(userInfo.companyId) &&
+              navigate(`/boss/bossInfo/${userInfo.companyId}`);
+          }
+        });
       }
     });
-  }, [isLogin]);
-
-  useEffect(() => {
-    if (detailInfo.companyId === "" && detailInfo.userName !== "") {
-      setHeader("DinerLogIn");
-    } else if (detailInfo.companyId === "" && detailInfo.userName === "") {
-      setHeader("LogOut");
-    } else {
-      setHeader("BossLogIn");
-      getCompanyFirestore();
-    }
-  }, [detailInfo.companyId]);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  }, [location.pathname]);
 
   return (
-    <>
-      <ConfigProvider
-        theme={{
-          token: {
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: "#ff850e",
+          algorithm: true,
+        },
+        components: {
+          Menu: {
             colorPrimary: "#ff850e",
+            itemBg: "#e5e7eb",
+            subMenuItemBg: "#f3f4f6",
             algorithm: true,
-            // colorBgContainer: "black",
-            // colorBorder: "gray",
-
-            // fontSize: "3xl",
           },
-          components: {
-            Menu: {
-              //   colorItemText: "white",
-              //   itemColor: "red",
-              colorPrimary: "#ff850e",
-              colorItemBg: "#e5e7eb",
-              colorSubItemBg: "#f3f4f6",
-              algorithm: true, // 启用算法
-            },
-          },
-        }}
-      >
-        <Header />
-        <Outlet />
-        <Footer />
-      </ConfigProvider>
-    </>
+        },
+      }}
+    >
+      <Header />
+      <Outlet />
+      <Footer />
+    </ConfigProvider>
   );
 }
 

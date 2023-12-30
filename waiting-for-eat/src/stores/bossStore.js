@@ -3,11 +3,11 @@ import { immer } from "zustand/middleware/immer";
 
 const useBossStore = create(
   immer((set) => ({
-    selected: "boss",
+    selectedBossBar: "",
 
-    setSelected: (status) => {
+    setSelectedBossBar: (status) => {
       set((state) => {
-        state.selected = status;
+        state.selectedBossBar = status;
       });
     },
   })),

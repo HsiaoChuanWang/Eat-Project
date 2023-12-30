@@ -5,14 +5,14 @@ import { GiMeal } from "react-icons/gi";
 import { IoTime } from "react-icons/io5";
 import { MdNotificationsActive, MdPhotoLibrary } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
-import useBossStore from "../../stores/bossStore";
+import useBossStore from "../../stores/bossStore.js";
 
 function BossSidebar() {
   const { companyId } = useParams();
   const navigate = useNavigate();
   //   const [active, setActive] = useState("boss");
-  const selected = useBossStore((state) => state.selected);
-  const setSelected = useBossStore((state) => state.setSelected);
+  const selectedBossBar = useBossStore((state) => state.selectedBossBar);
+  const setSelectedBossBar = useBossStore((state) => state.setSelectedBossBar);
 
   return (
     <>
@@ -20,13 +20,14 @@ function BossSidebar() {
         <div className="flex flex-wrap bg-zinc-600/70">
           <div
             className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              selected === "boss"
+              selectedBossBar === "bossInfo" ||
+              selectedBossBar === "bossInfoEdit"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/boss/bossInfo/${companyId}`);
-              setSelected("boss");
+              setSelectedBossBar("bossInfo");
             }}
           >
             <div>
@@ -37,13 +38,13 @@ function BossSidebar() {
 
           <div
             className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              selected === "photo"
+              selectedBossBar === "photo" || selectedBossBar === "photoUpload"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/boss/photo/${companyId}`);
-              setSelected("photo");
+              setSelectedBossBar("photo");
             }}
           >
             <div>
@@ -54,13 +55,14 @@ function BossSidebar() {
 
           <div
             className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              selected === "activity"
+              selectedBossBar === "activity" ||
+              selectedBossBar === "activityEdit"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/boss/activity/${companyId}`);
-              setSelected("activity");
+              setSelectedBossBar("activity");
             }}
           >
             <div>
@@ -71,13 +73,13 @@ function BossSidebar() {
 
           <div
             className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              selected === "openTime"
+              selectedBossBar === "openTime"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/boss/openTime/${companyId}`);
-              setSelected("openTime");
+              setSelectedBossBar("openTime");
             }}
           >
             <div>
@@ -88,13 +90,13 @@ function BossSidebar() {
 
           <div
             className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              selected === "table"
+              selectedBossBar === "table"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/boss/table/${companyId}`);
-              setSelected("table");
+              setSelectedBossBar("table");
             }}
           >
             <div>
@@ -105,13 +107,13 @@ function BossSidebar() {
 
           <div
             className={`flex h-[calc((100vh-176px)/6)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              selected === "schedule"
+              selectedBossBar === "schedule"
                 ? "bg-zinc-800/80"
                 : "duration-150 hover:bg-zinc-500"
             }`}
             onClick={() => {
               navigate(`/boss/schedule/${companyId}`);
-              setSelected("schedule");
+              setSelectedBossBar("schedule");
             }}
           >
             <div>

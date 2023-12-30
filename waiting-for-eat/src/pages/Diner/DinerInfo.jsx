@@ -4,65 +4,44 @@ import React, { useEffect, useState } from "react";
 import { BsTelephoneFill } from "react-icons/bs";
 import { TbGenderFemale } from "react-icons/tb";
 import { useNavigate, useParams } from "react-router-dom";
+import IsLoading from "../../components/IsLoading/index.jsx";
 import db from "../../firebase";
+import diner from "../SignUp/signUpPictures/diner.png";
 
 function DinerInfo() {
   const { userId } = useParams();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
     const userSnap = onSnapshot(doc(db, "user", userId), (doc) => {
       const data = doc.data();
       setUserData(data);
+      setIsLoading(false);
     });
 
     return userSnap;
   }, []);
 
+  if (isLoading) {
+    return <IsLoading />;
+  }
+
   return (
     <div className="flex h-full justify-center">
-      <div className="relative flex h-[380px] w-2/3 items-center self-center rounded-3xl border-8 border-solid border-black/50 bg-[url('/src/pages/Diner/contentBg.png')]">
+      <div className="relative flex h-[380px] w-[640px] items-center self-center rounded-3xl border-8 border-solid border-black/50 bg-[url('/src/pages/Diner/contentBg.png')]">
         <h1 className="absolute right-4 top-2 text-4xl font-black text-black/50">
           Foodies
         </h1>
-        {/* <div className="relative flex h-2/3 w-full items-center justify-center bg-[#ece0ca] ">
-          <div className="ml-12 flex h-48 w-48 items-center justify-center rounded-full border-8 border-double border-gray-200 bg-white object-cover object-center p-4">
-            {userData.picture === "" ? (
-              <p>尚無上傳照片</p>
-            ) : (
-              <img className="h-full" src={userData.picture} />
-            )}
-          </div>
 
-          <div className="mr-6 w-2/3">
-            <div className="ml-12 mt-2 flex">
-              <p className="text-3xl font-bold">{userData.userName}</p>
-            </div>
-
-            <div className="ml-12 mt-6">
-              <div className="mb-4 flex">
-                <div className="mb-2 mr-2 flex h-8 w-8 items-center justify-center rounded bg-black text-white">
-                  <TbGenderFemale className="text-4xl text-[#ece0ca]" />
-                </div>
-                <p className="text-2xl">
-                  {userData.gender === "小姐" ? "女" : "男"}
-                </p>
-              </div>
-
-              <div className="mb-4 flex ">
-                <div className="mb-2 mr-2 flex h-8 w-8 items-center justify-center rounded bg-black text-white">
-                  <BsTelephoneFill className="text-xl text-[#ece0ca]" />
-                </div>
-                <p className="text-2xl">{userData.phone}</p>
-              </div>
-            </div>
-          </div> */}
-        {/* </div> */}
         <div className="relative flex h-2/3 w-full items-center justify-center bg-[#ece0ca] ">
           <div className="ml-12 flex h-48 w-48 items-center justify-center rounded-full border-8 border-double border-gray-200 bg-white ">
             {userData.picture === "" ? (
-              <p>尚無上傳照片</p>
+              <img
+                className="h-full w-full rounded-full object-cover object-left"
+                src={diner}
+              />
             ) : (
               <img
                 className="h-full w-full rounded-full object-cover object-right"

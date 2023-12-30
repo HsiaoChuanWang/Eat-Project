@@ -4,11 +4,13 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
-import { default as React, useEffect, useState } from "react";
+import { default as React, useState } from "react";
+import toast from "react-hot-toast";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import Alert from "../../components/Alert";
 import { provider } from "../../firebase";
-import useUserStore from "../../stores/userStore";
+import useUserStore from "../../stores/userStore.js";
 import googleLogo from "../SignUp/signUpPictures/GoogleLogo.png";
 import boss from "../SignUp/signUpPictures/boss.png";
 import cook from "../SignUp/signUpPictures/cook.png";
@@ -23,9 +25,10 @@ function Login() {
   const toggleVisibility = () => setIsVisible(!isVisible);
   const navigate = useNavigate();
   const detailInfo = useUserStore((state) => state.detailInfo);
-  const getUserInfo = useUserStore((state) => state.getUserInfo);
-  const getUserFirestore = useUserStore((state) => state.getUserFirestore);
-  const setIsLogin = useUserStore((state) => state.setIsLogin);
+  const setUserId = useUserStore((state) => state.setUserId);
+  const getUserInfoFromFirestoreAndSave = useUserStore(
+    (state) => state.getUserInfoFromFirestoreAndSave,
+  );
 
   //native login
   const auth = getAuth();
@@ -33,50 +36,50 @@ function Login() {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        getUserInfo(user.providerId, user.uid);
-        getUserFirestore(user.uid);
-        alert("登入成功");
-        setIsLogin();
-        console.log(identity);
-        if (identity === "diner") {
-          navigate("/");
-        } else {
-          navigate(`/boss/bossInfo/${detailInfo.companyId}`);
-        }
+        Promise.all([
+          setUserId(user.uid),
+          getUserInfoFromFirestoreAndSave(user.uid),
+        ]).then(([_, userInfo]) => {
+          if (userInfo.companyId === "") {
+            navigate("/");
+          } else {
+            navigate(`/boss/bossInfo/${userInfo.companyId}`);
+          }
+          toast.success("登入成功");
+        });
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        alert("請確認email及密碼是否輸入正確");
+        toast.error("請確認email及密碼是否輸入正確");
         console.log((errorCode, "=", errorMessage));
       });
   }
 
-  useEffect(() => {
-    if (detailInfo.companyId !== "") {
-      navigate(`/boss/bossInfo/${detailInfo.companyId}`);
-    }
-  }, [detailInfo.companyId]);
-
   //google login
-  const googleLogin = async () => {
+  function googleLogin() {
     signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        console.log("Google login successfully!");
-        getUserInfo(user.providerId, user.uid);
-        getUserFirestore(user.uid);
-        alert("登入成功");
-        setIsLogin();
-        navigate("/");
+      .then((userCredential) => {
+        const user = userCredential.user;
+        Promise.all([
+          setUserId(user.uid),
+          getUserInfoFromFirestoreAndSave(user.uid),
+        ]).then(([_, userInfo]) => {
+          if (userInfo.companyId === "") {
+            navigate("/");
+          } else {
+            navigate(`/boss/bossInfo/${userInfo.companyId}`);
+          }
+          toast.success("登入成功");
+        });
       })
-      .then(() => {})
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        toast.error("請確認email及密碼是否輸入正確");
         console.log((errorCode, "=", errorMessage));
       });
-  };
+  }
 
   function saveIdentity(identity) {
     setIdentity(identity);
@@ -84,6 +87,7 @@ function Login() {
 
   return (
     <div className="relative flex h-[calc(100vh-96px)] w-screen">
+      <Alert />
       <img
         src={loginBackground}
         className="h-full w-3/5 object-cover object-center"

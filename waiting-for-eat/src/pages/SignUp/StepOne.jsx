@@ -1,5 +1,7 @@
 import React from "react";
+import toast from "react-hot-toast";
 import { Bs1CircleFill } from "react-icons/bs";
+import Alert from "../../components/Alert/index.jsx";
 import boss from "./signUpPictures/boss.png";
 import diner from "./signUpPictures/diner.png";
 import stepOne from "./signUpPictures/stepOne.jpg";
@@ -11,7 +13,7 @@ function StepOne({ setActive, identity, setIdentity }) {
 
   function nextStep() {
     if (identity === "") {
-      alert("請點選註冊類別");
+      toast.error("請點選註冊身份");
     } else {
       setActive("StepTwo");
     }
@@ -19,6 +21,7 @@ function StepOne({ setActive, identity, setIdentity }) {
 
   return (
     <div className="relative flex h-[calc(100vh-96px)] w-screen">
+      <Alert />
       <img src={stepOne} className="h-full w-3/5 object-cover object-center" />
 
       <div className="flex h-full w-2/5 items-center justify-center">
@@ -27,7 +30,7 @@ function StepOne({ setActive, identity, setIdentity }) {
         >
           <div className="mb-12 flex items-center gap-2 text-3xl font-black text-[#ff850e]">
             <Bs1CircleFill />
-            <h1>請選擇登入身份</h1>
+            <h1>請選擇註冊身份</h1>
           </div>
           <div
             onClick={() => saveIdentity("diner")}

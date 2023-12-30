@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import useUserStore from "../../stores/userStore";
+import useUserStore from "../../stores/userStore.js";
 import cook from "./signUpPictures/cook.png";
 import stepFour from "./signUpPictures/stepFour.jpg";
 
 function StepFourDiner() {
-  const userInfo = useUserStore((state) => state.userInfo);
+  const userId = useUserStore((state) => state.userId);
 
   return (
     <div className="relative flex h-[calc(100vh-96px)] w-screen">
@@ -28,7 +28,7 @@ function StepFourDiner() {
 
           <div className="flex w-full justify-between px-16">
             <Link
-              to={`/diner/dinerInfo/${userInfo.userId}`}
+              to={`/diner/dinerInfo/${userId}`}
               className="h-10 w-36 rounded-lg bg-[#ff850e] text-center font-bold leading-10 text-white hover:bg-[#ff850e]/80"
             >
               前往食客專區

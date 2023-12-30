@@ -10,9 +10,11 @@ import {
 } from "firebase/firestore";
 import { motion } from "framer-motion";
 import { default as React, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import Alert from "../../components/Alert/index.jsx";
 import db from "../../firebase";
-import useUserStore from "../../stores/userStore";
+import useUserStore from "../../stores/userStore.js";
 import logologo from "./logologo.jpg";
 
 function Post() {
@@ -23,7 +25,7 @@ function Post() {
   const [postList, setPostList] = useState([]);
   const [mainPoster, setMainPoster] = useState({});
   const [mainTime, setMainTime] = useState("");
-  const userInfo = useUserStore((state) => state.userInfo);
+  const userId = useUserStore((state) => state.userId);
 
   async function getHtml() {
     const postRef = doc(db, "post", postId);
@@ -175,6 +177,7 @@ function Post() {
 
   return (
     <div className="flex justify-center">
+      <Alert />
       <div className="m-8 flex w-full max-w-[1400px] justify-between">
         <div className="w-3/4 pr-10">
           <h2 className="text-5xl font-black text-[#134f6c]">{post.title}</h2>
@@ -223,8 +226,8 @@ function Post() {
                   radius="full"
                   className="my-6 block h-11 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
                   onClick={() => {
-                    if (userInfo.userId === "") {
-                      alert("請登入以進行預約");
+                    if (userId === "") {
+                      toast.error("請登入以進行預約");
                     } else {
                       navigation(`/reserve/${companyData.companyId}`);
                     }

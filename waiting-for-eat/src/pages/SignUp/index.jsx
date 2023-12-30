@@ -26,49 +26,9 @@ function SignUp() {
   };
 
   return (
-    <>
-      {/* <div className=" flex">
-        <h2
-          className={`mx-28 my-8  text-4xl  ${
-            active === "StepOne" && "bg-red-200"
-          }`}
-        >
-          <Bs1CircleFill />
-          選擇註冊身份
-        </h2>
-
-        <h2
-          className={`mx-28 my-8  text-4xl  ${
-            active === "StepTwo" && "bg-red-200"
-          }`}
-        >
-          <Bs2CircleFill />
-          完成註冊
-        </h2>
-
-        <h2
-          className={`mx-28 my-8  text-4xl  ${
-            active === ("StepThreeDiner" || "StepThreeBoss") && "bg-red-200"
-          }`}
-        >
-          <Bs3CircleFill />
-          填寫詳細資料
-        </h2>
-
-        <h2
-          className={`mx-28 my-8  text-4xl  ${
-            active === ("StepFourDiner" || "StepFourBoss") && "bg-red-200"
-          }`}
-        >
-          <Bs4CircleFill />
-          歡迎您加入"吃痴等待"
-        </h2>
-      </div> */}
-
-      <div className="mflex justify-center">
-        <div>{signUpComponents[active]}</div>
-      </div>
-    </>
+    <div className="mflex justify-center">
+      <div>{signUpComponents[active]}</div>
+    </div>
   );
 }
 
