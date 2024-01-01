@@ -6,25 +6,25 @@
 </p>
 
 # Waiting for Eat
-Waiting for Eat is a restaurant reservation website for both "owners" and "diners".</br>
+Waiting for Eat is a restaurant reservation website for both "bosses" and "diners".</br>
 
 
-**Owners**
-- Upload restaurant details, menus, and events.
-- Manage time slots, seating capacity, and reservations.
+- Bosses
+  - Upload restaurant details, menus, and events.
+  - Manage time slots, seating capacity, and reservations.
 
-**Diners**
-- Search for restaurants of interest.
-- Make reservations.
-- Rreview the restaurants they’ve been.
-- Create their own list of personal preferences.
-- Compose food reviews and food diaries.
+- Diners
+  - Search for restaurants of interest.
+  - Make reservations.
+  - Review the restaurants they’ve been to.
+  - Create their list of personal preferences.
+  - Compose reviews and food diaries.
 
 ## About Waiting for Eat
 - Applied `React Router` for SPA and fulfilled protected root to restrict actions based on user roles.
-- Implemented global state managing with `Zustand`.
-- Used `Firebase Cloud Firestore` to manage database.
-- Managed native and google user registration via `Firebase Authentication`.
+- Implemented global state management with `Zustand`.
+- Used `Firebase Cloud Firestore` to manage the database.
+- Managed native and Google user registration via `Firebase Authentication`.
 - Utilized `Tailwind CSS`, `NextUI`, and `Ant Design` for UI.
 - Applied `Framer Motion` for the animation to provide users with a smoother experience.
 - Fulfilled real-time reservation information update with `Firestore onSnapshot`.
@@ -61,20 +61,50 @@ Waiting for Eat is a restaurant reservation website for both "owners" and "diner
 - FullCalendar
 
 ## Flow Chart
+![chart flow](https://github.com/HsiaoChuanWang/Eat-Project/assets/140884229/5a04564b-0a22-46de-a37b-f094aba6a10d)
 
 ## Demo
 ### Test Account
-- Diner:
-    - Email: diner168@mail.com
-    - Password: 168168
 - Boss:
     - Email: boss888@mail.com
     - Password: 888888
+- Diner:
+    - Email: diner168@mail.com
+    - Password: 168168
+
+### **Diner**
+  1. **【Homepage】** 
+      - Search for restaurants by name, city / county, or food categorization.
+
+  2. **【Map page】**  
+      - Show related restaurant list with location.
+      - If the diner is logged in, there will be thumbs icons on the list to indicate personal preferences.
+      - Click on the image of the restaurant to obtain more related information about it.
+
+  3. **【Restaurant page】**  
+      - Click on the menu photo to enlarge it for a clearer view of the content.
+      - Click to view the related reviews and food diaries.
+
+  4. **【Food diary page】** 
+      - Scroll to the bottom, where you can click on the restaurant photo to return to the restaurant page, or click on the button on the right to make a reservation.
+
+   5. **【Diner page】** 
+      - Check the list of booked restaurants.
+      - For visited restaurants, mark preferences or write reviews and food diaries.
+
+
+### **Boss**
+  1. **【Boss page】** 
+      - Upload restaurant information, menus, or events.
+      - Update time slots and seating capacity.
+      - Drag the reservation to change the dining time or click the buttons on it to confirm attendance or cancel.
  
-  ## Contact
+ ## Contact
+ <a href="mailto:j2130970@gmail.com">
+    <img src="https://img.shields.io/badge/Gmail-EA4335.svg?style=for-the-badge&logo=Gmail&logoColor=white" /></a>
+
   <a href="https://www.linkedin.com/in/hsiao-chuan-wang/">
     <img src="https://img.shields.io/badge/LinkedIn-0A66C2.svg?style=for-the-badge&logo=LinkedIn&logoColor=white" />
   </a>
-  <a href="mailto:j2130970@gmail.com">
-    <img src="https://img.shields.io/badge/Gmail-EA4335.svg?style=for-the-badge&logo=Gmail&logoColor=white" />
-  </a>
+
+  
