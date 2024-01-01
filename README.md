@@ -10,8 +10,8 @@ Waiting for Eat is a restaurant reservation website for both "bosses" and "diner
 
 
 - Bosses
-   - Upload restaurant details, menus, and events.
-   - Manage time slots, seating capacity, and reservations.
+    - Upload restaurant details, menus, and events.
+    - Manage time slots, seating capacity, and reservations.
 
 - Diners
   - Search for restaurants of interest.
