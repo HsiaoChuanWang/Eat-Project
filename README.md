@@ -64,6 +64,14 @@ Waiting for Eat is a restaurant reservation website for both "bosses" and "diner
 ![chart flow](https://github.com/HsiaoChuanWang/Eat-Project/assets/140884229/5a04564b-0a22-46de-a37b-f094aba6a10d)
 
 ## Demo
+<a href="https://waiting-for-eat.web.app/">
+ 
+![https://waiting-for-eat.web.app/](https://img.shields.io/badge/🍕&nbsp;Website-orange.svg?style=for-the-badge&logoColor=black)
+
+</a>
+
+
+
 ### Test Account
 - Boss:
     - Email: boss888@mail.com
