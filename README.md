@@ -105,7 +105,7 @@ Waiting for Eat is a restaurant reservation website for both "bosses" and "diner
   1. **【Boss page】** 
       - Upload restaurant information, menus, or events.
       - Update time slots and seating capacity.
-      - Drag the reservation to change the dining time or click the buttons on it to confirm attendance or cancel.
+      - Drag the reservation to change the dining time or seat, or click the buttons on it to confirm attendance or cancel.
  
  ## Contact
  <a href="mailto:j2130970@gmail.com">
