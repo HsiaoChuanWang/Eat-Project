@@ -2,7 +2,7 @@
 <img src="https://github.com/HsiaoChuanWang/Eat-Project/assets/140884229/ba2a5a80-b72b-49ae-82e9-2cdb38c96cd6" style="width:600px">
 </div>
 <p align="center">
- <a href="https://waiting-for-eat.web.app/">Website</a> | <a href=#waiting-for-eat>About</a> | <a href="#demo">Demo</a> | <a href="#contact">Contact</a>
+ <a href="https://waiting-for-eat.web.app/">Website</a> | <a href=#about-waiting-for-eat>About</a> | <a href="#demo">Demo</a> | <a href="#contact">Contact</a>
 </p>
 
 # Waiting for Eat
