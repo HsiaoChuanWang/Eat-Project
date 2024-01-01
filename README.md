@@ -90,16 +90,11 @@ Waiting for Eat is a restaurant reservation website for both "bosses" and "diner
       - Click on the image of the restaurant to obtain more related information about it.
    ![diner-02](https://github.com/HsiaoChuanWang/Eat-Project/assets/140884229/7728b0c2-5604-4831-aff3-8ceab552b783)
 
-  3. **【Restaurant page】**  
-      - Click on the menu photo to enlarge it for a clearer view of the content.
-      - Click to view the related reviews and food diaries.
-  ![diner-03](https://firebasestorage.googleapis.com/v0/b/project-fire-6a02f.appspot.com/o/diner-03.gif?alt=media&token=e3ffc604-cdc1-4352-96fa-d98a564559df)
-   
-  4. **【Food diary page】** 
+  3. **【Food diary page】** 
       - Scroll to the bottom, where you can click on the restaurant photo to return to the restaurant page, or click on the button on the right to make a reservation.
   ![diner-04](https://github.com/HsiaoChuanWang/Eat-Project/assets/140884229/a0a4058e-097c-4fd6-8c7b-20d10dc52bcf)
 
-   5. **【Diner page】** 
+   4. **【Diner page】** 
       - Check the list of booked restaurants.
       - For visited restaurants, mark preferences or write reviews and food diaries.
     ![diner-05](https://github.com/HsiaoChuanWang/Eat-Project/assets/140884229/c57970ed-5dba-4900-881d-84a5644e0571)
