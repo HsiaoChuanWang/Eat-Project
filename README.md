@@ -8,7 +8,6 @@
 # Waiting for Eat
 Waiting for Eat is a restaurant reservation website for both "bosses" and "diners".</br>
 
-
 - Bosses
     - Upload restaurant details, menus, and events.
     - Manage time slots, seating capacity, and reservations.
@@ -83,15 +82,19 @@ Waiting for Eat is a restaurant reservation website for both "bosses" and "diner
 ### **Diner**
   1. **【Homepage】** 
       - Search for restaurants by name, city / county, or food categorization.
+   ![diner-01](https://github.com/HsiaoChuanWang/Eat-Project/assets/140884229/e960a7ef-ebed-4007-9825-0abf4afaa227)
 
   2. **【Map page】**  
       - Show related restaurant list with location.
       - If the diner is logged in, there will be thumbs icons on the list to indicate personal preferences.
       - Click on the image of the restaurant to obtain more related information about it.
+   ![diner-02](https://github.com/HsiaoChuanWang/Eat-Project/assets/140884229/7728b0c2-5604-4831-aff3-8ceab552b783)
 
   3. **【Restaurant page】**  
       - Click on the menu photo to enlarge it for a clearer view of the content.
       - Click to view the related reviews and food diaries.
+
+   
 
   4. **【Food diary page】** 
       - Scroll to the bottom, where you can click on the restaurant photo to return to the restaurant page, or click on the button on the right to make a reservation.
