@@ -73,8 +73,6 @@ function Posted() {
     await deleteDoc(doc(db, "post", postId));
   }
 
-  console.log(combineData);
-
   const printDatas =
     combineData.length > 0 ? (
       combineData
