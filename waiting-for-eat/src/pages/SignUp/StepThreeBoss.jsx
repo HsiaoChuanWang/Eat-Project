@@ -72,8 +72,6 @@ function StepThreeBoss({ setActive }) {
         setCompanyInfo(company);
         sendCompanyInfoToFirestore();
       } else {
-        console.log("error");
-        console.log(`Geocode + ${status}`);
         toast.error("請確認地址已填寫且地址正確");
       }
     });
@@ -132,6 +130,7 @@ function StepThreeBoss({ setActive }) {
       await getLocation();
       if (company.lat !== "") {
         await setDetailInfo(detail);
+        await sendUserInfoToFirestore();
         setActive("StepFourBoss");
       }
     } else {

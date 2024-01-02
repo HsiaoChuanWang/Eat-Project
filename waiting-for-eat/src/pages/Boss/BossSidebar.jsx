@@ -10,7 +10,6 @@ import useBossStore from "../../stores/bossStore.js";
 function BossSidebar() {
   const { companyId } = useParams();
   const navigate = useNavigate();
-  //   const [active, setActive] = useState("boss");
   const selectedBossBar = useBossStore((state) => state.selectedBossBar);
   const setSelectedBossBar = useBossStore((state) => state.setSelectedBossBar);
 

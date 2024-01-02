@@ -21,7 +21,6 @@ import loginBackground from "./loginBackground.jpg";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //   const [identity, setIdentity] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const navigate = useNavigate();
@@ -43,7 +42,6 @@ function Login() {
     }
   }, []);
 
-  //native login
   const auth = getAuth();
   function nativeLogin() {
     signInWithEmailAndPassword(auth, email, password)
@@ -64,15 +62,11 @@ function Login() {
           setTestPassword("");
         });
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+      .catch(() => {
         toast.error("請確認email及密碼是否輸入正確");
-        console.log((errorCode, "=", errorMessage));
       });
   }
 
-  //google login
   function googleLogin() {
     signInWithPopup(auth, provider)
       .then((userCredential) => {
@@ -92,11 +86,8 @@ function Login() {
           setTestPassword("");
         });
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+      .catch(() => {
         toast.error("請確認email及密碼是否輸入正確");
-        console.log((errorCode, "=", errorMessage));
       });
   }
 

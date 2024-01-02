@@ -25,12 +25,8 @@ function Comment() {
     const docRef = doc(db, "user", userId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment userInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   useEffect(() => {

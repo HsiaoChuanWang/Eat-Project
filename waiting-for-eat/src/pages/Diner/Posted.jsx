@@ -29,24 +29,16 @@ function Posted() {
     const docRef = doc(db, "company", companyId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment companyInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   async function getOrderInfo(orderId) {
     const docRef = doc(db, "order", orderId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment companyInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   useEffect(() => {
@@ -80,6 +72,8 @@ function Posted() {
   async function handleDelete(postId) {
     await deleteDoc(doc(db, "post", postId));
   }
+
+  console.log(combineData);
 
   const printDatas =
     combineData.length > 0 ? (

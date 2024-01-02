@@ -11,7 +11,6 @@ import useDinerStore from "../../stores/dinerStore.js";
 function DinerSidebar() {
   const { userId } = useParams();
   const navigate = useNavigate();
-  //   const [selectedDinerBar, setSelectedDinerBar] = useState("");
   const selectedDinerBar = useDinerStore((state) => state.selectedDinerBar);
   const setSelectedDinerBar = useDinerStore(
     (state) => state.setSelectedDinerBar,

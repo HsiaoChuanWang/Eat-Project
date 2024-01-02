@@ -17,11 +17,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import db from "../../firebase";
 
-//解決因為圖片死去的問題
 function myBlockRenderer(contentBlock) {
   const type = contentBlock.getType();
 
-  //將圖片類型轉換成mediaComponent
   if (type === "atomic") {
     return {
       component: Media,
@@ -73,7 +71,6 @@ function TextEditor() {
     setEditorState(e);
   }
 
-  //上傳食記中照片，拿回URL
   async function uploadPicture(picture) {
     const storage = getStorage();
     const storageRef = ref(storage, uuid);
@@ -87,7 +84,6 @@ function TextEditor() {
     return pictureURL;
   }
 
-  //上傳main照片
   async function handleMainPicture(picture) {
     const storage = getStorage();
     const storageRef = ref(storage, uuid);
@@ -96,7 +92,6 @@ function TextEditor() {
     setMainPicture(downloadURL);
   }
 
-  //送出html到firestore
   async function handleSend() {
     const uploadHtml = draftToHtml(
       convertToRaw(editorState.getCurrentContent()),
@@ -112,13 +107,6 @@ function TextEditor() {
       companyId: orderData.companyId,
     });
   }
-
-  const onFinish = (values) => {
-    console.log("Success:", values);
-  };
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
 
   const editorStyle = {
     height: "calc(100vh - 450px)",
@@ -199,7 +187,7 @@ function TextEditor() {
               image: {
                 urlEnabled: true,
                 uploadEnabled: true,
-                alignmentEnabled: false, // 是否顯示圖片排列置中與否，相當於text-align
+                alignmentEnabled: false,
                 uploadCallback: _uploadImageCallBack,
                 previewImage: true,
                 inputAccept:

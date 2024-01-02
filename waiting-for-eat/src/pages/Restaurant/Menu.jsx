@@ -16,13 +16,6 @@ const variants = {
     x: 0,
     opacity: 1,
   },
-  exit: (direction) => {
-    return {
-      zIndex: 0,
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0,
-    };
-  },
 };
 
 const swipeConfidenceThreshold = 10000;
@@ -51,7 +44,6 @@ const Menu = ({ images, position, setDisplay }) => {
             variants={variants}
             initial="enter"
             animate="center"
-            //   exit="enter"
             transition={{
               x: { type: "spring", stiffness: 300, damping: 30 },
               opacity: { duration: 1.2 },

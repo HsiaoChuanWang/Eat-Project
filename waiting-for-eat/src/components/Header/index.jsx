@@ -12,7 +12,6 @@ import logo from "./logo.png";
 
 function Header() {
   const navigate = useNavigate();
-  const [isSignUp, setIsSignUp] = useState(false);
   const [userData, setUserData] = useState({});
   const setIsLogout = useUserStore((state) => state.setIsLogout);
   const setLoginIdentity = useTestStore((state) => state.setLoginIdentity);

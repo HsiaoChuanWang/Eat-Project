@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import useHeaderStore from "../src/stores/headerStore.js";
 import useUserStore from "../src/stores/userStore.js";
-import Footer from "./components/Footer";
 import Header from "./components/Header";
 import RwdWarning from "./components/RwdWarning";
 
@@ -84,7 +83,6 @@ function App() {
       <Header />
       <RwdWarning />
       <Outlet />
-      <Footer />
     </ConfigProvider>
   );
 }

@@ -91,7 +91,6 @@ function Reserve() {
     }
   }, [userId]);
 
-  //不能選今天之前的日期
   const disabledDate = (current) => {
     return current && current <= dayjs().subtract(1, "day").endOf("day");
   };
@@ -104,11 +103,9 @@ function Reserve() {
     if (!Object.values(send).includes("")) {
       checkRef.current = false;
 
-      //以orderq找出這間公司其指定時間已經被訂位的所有訂單
       let hasOrderArray = orders.filter((p) => p.start == send.start);
       let hasOrderTableNumberArray = [];
 
-      //一個訂單可能有多個桌號，取出指定時間已經被訂位的桌號
       hasOrderArray.map((p) =>
         p.tableNumber.map((p) => hasOrderTableNumberArray.push(p)),
       );
@@ -116,32 +113,28 @@ function Reserve() {
       let canOrderArray = [];
       let orderTable = null;
 
-      //確認可以訂的桌位
       tables.map((table) => {
         const hasOrder = hasOrderTableNumberArray.find(
           (p) => p == table.number,
         );
         if (hasOrder == undefined) canOrderArray.push(table);
-      }); //沒有被訂的桌位就會undefined
+      });
       canOrderArray = canOrderArray.sort((firstItem, secondItem) =>
         firstItem.people > secondItem.people ? 1 : -1,
-      ); //將table可容納的人數從小到大排列，資料中有id、number、people
+      );
 
-      //人數剛好的桌子就分派給他
       orderTable = canOrderArray.find(
         (p) => parseInt(p.people) >= parseInt(send.people),
       );
 
-      //如果沒有一個桌子的人數可以容納他定的人數，要訂兩張
-      let tableNumbers = []; //最終桌號
+      let tableNumbers = [];
       if (orderTable != null) {
         tableNumbers.push(orderTable.number);
       } else {
         let canOrderCount = [];
-        let peopleCount = 0; //試著塞桌子後的總人數
+        let peopleCount = 0;
         let orderList = [];
 
-        //從桌位人數最小的開始塞，得到canOrderCount
         canOrderArray.map((canOrder) => {
           if (parseInt(send.people) > peopleCount) {
             canOrderCount.push(canOrder);
@@ -149,7 +142,6 @@ function Reserve() {
           }
         });
 
-        //將canOrderCount從桌位人數大到小再排一次
         peopleCount = 0;
         canOrderCount.sort((firstItem, secondItem) =>
           firstItem.people < secondItem.people ? 1 : -1,
@@ -166,7 +158,6 @@ function Reserve() {
           return false;
         }
 
-        //最終桌號
         orderList.forEach((table) => {
           const number = table.number;
           tableNumbers.push(number);

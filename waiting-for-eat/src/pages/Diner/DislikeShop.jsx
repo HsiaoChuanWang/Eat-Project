@@ -35,12 +35,8 @@ function DislikeShop() {
     const docRef = doc(db, "company", companyId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment companyInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   useEffect(() => {

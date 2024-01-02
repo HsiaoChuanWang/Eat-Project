@@ -28,7 +28,6 @@ import tasty from "./tasty.jpg";
 const libraries = ["places"];
 
 function Search() {
-  const [isLoading, setIsLoading] = useState(true);
   const userId = useUserStore((state) => state.userId);
   const searchArray = useSearchStore((state) => state.searchArray);
   const setSearchArray = useSearchStore((state) => state.setSearchArray);
@@ -58,20 +57,16 @@ function Search() {
     }
   }
 
-  //一、將Google Map顯示於畫面
-  //isLoaded為布林值，地圖準備好即進行渲染
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_API_KEY,
     libraries,
   });
 
-  // 三、地圖加載後進行初始化操作
   const mapRef = useRef();
   const onLoad = useCallback((map) => {
     mapRef.current = map;
   }, []);
 
-  //四、設定初始地圖畫面之經緯度，使用useMemo(dependencies[])控制只渲染一次
   const defaultCenter = useMemo(
     () => ({
       lat: 25.0492576,
@@ -80,8 +75,6 @@ function Search() {
     [],
   );
 
-  //五、設定取得input後的值，該如何變化
-  // map是google map的物件，設置state的變化去追蹤它的變化
   const [searchName, setSearchName] = useState("");
   const [searchPlace, setSearchPlace] = useState("");
   const [searchCategory, setSearchCategory] = useState("");
@@ -111,11 +104,9 @@ function Search() {
         new Set(cityList.map((item) => JSON.stringify(item))),
       ).map((item) => JSON.parse(item));
       setCity(newCityList);
-      setIsLoading(false);
     });
   }, []);
 
-  //搜尋特定一間店的店名
   async function getRestaurant(searchitem) {
     const q = query(companyRef, where("name", "==", searchitem));
     const querySnapshot = await getDocs(q);
@@ -156,7 +147,6 @@ function Search() {
     getRestaurant(searchName);
   }
 
-  //搜尋地點
   async function getPlace(searchitem) {
     const q = query(companyRef, where("city", "==", searchitem));
     const querySnapshot = await getDocs(q);
@@ -197,7 +187,6 @@ function Search() {
     getPlace(searchPlace);
   }
 
-  //取得所有種類
   function handleCategory() {
     setSearchArray([]);
     getCategory(searchCategory);

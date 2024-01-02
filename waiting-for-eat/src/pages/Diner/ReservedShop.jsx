@@ -36,12 +36,8 @@ function ReservedShop() {
     const docRef = doc(db, "company", companyId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment companyInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   useEffect(() => {
@@ -71,19 +67,6 @@ function ReservedShop() {
         setCombineData(value);
         setIsLoading(false);
       });
-
-      //   let companyList = [];
-      //   orderList.forEach((order) => {
-      //     getCompanyInfo(order.companyId)
-      //       .then((data) => {
-      //         const newData = Object.assign(order, data);
-      //         companyList.push(newData);
-      //       })
-      //       .then(() => {
-      //         setCombineData([...companyList]);
-      //         setIsLoading(false);
-      //       });
-      //   });
     });
 
     return orderSnap;
