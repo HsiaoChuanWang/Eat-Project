@@ -82,7 +82,7 @@ function Comment() {
             }
           }}
         >
-          <Card className="min-h-[190px]  p-4">
+          <Card className="min-h-[190px] w-72 p-4">
             <div className="flex justify-between">
               <div className="flex items-center">
                 <User

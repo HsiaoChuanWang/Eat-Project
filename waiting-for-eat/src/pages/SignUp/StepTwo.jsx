@@ -29,7 +29,6 @@ function StepTwo({ setActive, identity }) {
   const [email, setEmail] = useState("");
 
   function nextStep() {
-    console.log();
     createUserWithEmailAndPassword(auth, email, password)
       .then((response) => {
         console.log("Sign up successfully!");
@@ -37,6 +36,7 @@ function StepTwo({ setActive, identity }) {
         setUserId(user.uid);
       })
       .then(() => {
+        console.log(identity);
         identity === "diner"
           ? setActive("StepThreeDiner")
           : setActive("StepThreeBoss");

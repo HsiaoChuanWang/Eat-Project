@@ -2,12 +2,12 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
 const useHeaderStore = create(
-  immer((set, get) => ({
-    situation: "LogOut",
+  immer((set) => ({
+    loginStatus: "LogOut",
 
     setHeader: (status) => {
       set((state) => {
-        state.situation = status;
+        state.loginStatus = status;
       });
     },
   })),

@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 import IsLoading from "../../components/IsLoading";
 import NoItem from "../../components/NoItem";
 import db from "../../firebase";
-import useSearchStore from "../../stores/searchStore";
+import useSearchStore from "../../stores/searchStore.js";
 import useUserStore from "../../stores/userStore.js";
 import MyGoogleMaps from "./MyGoogleMaps";
 import tasty from "./tasty.jpg";
@@ -303,7 +303,7 @@ function Search() {
     }
   };
 
-  if (isLoading) {
+  if (!isLoaded) {
     return <IsLoading />;
   }
 

@@ -79,7 +79,7 @@ function StepThreeDiner({ setActive }) {
         >
           <div className=" mb-8 flex items-center gap-2 text-3xl font-black text-[#ff850e]">
             <Bs3CircleFill />
-            <h1>填寫資訊，上架你的餐廳。</h1>
+            <h1>填寫基本資訊</h1>
           </div>
 
           <Form autoComplete="off" className="mb-8">

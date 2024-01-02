@@ -38,7 +38,7 @@ function Schedule() {
   const orderRef = query(collection(db, "order"));
   const orderq = query(orderRef, where("companyId", "==", companyId));
 
-  async function setUserId(userId) {
+  async function setUserInfo(userId) {
     const docRef = doc(db, "user", userId);
     const docSnap = await getDoc(docRef);
 
@@ -76,7 +76,7 @@ function Schedule() {
       .then((orderList) => {
         let combineOrder = [];
         orderList.forEach((order) => {
-          setUserId(order.userId)
+          setUserInfo(order.userId)
             .then((data) => {
               const newData = {
                 ...order,
@@ -100,6 +100,7 @@ function Schedule() {
         seats.push(combine);
       });
       setTables(seats);
+      setIsLoading(false);
     });
 
     const orderSnap = onSnapshot(orderq, (querySnapshot) => {
@@ -111,22 +112,36 @@ function Schedule() {
         orderList.push(combine);
       });
 
-      let combineOrder = [];
-      orderList.forEach((order) => {
-        setUserId(order.userId)
-          .then((data) => {
-            const newData = {
-              ...order,
-              userName: data.userName,
-              phone: data.phone,
+      Promise.all(
+        orderList.map((item) => {
+          return Promise.all([setUserInfo(item.userId)]).then(([userInfo]) => {
+            const newItem = {
+              ...item,
+              userName: userInfo.userName,
+              phone: userInfo.phone,
             };
-            combineOrder.push(newData);
-          })
-          .then(() => {
-            setOrders([...combineOrder]);
-            setIsLoading(false);
+            return newItem;
           });
+        }),
+      ).then((value) => {
+        setOrders(value);
       });
+
+      //   let combineOrder = [];
+      //   orderList.forEach((order) => {
+      //     setUserInfo(order.userId)
+      //       .then((data) => {
+      //         const newData = {
+      //           ...order,
+      //           userName: data.userName,
+      //           phone: data.phone,
+      //         };
+      //         combineOrder.push(newData);
+      //       })
+      //       .then(() => {
+      //         setOrders([...combineOrder]);
+      //       });
+      //   });
     });
 
     return tableSnap, orderSnap;
@@ -325,10 +340,8 @@ function Schedule() {
                 attend === "no" && "cursor-pointer"
               }`}
               onClick={() => {
-                if (editable === true) {
-                  AddFavorite(orderId, userId);
-                  UpdateAttend(orderId);
-                }
+                AddFavorite(orderId, userId);
+                UpdateAttend(orderId);
               }}
               disabled={attend === "yes"}
             >

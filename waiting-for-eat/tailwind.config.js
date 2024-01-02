@@ -9,6 +9,15 @@ export default {
   ],
   theme: {
     extend: {},
+    screens: {
+      phone: { min: "360px", max: "767px" },
+
+      tablet: { min: "768px", max: "1023px" },
+
+      laptop: { min: "1024px", max: "1279px" },
+
+      desktop: { max: "1280px" },
+    },
   },
   darkMode: "class",
   plugins: [nextui(), require("daisyui")],

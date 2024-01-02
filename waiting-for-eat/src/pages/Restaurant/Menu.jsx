@@ -44,7 +44,7 @@ const Menu = ({ images, position, setDisplay }) => {
       <div className="fixed left-0 top-0 z-20 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70">
         <AnimatePresence initial={false} custom={direction}>
           <motion.img
-            className="z-30 w-[800px]"
+            className="z-30 h-[800px]"
             key={page}
             src={images[imageIndex]}
             custom={direction}

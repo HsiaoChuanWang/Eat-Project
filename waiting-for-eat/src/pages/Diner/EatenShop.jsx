@@ -26,7 +26,7 @@ import { PiPhoneCallFill } from "react-icons/pi";
 import { useNavigate, useParams } from "react-router-dom";
 import IsLoading from "../../components/IsLoading/index.jsx";
 import db from "../../firebase";
-import useStarStore from "../../stores/starStore";
+import useStarStore from "../../stores/starStore.js";
 import noData from "./noData.png";
 
 function EatenShop() {
@@ -321,9 +321,7 @@ function EatenShop() {
                     className={` ${data.canWritePost === false && "hidden"}`}
                   >
                     <Button
-                      onClick={() =>
-                        navigate(`/diner/textEditor/${data.orderId}`)
-                      }
+                      onClick={() => navigate(`/textEditor/${data.orderId}`)}
                       className={` ${
                         data.canWritePost === false && "hidden"
                       } absolute bottom-4 right-4 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg`}

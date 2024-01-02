@@ -1,6 +1,6 @@
 import { GoogleMap } from "@react-google-maps/api";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import useSearchStore from "../../stores/searchStore";
+import useSearchStore from "../../stores/searchStore.js";
 import "./_map.css";
 
 function MyGoogleMaps({ currentPosition, mapRef, map, setMap, onLoad }) {
@@ -34,7 +34,6 @@ function MyGoogleMaps({ currentPosition, mapRef, map, setMap, onLoad }) {
     }
 
     const infoWindow = new window.google.maps.InfoWindow();
-    console.log(searchArray);
     searchArray.map((markInfo, index) => {
       const lat = markInfo.lat;
       const lng = markInfo.lng;

@@ -7,7 +7,7 @@ import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import IsLoading from "../../components/IsLoading/index.jsx";
 import db from "../../firebase";
-import useSearchStore from "../../stores/searchStore";
+import useSearchStore from "../../stores/searchStore.js";
 import useUserStore from "../../stores/userStore.js";
 import Carousel from "./Carousel";
 import bbq from "./homepagePictures/bbq.jpg";
@@ -233,16 +233,16 @@ function HomePage() {
         className="mt-24 flex items-center justify-center"
       >
         <div>
-          <img className="h-[240px]" src={diner}></img>
+          <img className="tablet:h-36 phone:hidden h-[240px]" src={diner}></img>
         </div>
 
-        <div className="ml-16 leading-8">
-          <div className="mb-2 text-2xl font-bold">
+        <div className="tablet:ml-4 ml-16 leading-8">
+          <div className="tablet:text-lg tablet:mb-0 mb-2 text-2xl font-bold">
             <span>動動手指，</span>
             <span className="text-[#ff6e06]">探索你所不知道的熱門美食。</span>
           </div>
 
-          <div className="text-gray-600">
+          <div className="tablet:text-sm text-gray-600">
             <h1>以店名、地區、食物種類快速搜尋餐廳，</h1>
             <h1>查看相關評論及食記，準確下訂感興趣的餐廳，</h1>
             <h1>記錄每間吃過的餐廳，避免再度光臨不合口味的餐廳。</h1>
@@ -257,15 +257,15 @@ function HomePage() {
           duration: 0.5,
         }}
         initial={{ x: 50, opacity: 0 }}
-        className="mt-24 flex items-center justify-center"
+        className="tablet:mt-12 mt-24 flex items-center justify-center"
       >
-        <div className="mr-16 leading-8">
-          <div className="mb-2 text-2xl font-bold">
+        <div className="tablet:mr-4 mr-16 leading-8">
+          <div className="tablet:text-lg tablet:mb-0 mb-2 text-2xl font-bold">
             <span>敲敲鍵盤，</span>
             <span className="text-[#ff6e06]">輕鬆上架你的餐廳。</span>
           </div>
 
-          <div className="text-gray-600">
+          <div className="tablet:text-sm text-gray-600">
             <h1>編輯相關資訊、菜單、活動，</h1>
             <h1>指定各時段可訂位人數，</h1>
             <h1>使用日曆查看每天預約狀況。</h1>
@@ -273,7 +273,7 @@ function HomePage() {
         </div>
 
         <div>
-          <img className="h-[240px]" src={boss}></img>
+          <img className="phone:hidden tablet:h-36 h-[240px]" src={boss}></img>
         </div>
       </motion.div>
 
@@ -289,8 +289,8 @@ function HomePage() {
         </div>
       </div>
 
-      <div className=" flex  w-full justify-center">
-        <div className="flex">
+      <div className="flex w-full justify-center">
+        <div className="laptop:flex-col tablet:flex-col phone:flex-col flex">
           <div className="mx-8">
             <Form className="flex">
               <Form.Item className="rounded-lg border-2 border-solid border-[#ff6e06]">
@@ -357,15 +357,14 @@ function HomePage() {
       </div>
 
       <div className="flex justify-center">
-        <div className="mb-8 flex max-w-[1440px] flex-wrap justify-center">
+        <div className="tablet:w-[768px] laptop:w-[1024px] phone-[360px] mb-8 flex w-[1440px] max-w-[1440px] flex-wrap justify-center">
           <div
             onClick={() => handleCategory("0")}
-            className="card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
+            className="laptop:w-64 tablet:w-64 tablet:h-48 laptop:h-48 laptop:mx-4 card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
           >
             <img
               className="card-zoom-image absolute h-full w-full transform transition-all duration-500 ease-in-out"
               src={hotpot}
-              //   title="0"
             />
             <div className="absolute h-full w-full bg-black/30"></div>
             <div className="card-zoom-text absolute scale-150 transform text-center text-white transition-all duration-500 ease-in-out">
@@ -376,12 +375,11 @@ function HomePage() {
 
           <div
             onClick={() => handleCategory("1")}
-            className="card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
+            className="tablet:w-64 tablet:h-48 laptop:w-64 laptop:h-48 laptop:mx-4 card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
           >
             <img
               className="card-zoom-image absolute h-full w-full transform transition-all duration-500 ease-in-out"
               src={bbq}
-              //   title="0"
             />
             <div className="absolute h-full w-full bg-black/30"></div>
             <div className="card-zoom-text absolute scale-150 transform text-center text-white transition-all duration-500 ease-in-out">
@@ -392,7 +390,7 @@ function HomePage() {
 
           <div
             onClick={() => handleCategory("2")}
-            className="card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
+            className="tablet:w-64 tablet:h-48 laptop:w-64 laptop:h-48 laptop:mx-4 card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
           >
             <img
               className="card-zoom-image absolute h-full w-full transform transition-all duration-500 ease-in-out"
@@ -407,7 +405,7 @@ function HomePage() {
 
           <div
             onClick={() => handleCategory("3")}
-            className="card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
+            className="tablet:w-64 tablet:h-48 laptop:w-64 laptop:h-48 laptop:mx-4 card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
           >
             <img
               className="card-zoom-image absolute h-full w-full transform transition-all duration-500 ease-in-out"
@@ -422,7 +420,7 @@ function HomePage() {
 
           <div
             onClick={() => handleCategory("4")}
-            className="card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
+            className="tablet:w-64 tablet:h-48 laptop:w-64 laptop:h-48 laptop:mx-4 card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
           >
             <img
               className="card-zoom-image absolute h-full w-full transform transition-all duration-500 ease-in-out"
@@ -437,7 +435,7 @@ function HomePage() {
 
           <div
             onClick={() => handleCategory("5")}
-            className="card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
+            className="tablet:w-64 tablet:h-48 laptop:w-64 laptop:h-48 laptop:mx-4 card-zoom relative mx-8 my-8 flex h-72 w-96 cursor-pointer items-center justify-center overflow-hidden rounded-2xl shadow-xl"
           >
             <img
               className="card-zoom-image absolute h-full w-full transform transition-all duration-500 ease-in-out"

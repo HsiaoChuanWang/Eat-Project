@@ -4,12 +4,13 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
-import { default as React, useState } from "react";
+import { default as React, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Alert from "../../components/Alert";
 import { provider } from "../../firebase";
+import useTestStore from "../../stores/testStore.js";
 import useUserStore from "../../stores/userStore.js";
 import googleLogo from "../SignUp/signUpPictures/GoogleLogo.png";
 import boss from "../SignUp/signUpPictures/boss.png";
@@ -20,15 +21,27 @@ import loginBackground from "./loginBackground.jpg";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [identity, setIdentity] = useState("");
+  //   const [identity, setIdentity] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const navigate = useNavigate();
-  const detailInfo = useUserStore((state) => state.detailInfo);
+  const setLoginIdentity = useTestStore((state) => state.setLoginIdentity);
+  const setTestAccount = useTestStore((state) => state.setTestAccount);
+  const setTestPassword = useTestStore((state) => state.setTestPassword);
+  const loginIdentity = useTestStore((state) => state.loginIdentity);
+  const testAccount = useTestStore((state) => state.testAccount);
+  const testPassword = useTestStore((state) => state.testPassword);
   const setUserId = useUserStore((state) => state.setUserId);
   const getUserInfoFromFirestoreAndSave = useUserStore(
     (state) => state.getUserInfoFromFirestoreAndSave,
   );
+
+  useEffect(() => {
+    if (testAccount !== "") {
+      setEmail(testAccount);
+      setPassword(testPassword);
+    }
+  }, []);
 
   //native login
   const auth = getAuth();
@@ -46,6 +59,9 @@ function Login() {
             navigate(`/boss/bossInfo/${userInfo.companyId}`);
           }
           toast.success("登入成功");
+          setLoginIdentity("");
+          setTestAccount("");
+          setTestPassword("");
         });
       })
       .catch((error) => {
@@ -71,6 +87,9 @@ function Login() {
             navigate(`/boss/bossInfo/${userInfo.companyId}`);
           }
           toast.success("登入成功");
+          setLoginIdentity("");
+          setTestAccount("");
+          setTestPassword("");
         });
       })
       .catch((error) => {
@@ -82,7 +101,7 @@ function Login() {
   }
 
   function saveIdentity(identity) {
-    setIdentity(identity);
+    setLoginIdentity(identity);
   }
 
   return (
@@ -96,7 +115,7 @@ function Login() {
       <div className="flex h-full w-2/5 items-center justify-center">
         <div
           className={`${
-            identity !== "" && "hidden"
+            loginIdentity !== "" && "hidden"
           } flex h-[520px] w-[450px] flex-col items-center justify-center rounded-2xl bg-white`}
         >
           <h1 className="mb-12 text-3xl font-black text-[#ff850e]">
@@ -127,7 +146,7 @@ function Login() {
 
         <div
           className={`${
-            identity === "" && "hidden"
+            loginIdentity === "" && "hidden"
           } flex h-[520px] w-[450px] flex-col items-center justify-center rounded-2xl bg-white`}
         >
           <div className="mt-1 flex w-full items-center">
@@ -161,7 +180,9 @@ function Login() {
               label="Email"
               placeholder="test@example.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
               className="mb-12 hover:border-red-300"
             />
 
@@ -172,7 +193,9 @@ function Login() {
               color={"warning"}
               placeholder="請輸入至少6碼"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
               endContent={
                 <button
                   className="focus:outline-none"

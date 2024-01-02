@@ -12,7 +12,7 @@ import {
 import { default as React, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import db from "../../firebase";
-import useStarStore from "../../stores/starStore";
+import useStarStore from "../../stores/starStore.js";
 
 function StarEdit() {
   const { userId } = useParams();

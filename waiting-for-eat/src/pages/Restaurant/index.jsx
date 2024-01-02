@@ -201,7 +201,7 @@ function Restaurant() {
               <div className=" flex w-[1000px] p-4">
                 {data.menu ? (
                   data.menu.map((picture, index) => (
-                    <div className="min-w-[200px]" key={index}>
+                    <div className="w-[200px] min-w-[200px]" key={index}>
                       <motion.img
                         whileHover={{
                           scale: 1.1,
