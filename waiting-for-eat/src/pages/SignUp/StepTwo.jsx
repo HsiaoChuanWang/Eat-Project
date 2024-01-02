@@ -1,9 +1,5 @@
 import { Input } from "@nextui-org/react";
-import {
-  GoogleAuthProvider,
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
@@ -15,24 +11,18 @@ import useUserStore from "../../stores/userStore.js";
 import googleLogo from "./signUpPictures/GoogleLogo.png";
 import stepTwo from "./signUpPictures/stepTwo.jpg";
 
-//native登入
-
 function StepTwo({ setActive, identity }) {
-  //儲存state
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const setUserId = useUserStore((state) => state.setUserId);
   const setIsLogout = useUserStore((state) => state.setIsLogout);
 
-  //native sign up
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
 
   function nextStep() {
-    console.log();
     createUserWithEmailAndPassword(auth, email, password)
       .then((response) => {
-        console.log("Sign up successfully!");
         const user = response.user;
         setUserId(user.uid);
       })
@@ -43,8 +33,7 @@ function StepTwo({ setActive, identity }) {
       })
       .catch((error) => {
         const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, "=", errorMessage);
+
         if (errorCode === "auth/email-already-in-use") {
           toast.error("此email已經註冊");
         } else if (errorCode === "auth/weak-password") {
@@ -55,31 +44,21 @@ function StepTwo({ setActive, identity }) {
       });
   }
 
-  //check google email
   async function checkGoogleAccount(googleId) {
     const docRef = doc(db, "user", googleId);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
       return false;
     } else {
-      // docSnap.data() will be undefined in this case
-      console.log("No such document!");
       return true;
     }
   }
 
-  //google sign up
   const googleSignUp = async () => {
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
         const user = result.user;
-        console.log(user);
         setUserId(user.uid);
       })
       .then(() => {
@@ -94,16 +73,6 @@ function StepTwo({ setActive, identity }) {
             setIsLogout();
           }
         });
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        // const email = error.customData.email;
-        // The AuthCredential identity that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
       });
   };
 

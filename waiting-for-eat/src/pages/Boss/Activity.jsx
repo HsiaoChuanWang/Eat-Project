@@ -44,7 +44,7 @@ function Activity() {
               <div>
                 <img className="w-48" src={noActivity} />
                 <h1 className="text-center text-xl font-bold text-gray-600">
-                  尚無上傳菜單照片
+                  尚無活動
                 </h1>
               </div>
             </div>

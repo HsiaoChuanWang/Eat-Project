@@ -5,7 +5,6 @@ import {
   getDoc,
   onSnapshot,
   query,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { motion } from "framer-motion";
@@ -36,12 +35,8 @@ function LikeShop() {
     const docRef = doc(db, "company", companyId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment companyInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   useEffect(() => {
@@ -71,30 +66,10 @@ function LikeShop() {
         setCombineData(value);
         setIsLoading(false);
       });
-
-      //   let companyList = [];
-      //   favoriteList.forEach((item) => {
-      //     getCompanyInfo(item.companyId)
-      //       .then((data) => {
-      //         const newData = Object.assign(item, data);
-      //         companyList.push(newData);
-      //       })
-      //       .then(() => {
-      //         setCombineData([...companyList]);
-      //         setIsLoading(false);
-      //       });
-      //   });
     });
 
     return favoriteSnap;
   }, []);
-
-  const handleLike = async (favoriteId, change) => {
-    const favoriteRef = doc(db, "favorite", favoriteId);
-    await updateDoc(favoriteRef, {
-      status: change,
-    });
-  };
 
   const companyDatas =
     combineData.length > 0 ? (

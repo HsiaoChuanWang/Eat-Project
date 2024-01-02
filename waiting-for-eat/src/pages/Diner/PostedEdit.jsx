@@ -18,11 +18,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import db from "../../firebase";
 
-//解決因為圖片死去的問題
 function myBlockRenderer(contentBlock) {
   const type = contentBlock.getType();
 
-  //將圖片類型轉換成mediaComponent
   if (type === "atomic") {
     return {
       component: Media,
@@ -70,12 +68,8 @@ function PostedEdit() {
     const docRef = doc(db, "company", companyId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment companyInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   useEffect(() => {
@@ -100,7 +94,6 @@ function PostedEdit() {
     return postSnap;
   }, []);
 
-  //上傳食記中照片，拿回URL
   async function uploadPicture(picture) {
     const storage = getStorage();
     const storageRef = ref(storage, uuid);
@@ -114,7 +107,6 @@ function PostedEdit() {
     return pictureURL;
   }
 
-  //上傳main照片
   async function handleMainPicture(picture) {
     const storage = getStorage();
     const storageRef = ref(storage, uuid);
@@ -123,9 +115,7 @@ function PostedEdit() {
     setMainPicture(downloadURL);
   }
 
-  //送出html到firestore
   async function handleSend(postId) {
-    console.log(postId);
     const uploadHtml = draftToHtml(
       convertToRaw(editorState.getCurrentContent()),
     );
@@ -235,7 +225,7 @@ function PostedEdit() {
               image: {
                 urlEnabled: true,
                 uploadEnabled: true,
-                alignmentEnabled: false, // 是否顯示圖片排列置中與否，相當於text-align
+                alignmentEnabled: false,
                 uploadCallback: _uploadImageCallBack,
                 previewImage: true,
                 inputAccept:

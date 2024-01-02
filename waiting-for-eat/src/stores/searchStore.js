@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
 const useSearchStore = create(
-  immer((set, get) => ({
+  immer((set) => ({
     searchArray: [],
 
     setSearchArray: (searchArray) => {

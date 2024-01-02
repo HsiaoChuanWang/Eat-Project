@@ -42,26 +42,19 @@ function Restaurant() {
   async function getCompanyData() {
     const docRef = doc(db, "company", companyId);
     const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const resultData = docSnap.data();
-      const menuList = resultData.menu;
-      setData(resultData);
-      setMenu(menuList);
-    } else {
-      console.log("No company data document in boss page!");
-    }
+
+    const resultData = docSnap.data();
+    const menuList = resultData.menu;
+    setData(resultData);
+    setMenu(menuList);
   }
 
   async function getPosterInfo(userId) {
     const docRef = doc(db, "user", userId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment userInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   useEffect(() => {
@@ -201,7 +194,7 @@ function Restaurant() {
               <div className=" flex w-[1000px] p-4">
                 {data.menu ? (
                   data.menu.map((picture, index) => (
-                    <div className="min-w-[200px]" key={index}>
+                    <div className="w-[200px] min-w-[200px]" key={index}>
                       <motion.img
                         whileHover={{
                           scale: 1.1,

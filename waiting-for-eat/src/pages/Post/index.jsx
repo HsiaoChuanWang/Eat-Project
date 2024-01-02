@@ -31,37 +31,26 @@ function Post() {
     const postRef = doc(db, "post", postId);
     const docSnap = await getDoc(postRef);
 
-    if (docSnap.exists()) {
-      const resultPost = docSnap.data();
-      setPost(resultPost);
-      return resultPost;
-    } else {
-      console.log("No such document!");
-    }
+    const resultPost = docSnap.data();
+    setPost(resultPost);
+    return resultPost;
   }
 
   async function getCompanyData(companyId) {
     const docRef = doc(db, "company", companyId);
     const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      const resultData = { ...data, companyId: companyId };
-      setCompanyData(resultData);
-    } else {
-      console.log("No company data document in boss page!");
-    }
+
+    const data = docSnap.data();
+    const resultData = { ...data, companyId: companyId };
+    setCompanyData(resultData);
   }
 
   async function getPosterInfo(userId) {
     const docRef = doc(db, "user", userId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment userInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   useEffect(() => {

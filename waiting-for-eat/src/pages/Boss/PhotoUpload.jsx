@@ -13,7 +13,6 @@ function PhotoUpload() {
   const { companyId } = useParams();
   const navigate = useNavigate();
   const [mainPictures, setMainpictures] = useState([]);
-  const [showMainPicture, setShowMainpicture] = useState("");
   const detailInfo = useUserStore((state) => state.detailInfo);
   const [menuPictures, setMenuPictures] = useState([]);
 

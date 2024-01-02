@@ -1,13 +1,11 @@
 import { Button, Card, ScrollShadow } from "@nextui-org/react";
 import {
-  addDoc,
   collection,
   doc,
   getDoc,
   getDocs,
   onSnapshot,
   query,
-  serverTimestamp,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -26,7 +24,7 @@ import { PiPhoneCallFill } from "react-icons/pi";
 import { useNavigate, useParams } from "react-router-dom";
 import IsLoading from "../../components/IsLoading/index.jsx";
 import db from "../../firebase";
-import useStarStore from "../../stores/starStore";
+import useStarStore from "../../stores/starStore.js";
 import noData from "./noData.png";
 
 function EatenShop() {
@@ -47,12 +45,8 @@ function EatenShop() {
     const docRef = doc(db, "company", companyId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment companyInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   async function getPostInfo(orderId) {
@@ -68,11 +62,9 @@ function EatenShop() {
       if (doc.exists()) {
         const result = false;
         resultList.push(result);
-        console.log(resultList);
       } else {
         const result = true;
         resultList.push(result);
-        console.log(resultList);
       }
     });
 
@@ -150,17 +142,6 @@ function EatenShop() {
       status: change,
     });
   };
-
-  async function handleSend() {
-    const starRef = await addDoc(collection(db, "star"), {
-      orderId: orderId,
-      companyId: companyId,
-      userId: userId,
-      star: star,
-      content: content,
-      createTime: serverTimestamp(),
-    });
-  }
 
   const favoriteState = (favoriteId, status) => {
     switch (status) {
@@ -321,9 +302,7 @@ function EatenShop() {
                     className={` ${data.canWritePost === false && "hidden"}`}
                   >
                     <Button
-                      onClick={() =>
-                        navigate(`/diner/textEditor/${data.orderId}`)
-                      }
+                      onClick={() => navigate(`/textEditor/${data.orderId}`)}
                       className={` ${
                         data.canWritePost === false && "hidden"
                       } absolute bottom-4 right-4 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg`}
