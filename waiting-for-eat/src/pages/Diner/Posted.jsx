@@ -29,24 +29,16 @@ function Posted() {
     const docRef = doc(db, "company", companyId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment companyInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   async function getOrderInfo(orderId) {
     const docRef = doc(db, "order", orderId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment companyInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   useEffect(() => {
@@ -60,17 +52,19 @@ function Posted() {
       });
 
       let orderList = [];
-      postList.forEach((item) => {
-        getCompanyInfo(item.companyId).then((data) => {
-          const newItem = Object.assign(item, data);
-          getOrderInfo(newItem.orderId).then((data) => {
-            const newnewItem = Object.assign(newItem, data);
-            orderList.push(newnewItem);
-            setCombineData([...orderList]);
-            setIsLoading(false);
+      postList.length === 0
+        ? setIsLoading(false)
+        : postList.forEach((item) => {
+            getCompanyInfo(item.companyId).then((data) => {
+              const newItem = Object.assign(item, data);
+              getOrderInfo(newItem.orderId).then((data) => {
+                const newnewItem = Object.assign(newItem, data);
+                orderList.push(newnewItem);
+                setCombineData([...orderList]);
+                setIsLoading(false);
+              });
+            });
           });
-        });
-      });
     });
     return postSnap;
   }, []);
@@ -78,6 +72,8 @@ function Posted() {
   async function handleDelete(postId) {
     await deleteDoc(doc(db, "post", postId));
   }
+
+  console.log(combineData);
 
   const printDatas =
     combineData.length > 0 ? (
@@ -142,7 +138,7 @@ function Posted() {
 
                   <Button
                     onClick={() => {
-                      navigate(`/diner/postedEdit/${data.postId}`);
+                      navigate(`/postedEdit/${data.postId}`);
                     }}
                     className=" absolute bottom-16 right-4 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
                   >

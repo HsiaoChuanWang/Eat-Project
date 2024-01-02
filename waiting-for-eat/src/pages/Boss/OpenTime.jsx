@@ -30,17 +30,6 @@ function OpenTime() {
   const [endTime, setEndTime] = useState("");
 
   useEffect(() => {
-    // getDocs(openTimeRef).then((result) => {
-    //   let openTimes = [];
-    //   result.forEach((doc) => {
-    //     const data = doc.data();
-    //     const dataId = doc.id;
-    //     const combine = { ...data, timeId: dataId };
-    //     openTimes.push(combine);
-    //   });
-    //   setOpenTime(openTimes);
-    // });
-
     onSnapshot(openTimeRef, (querySnapshot) => {
       let openTimes = [];
       querySnapshot.forEach((doc) => {
@@ -224,7 +213,6 @@ function OpenTime() {
                   style={{
                     width: "142px",
                   }}
-                  //   placeholder="請選擇星期"
                   value={addTime.day}
                   optionFilterProp="children"
                   filterOption={(input, option) =>

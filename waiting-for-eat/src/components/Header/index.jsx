@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import db from "../../firebase";
-import useHeaderStore from "../../stores/headerStore";
+import useHeaderStore from "../../stores/headerStore.js";
+import useTestStore from "../../stores/testStore.js";
 import useUserStore from "../../stores/userStore.js";
 import Alert from "../Alert/index.jsx";
 import logo from "./logo.png";
@@ -13,9 +14,12 @@ function Header() {
   const navigate = useNavigate();
   const [userData, setUserData] = useState({});
   const setIsLogout = useUserStore((state) => state.setIsLogout);
+  const setLoginIdentity = useTestStore((state) => state.setLoginIdentity);
+  const setTestAccount = useTestStore((state) => state.setTestAccount);
+  const setTestPassword = useTestStore((state) => state.setTestPassword);
   const userId = useUserStore((state) => state.userId);
   const detailInfo = useUserStore((state) => state.detailInfo);
-  const situation = useHeaderStore((state) => state.situation);
+  const loginStatus = useHeaderStore((state) => state.loginStatus);
   const setHeader = useHeaderStore((state) => state.setHeader);
   const auth = getAuth();
 
@@ -30,15 +34,14 @@ function Header() {
   }, [userId]);
 
   function logOut() {
-    signOut(auth)
-      .then(() => {
-        setIsLogout();
-        toast.success("登出成功");
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log("LoginOut failed!", "=", error);
-      });
+    signOut(auth).then(() => {
+      setIsLogout();
+      setLoginIdentity("");
+      setTestAccount("");
+      setTestPassword("");
+      toast.success("登出成功");
+      navigate("/");
+    });
   }
 
   const buttonSignUp = [
@@ -61,7 +64,7 @@ function Header() {
 
   const buttonBoss = [
     {
-      link: `boss/bossInfo/${detailInfo.companyId}`,
+      link: `boss/bossInfo/${detailInfo?.companyId}`,
       displayText: "業者專區",
       status: "BossLogIn",
     },
@@ -69,7 +72,7 @@ function Header() {
   ];
 
   const renderSwitch = () => {
-    switch (situation) {
+    switch (loginStatus) {
       case "SignUp":
         return buttonSignUp.map((item) => (
           <button
@@ -81,7 +84,6 @@ function Header() {
                 behavior: "smooth",
               });
               setHeader(item.status);
-              console.log(item.status);
               navigate(`/${item.link}`);
             }}
           >
@@ -100,7 +102,6 @@ function Header() {
                 behavior: "smooth",
               });
               setHeader(item.status);
-              console.log(item.status);
               navigate(`/${item.link}`);
             }}
           >
@@ -121,7 +122,6 @@ function Header() {
                 behavior: "smooth",
               });
               setHeader(item.status);
-              console.log(item.status);
               navigate(`/${item.link}`);
             }}
           >
@@ -142,7 +142,6 @@ function Header() {
                 behavior: "smooth",
               });
               setHeader(item.status);
-              console.log(item.status);
               navigate(`/${item.link}`);
             }}
           >
@@ -153,7 +152,7 @@ function Header() {
   };
 
   return (
-    <div className="sticky top-0 z-10 flex h-24 items-center justify-between bg-white shadow-[0_0_4px_2px_rgba(0,0,0,0.16)]">
+    <div className="sticky top-0 z-10 flex h-24 w-full items-center justify-between bg-white shadow-[0_0_4px_2px_rgba(0,0,0,0.16)]">
       <Alert />
       <Link to="/">
         <img src={logo} className="ml-16 h-24 w-auto" />

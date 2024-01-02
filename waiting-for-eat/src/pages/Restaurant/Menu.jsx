@@ -16,13 +16,6 @@ const variants = {
     x: 0,
     opacity: 1,
   },
-  exit: (direction) => {
-    return {
-      zIndex: 0,
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0,
-    };
-  },
 };
 
 const swipeConfidenceThreshold = 10000;
@@ -44,14 +37,13 @@ const Menu = ({ images, position, setDisplay }) => {
       <div className="fixed left-0 top-0 z-20 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70">
         <AnimatePresence initial={false} custom={direction}>
           <motion.img
-            className="z-30 w-[800px]"
+            className="z-30 h-[800px]"
             key={page}
             src={images[imageIndex]}
             custom={direction}
             variants={variants}
             initial="enter"
             animate="center"
-            //   exit="enter"
             transition={{
               x: { type: "spring", stiffness: 300, damping: 30 },
               opacity: { duration: 1.2 },

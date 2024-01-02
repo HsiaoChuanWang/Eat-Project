@@ -1,4 +1,3 @@
-// import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -14,13 +13,12 @@ const firebaseConfig = {
   measurementId: "G-MLHM03JQLJ",
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig); //建立 Firebase App 物件
-// const analytics = getAnalytics(app);
-const db = getFirestore(app); //database
-export const storage = getStorage(app); //storage connect
+const app = initializeApp(firebaseConfig);
 
-export default db; //要用的地方就要用db
+const db = getFirestore(app);
+export const storage = getStorage(app);
+
+export default db;
 
 export const auth = getAuth(app);
 

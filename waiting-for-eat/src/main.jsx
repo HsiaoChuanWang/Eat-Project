@@ -37,57 +37,53 @@ import Search from "./pages/Search";
 import SignUp from "./pages/SignUp";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <NextUIProvider>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route index element={<Homepage />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/restaurant/:companyId" element={<Restaurant />} />
-            <Route path="/reserve/:companyId" element={<Reserve />} />
+  //   <React.StrictMode>
+  <NextUIProvider>
+    <BrowserRouter>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route index element={<Homepage />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/restaurant/:companyId" element={<Restaurant />} />
+          <Route path="/reserve/:companyId" element={<Reserve />} />
 
-            <Route path="/diner" element={<Diner />}>
-              <Route path="dinerInfo/:userId" element={<DinerInfo />} />
-              <Route path="dinerInfoEdit/:userId" element={<DinerInfoEdit />} />
-              <Route path="reservedShop/:userId" element={<ReservedShop />} />
-              <Route path="eatenShop/:userId" element={<EatenShop />} />
-              <Route path="likeShop/:userId" element={<LikeShop />} />
-              <Route path="dislikeShop/:userId" element={<DislikeShop />} />
-              <Route path="posted/:userId" element={<Posted />} />
-              <Route path="commented/:userId" element={<Commented />} />
-              <Route path="addStar/:userId" element={<AddStar />} />
-              <Route path="starEdit/:userId" element={<StarEdit />} />
-            </Route>
-
-            <Route path="/diner/textEditor/:orderId" element={<TextEditor />} />
-            <Route path="/diner/postedEdit/:postId" element={<PostedEdit />} />
-
-            <Route path="/post/:postId" element={<Post />} />
-
-            <Route path="/boss" element={<Boss />}>
-              <Route path="bossInfo/:companyId" element={<BossInfo />} />
-              <Route
-                path="bossInfoEdit/:companyId"
-                element={<BossInfoEdit />}
-              />
-              <Route path="photo/:companyId" element={<Photo />} />
-              <Route path="photoUpload/:companyId" element={<PhotoUpload />} />
-              <Route path="openTime/:companyId" element={<OpenTime />} />
-              <Route path="activity/:companyId" element={<Activity />} />
-              <Route
-                path="activityEdit/:companyId"
-                element={<ActivityEdit />}
-              />
-              <Route path="table/:companyId" element={<Table />} />
-              <Route path="schedule/:companyId" element={<Schedule />} />
-            </Route>
+          <Route path="/diner" element={<Diner />}>
+            <Route path="dinerInfo/:userId" element={<DinerInfo />} />
+            <Route path="dinerInfoEdit/:userId" element={<DinerInfoEdit />} />
+            <Route path="reservedShop/:userId" element={<ReservedShop />} />
+            <Route path="eatenShop/:userId" element={<EatenShop />} />
+            <Route path="likeShop/:userId" element={<LikeShop />} />
+            <Route path="dislikeShop/:userId" element={<DislikeShop />} />
+            <Route path="posted/:userId" element={<Posted />} />
+            <Route path="commented/:userId" element={<Commented />} />
+            <Route path="addStar/:userId" element={<AddStar />} />
+            <Route path="starEdit/:userId" element={<StarEdit />} />
           </Route>
-        </Routes>
-      </BrowserRouter>
-    </NextUIProvider>
-  </React.StrictMode>,
+
+          <Route path="/textEditor/:orderId" element={<TextEditor />} />
+          <Route path="/postedEdit/:postId" element={<PostedEdit />} />
+
+          <Route path="/post/:postId" element={<Post />} />
+
+          <Route path="/boss" element={<Boss />}>
+            <Route path="bossInfo/:companyId" element={<BossInfo />} />
+            <Route path="bossInfoEdit/:companyId" element={<BossInfoEdit />} />
+            <Route path="photo/:companyId" element={<Photo />} />
+            <Route path="photoUpload/:companyId" element={<PhotoUpload />} />
+            <Route path="openTime/:companyId" element={<OpenTime />} />
+            <Route path="activity/:companyId" element={<Activity />} />
+            <Route path="activityEdit/:companyId" element={<ActivityEdit />} />
+            <Route path="table/:companyId" element={<Table />} />
+            <Route path="schedule/:companyId" element={<Schedule />} />
+          </Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  </NextUIProvider>,
+  {
+    /* </React.StrictMode>, */
+  },
 );

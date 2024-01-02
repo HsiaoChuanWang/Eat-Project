@@ -6,7 +6,7 @@ import banner02 from "./homepagePictures/banner02.jpg";
 import banner03 from "./homepagePictures/banner03.jpg";
 
 const variants = {
-  enter: (direction) => {
+  enter: () => {
     return {
       x: 0,
       opacity: 0.5,
@@ -16,13 +16,6 @@ const variants = {
     zIndex: 0,
     x: 0,
     opacity: 1,
-  },
-  exit: (direction) => {
-    return {
-      zIndex: 0,
-      x: 0,
-      opacity: 0,
-    };
   },
 };
 
@@ -61,15 +54,9 @@ const Carousel = () => {
           variants={variants}
           initial="enter"
           animate="center"
-          //   exit="exit"
-          //   transition={{
-          //     x: { type: "keyframes", stiffness: 300, damping: 30 },
-          //     opacity: { duration: 1.5 },
-          //   }}
           transition={{
             ease: "linear",
             duration: 0.5,
-            //   x: { duration: 1 },
           }}
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}

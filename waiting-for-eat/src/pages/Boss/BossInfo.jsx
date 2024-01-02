@@ -21,8 +21,6 @@ function BossInfo() {
   const userId = useUserStore((state) => state.userId);
   const [userData, setUserData] = useState({});
   const [companyData, setCompanyData] = useState({});
-  const detailInfo = useUserStore((state) => state.detailInfo);
-  const companyInfo = useUserStore((state) => state.companyInfo);
 
   async function getCategory(category) {
     const categoryRef = doc(db, "category", category);

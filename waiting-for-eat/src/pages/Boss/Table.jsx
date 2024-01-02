@@ -17,7 +17,6 @@ import Alert from "../../components/Alert/index.jsx";
 import IsLoading from "../../components/IsLoading/index.jsx";
 import db from "../../firebase";
 import noTable from "./noTable.png";
-import "./table.css";
 
 const rootSubmenuKeys = [];
 
@@ -31,17 +30,6 @@ function Table() {
   const tableRef = query(collection(companyRef, companyId, "table"));
 
   useEffect(() => {
-    // getDocs(tableRef).then((result) => {
-    //   let seats = [];
-    //   result.forEach((doc) => {
-    //     const data = doc.data();
-    //     const dataId = doc.id;
-    //     const combine = { ...data, tableId: dataId };
-    //     seats.push(combine);
-    //   });
-    //   setTables(seats);
-    // });
-
     onSnapshot(tableRef, (querySnapshot) => {
       let seats = [];
       querySnapshot.forEach((doc) => {
@@ -64,12 +52,10 @@ function Table() {
     }
   };
 
-  //排桌號
   let tableList = tables.sort((firstItem, secondItem) =>
     firstItem.number > secondItem.number ? 1 : -1,
   );
 
-  //先查看有沒有這個人數的類別
   let items = [];
   tableList.map((tableInfo) => {
     const peopleItem = items.find((item) => {
@@ -115,7 +101,6 @@ function Table() {
     }
   });
 
-  //按照人數排桌號
   items = items.sort((firstItem, secondItem) =>
     firstItem.label > secondItem.label ? 1 : -1,
   );

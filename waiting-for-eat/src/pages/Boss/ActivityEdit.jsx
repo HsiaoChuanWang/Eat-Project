@@ -10,13 +10,10 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import db from "../../firebase";
-// import { Button, ScrollShadow } from "@nextui-org/react";
 
-//解決因為圖片死去的問題
 function myBlockRenderer(contentBlock) {
   const type = contentBlock.getType();
 
-  //將圖片類型轉換成mediaComponent
   if (type === "atomic") {
     return {
       component: Media,
@@ -51,10 +48,7 @@ function ActivityEdit() {
   const navigate = useNavigate();
   const { companyId } = useParams();
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const [title, setTitle] = useState("");
-  const [mainPicture, setMainPicture] = useState("");
   const [companyData, setCompanyData] = useState([]);
-  const { postId } = useParams();
   const uuid = uuidv4();
 
   function onEditorStateChange(e) {
@@ -65,12 +59,8 @@ function ActivityEdit() {
     const docRef = doc(db, "company", companyId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment companyInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   useEffect(() => {
@@ -90,7 +80,6 @@ function ActivityEdit() {
     return companySnap;
   }, []);
 
-  //上傳食記中照片，拿回URL
   async function uploadPicture(picture) {
     const storage = getStorage();
     const storageRef = ref(storage, uuid);
@@ -104,7 +93,6 @@ function ActivityEdit() {
     return pictureURL;
   }
 
-  //送出html到firestore
   async function handleSend(postId) {
     const uploadHtml = draftToHtml(
       convertToRaw(editorState.getCurrentContent()),
@@ -165,7 +153,7 @@ function ActivityEdit() {
             image: {
               urlEnabled: true,
               uploadEnabled: true,
-              alignmentEnabled: false, // 是否顯示圖片排列置中與否，相當於text-align
+              alignmentEnabled: false,
               uploadCallback: _uploadImageCallBack,
               previewImage: true,
               inputAccept: "image/gif,image/jpeg,image/jpg,image/png,image/svg",

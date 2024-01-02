@@ -34,7 +34,6 @@ function BossInfoEdit() {
     category: companyInfo.category,
   });
 
-  //user
   async function handlePicture(picture) {
     const storageRef = ref(storage, userId);
     await uploadBytes(storageRef, picture);
@@ -48,7 +47,6 @@ function BossInfoEdit() {
     navigate(`/boss/bossInfo/${companyId}`);
   }
 
-  //company
   async function getLocation() {
     const location =
       updateCompany.city + updateCompany.district + updateCompany.address;
@@ -70,8 +68,6 @@ function BossInfoEdit() {
         updateDoc(companyRef, updateCompany);
         navigate(`/boss/bossInfo/${companyId}`);
       } else {
-        console.log("error");
-        console.log(`Geocode + ${status}`);
         toast.error("請確認地址已填寫且地址正確");
       }
     });
@@ -79,9 +75,6 @@ function BossInfoEdit() {
 
   async function handleCompanyUpdate() {
     await getLocation();
-    // const companyRef = doc(db, "company", companyId);
-    // await updateDoc(companyRef, updateCompany);
-    // navigate(`/boss/bossInfo/${companyId}`);
   }
 
   return (

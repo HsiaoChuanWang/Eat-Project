@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Test from "../../components/Test";
 import StepFourBoss from "./StepFourBoss";
 import StepFourDiner from "./StepFourDiner";
 import StepOne from "./StepOne";
@@ -28,6 +29,7 @@ function SignUp() {
   return (
     <div className="mflex justify-center">
       <div>{signUpComponents[active]}</div>
+      <Test />
     </div>
   );
 }

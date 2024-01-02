@@ -2,10 +2,10 @@ import { ConfigProvider } from "antd";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import useHeaderStore from "../src/stores/headerStore";
+import useHeaderStore from "../src/stores/headerStore.js";
 import useUserStore from "../src/stores/userStore.js";
-import Footer from "./components/Footer";
 import Header from "./components/Header";
+import RwdWarning from "./components/RwdWarning";
 
 function App() {
   const auth = getAuth();
@@ -37,25 +37,28 @@ function App() {
       if (user) {
         const user = auth.currentUser;
         const userId = user.uid;
-        Promise.all([
-          setUserId(userId),
-          getUserInfoFromFirestoreAndSave(userId),
-        ]).then(([_, userInfo]) => {
-          if (userInfo.companyId === "") {
-            setHeader("DinerLogIn");
 
-            firstParam?.includes("boss") && navigate("/");
-            if (thirdParam) {
-              !thirdParam.includes(userId) && navigate("/");
-            }
-          } else if (userInfo.companyId !== "") {
-            setHeader("BossLogIn");
-            getCompanyInfoFromFirestoreAndSave(userInfo.companyId);
+        firstParam === "signup"
+          ? setHeader("SignUp")
+          : Promise.all([
+              setUserId(userId),
+              getUserInfoFromFirestoreAndSave(userId),
+            ]).then(([_, userInfo]) => {
+              if (userInfo.companyId === "") {
+                setHeader("DinerLogIn");
+                firstParam?.includes("boss") && navigate("/");
 
-            !thirdParam?.includes(userInfo.companyId) &&
-              navigate(`/boss/bossInfo/${userInfo.companyId}`);
-          }
-        });
+                if (thirdParam) {
+                  !thirdParam.includes(userId) && navigate("/");
+                }
+              } else if (userInfo.companyId !== "") {
+                setHeader("BossLogIn");
+                getCompanyInfoFromFirestoreAndSave(userInfo.companyId);
+
+                !thirdParam?.includes(userInfo.companyId) &&
+                  navigate(`/boss/bossInfo/${userInfo.companyId}`);
+              }
+            });
       }
     });
   }, [location.pathname]);
@@ -78,8 +81,8 @@ function App() {
       }}
     >
       <Header />
+      <RwdWarning />
       <Outlet />
-      <Footer />
     </ConfigProvider>
   );
 }

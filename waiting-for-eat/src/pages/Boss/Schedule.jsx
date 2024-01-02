@@ -38,16 +38,12 @@ function Schedule() {
   const orderRef = query(collection(db, "order"));
   const orderq = query(orderRef, where("companyId", "==", companyId));
 
-  async function setUserId(userId) {
+  async function setUserInfo(userId) {
     const docRef = doc(db, "user", userId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment userInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   useEffect(() => {
@@ -76,7 +72,7 @@ function Schedule() {
       .then((orderList) => {
         let combineOrder = [];
         orderList.forEach((order) => {
-          setUserId(order.userId)
+          setUserInfo(order.userId)
             .then((data) => {
               const newData = {
                 ...order,
@@ -100,6 +96,7 @@ function Schedule() {
         seats.push(combine);
       });
       setTables(seats);
+      setIsLoading(false);
     });
 
     const orderSnap = onSnapshot(orderq, (querySnapshot) => {
@@ -111,28 +108,25 @@ function Schedule() {
         orderList.push(combine);
       });
 
-      let combineOrder = [];
-      orderList.forEach((order) => {
-        setUserId(order.userId)
-          .then((data) => {
-            const newData = {
-              ...order,
-              userName: data.userName,
-              phone: data.phone,
+      Promise.all(
+        orderList.map((item) => {
+          return Promise.all([setUserInfo(item.userId)]).then(([userInfo]) => {
+            const newItem = {
+              ...item,
+              userName: userInfo.userName,
+              phone: userInfo.phone,
             };
-            combineOrder.push(newData);
-          })
-          .then(() => {
-            setOrders([...combineOrder]);
-            setIsLoading(false);
+            return newItem;
           });
+        }),
+      ).then((value) => {
+        setOrders(value);
       });
     });
 
     return tableSnap, orderSnap;
   }, []);
 
-  //左邊列表
   let resources = [];
   tables.map((table) => {
     resources.push({
@@ -144,7 +138,6 @@ function Schedule() {
     firstItem.id > secondItem.id ? 1 : -1,
   );
 
-  //新增事件，一筆訂單可能有兩個以上的桌號
   let events = [];
   orders.map((order) => {
     order.tableNumber.map((orderTableNumber) => {
@@ -167,13 +160,10 @@ function Schedule() {
         resourceId: orderTableNumber,
         display: "auto",
         color: "#e0effc",
-        //   constraints: "businessHours",//限制時段
       });
     });
   });
 
-  //拖曳事件
-  //更新
   async function updateOrder(orderId, tableNumber, startTime, endTime) {
     const OrderRef = doc(db, "order", orderId);
     await updateDoc(OrderRef, {
@@ -182,7 +172,7 @@ function Schedule() {
       end: endTime,
     });
   }
-  //取得指定order資料
+
   async function getOrder(orderId) {
     const docRef = doc(db, "order", orderId);
     const docSnap = await getDoc(docRef);
@@ -216,7 +206,7 @@ function Schedule() {
           newtableNumber: newtableNumber,
           tableNumberIndex: tableNumberIndex,
         };
-        updateOrders.push(updateOrder); //撈到移動的資料
+        updateOrders.push(updateOrder);
       }
     } else {
       updateOrder.start = startTime;
@@ -225,13 +215,11 @@ function Schedule() {
     }
   }
 
-  //datePicker選用時間
   function changeStartDate(date, dateString) {
     if (date != null) myRef.current.getApi().gotoDate(dateString);
   }
 
   async function updateFirestore(finalUpdateOrders) {
-    console.log(finalUpdateOrders.orderId);
     const orderRef = doc(db, "order", finalUpdateOrders.orderId);
 
     await updateDoc(orderRef, {
@@ -243,7 +231,6 @@ function Schedule() {
 
   function save(e) {
     setFinalUpdateOrders([]);
-    //改原本的值orders，updateOrders是有改過的所有訂單(但同一筆訂單可能有兩個component)
     updateOrders.forEach((updateOrder) => {
       let order = orders.find((p) => p.orderId == updateOrder.orderId);
       order.start = updateOrder.start;
@@ -252,7 +239,6 @@ function Schedule() {
       orderTableNumber[updateOrder.tableNumberIndex] =
         updateOrder.newtableNumber;
 
-      //上傳有被移動的結果(同一筆訂單的component合併成一個訂單)
       let finalUpdateOrder = finalUpdateOrders.find(
         (p) => p.orderId == updateOrder.orderId,
       );
@@ -293,7 +279,6 @@ function Schedule() {
     });
   }
 
-  //自製event的格式
   function eventContent(arg) {
     let stringArray = arg.event.title.split("$");
     let titleArray = stringArray[0].split("\n");
@@ -325,10 +310,8 @@ function Schedule() {
                 attend === "no" && "cursor-pointer"
               }`}
               onClick={() => {
-                if (editable === true) {
-                  AddFavorite(orderId, userId);
-                  UpdateAttend(orderId);
-                }
+                AddFavorite(orderId, userId);
+                UpdateAttend(orderId);
               }}
               disabled={attend === "yes"}
             >
@@ -413,21 +396,18 @@ function Schedule() {
               <FullCalendar
                 resourceAreaWidth={150}
                 contentHeight={"auto"}
-                slotMinWidth={80} //欄位寬度
+                slotMinWidth={80}
                 height={"auto"}
                 ref={myRef}
                 schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
                 plugins={[resourceTimelinePlugin, interactionPlugin]}
                 initialView="resourceTimeline"
-                //   selectable={true}
                 editable={editable}
                 events={events}
                 eventContent={eventContent}
                 eventDrop={MyDropEvent}
-                //   dateClick={MyAddEvent}
-                //   eventClick={MyEventClick}
                 resources={resources}
-                resourceAreaHeaderContent={"桌位/時間"} //title名
+                resourceAreaHeaderContent={"桌位/時間"}
               />
             </ScrollShadow>
           </div>

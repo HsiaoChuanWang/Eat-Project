@@ -19,7 +19,7 @@ import { IoRestaurant, IoTimeSharp } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 import IsLoading from "../../components/IsLoading/index.jsx";
 import db from "../../firebase";
-import useStarStore from "../../stores/starStore";
+import useStarStore from "../../stores/starStore.js";
 import noData from "./noData.png";
 
 function Commented() {
@@ -37,24 +37,16 @@ function Commented() {
     const docRef = doc(db, "company", companyId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment companyInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   async function getOrderInfo(orderId) {
     const docRef = doc(db, "order", orderId);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const resultUser = docSnap.data();
-      return resultUser;
-    } else {
-      console.log("No such comment companyInfo document!");
-    }
+    const resultUser = docSnap.data();
+    return resultUser;
   }
 
   useEffect(() => {
@@ -68,17 +60,19 @@ function Commented() {
       });
 
       let orderList = [];
-      starList.forEach((item) => {
-        getCompanyInfo(item.companyId).then((data) => {
-          const newItem = Object.assign(item, data);
-          getOrderInfo(newItem.orderId).then((data) => {
-            const newnewItem = Object.assign(newItem, data);
-            orderList.push(newnewItem);
-            setCombineData([...orderList]);
-            setIsLoading(false);
+      starList.length === 0
+        ? setIsLoading(false)
+        : starList.forEach((item) => {
+            getCompanyInfo(item.companyId).then((data) => {
+              const newItem = Object.assign(item, data);
+              getOrderInfo(newItem.orderId).then((data) => {
+                const newnewItem = Object.assign(newItem, data);
+                orderList.push(newnewItem);
+                setCombineData([...orderList]);
+                setIsLoading(false);
+              });
+            });
           });
-        });
-      });
     });
 
     return starSnap;
