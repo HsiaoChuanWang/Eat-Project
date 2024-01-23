@@ -5,7 +5,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import useHeaderStore from "../src/stores/headerStore.js";
 import useUserStore from "../src/stores/userStore.js";
 import Header from "./components/Header";
-import RwdWarning from "./components/RwdWarning";
+// import RwdWarning from "./components/RwdWarning";
 
 function App() {
   const auth = getAuth();
@@ -81,7 +81,7 @@ function App() {
       }}
     >
       <Header />
-      <RwdWarning />
+      {/* <RwdWarning /> */}
       <Outlet />
     </ConfigProvider>
   );

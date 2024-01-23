@@ -44,7 +44,7 @@ const Carousel = () => {
   }, [page]);
 
   return (
-    <div className="relative flex w-full items-center justify-center bg-black">
+    <div className="relative flex h-[400px] w-screen items-center justify-center overflow-hidden">
       <AnimatePresence initial={false} custom={direction}>
         <motion.img
           className="h-[400px] w-full object-cover object-center"
