@@ -148,9 +148,9 @@ function Restaurant() {
     ) : (
       <NoItem
         content="暫無相關食記"
-        distance="calc(100%-24px)"
+        distance="w-[calc(100%-24px)]"
         pictureWidth="w-36"
-        textSize="lg"
+        textSize="text-lg"
       />
     );
 
