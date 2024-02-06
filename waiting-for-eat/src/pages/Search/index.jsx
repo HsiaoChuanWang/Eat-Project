@@ -459,6 +459,7 @@ function Search() {
                 distance="w-[calc(100%-36px)] map:w-72"
                 pictureWidth="w-44 map:w-32"
                 textSize="text-lg map:text-sm"
+                optional={`${isShowResultbar === false && "hidden"}`}
               />
             ) : (
               [...searchArray].map((info, index) => {

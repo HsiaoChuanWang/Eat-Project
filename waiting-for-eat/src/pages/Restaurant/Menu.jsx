@@ -37,7 +37,7 @@ const Menu = ({ images, position, setDisplay }) => {
       <div className="fixed left-0 top-0 z-20 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70">
         <AnimatePresence initial={false} custom={direction}>
           <motion.img
-            className="z-30 h-[800px]"
+            className="z-30 h-[800px] phone:h-72 tablet:h-[450px] laptop:h-[600px]"
             key={page}
             src={images[imageIndex]}
             custom={direction}
@@ -63,15 +63,15 @@ const Menu = ({ images, position, setDisplay }) => {
         </AnimatePresence>
 
         <div className="absolute z-40">
-          <div className="flex w-[1200px] justify-between ">
+          <div className="flex w-[1200px] justify-between phone:w-96 tablet:w-[640px] laptop:w-[900px]">
             <div
-              className="prev cursor-pointer text-5xl text-white"
+              className="prev cursor-pointer text-5xl text-white phone:text-4xl"
               onClick={() => paginate(-1)}
             >
               <FaChevronCircleLeft />
             </div>
             <div
-              className="next cursor-pointer text-5xl text-white"
+              className="next cursor-pointer text-5xl text-white phone:text-4xl"
               onClick={() => paginate(1)}
             >
               <FaChevronCircleRight />
@@ -79,7 +79,7 @@ const Menu = ({ images, position, setDisplay }) => {
           </div>
         </div>
 
-        <div className="absolute z-30 cursor-pointer pb-[85vh] pl-[70vw] text-5xl text-white">
+        <div className="absolute z-30 cursor-pointer pb-[85vh] pl-[70vw] text-5xl text-white phone:pb-[45vh] phone:text-4xl tablet:pb-[55vh] laptop:pb-[70vh]">
           <CgCloseO
             onClick={() => {
               setDisplay(false);

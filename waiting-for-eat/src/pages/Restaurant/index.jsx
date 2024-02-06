@@ -103,7 +103,7 @@ function Restaurant() {
               }}
               whileTap={{ scale: 0.9 }}
               key={item.userId}
-              className="my-4 cursor-pointer"
+              className="my-4 cursor-pointer phone:w-full tablet:w-[calc(50%-8px)]"
               onClick={() => {
                 navigation(`/post/${item.postId}`);
               }}
@@ -117,7 +117,7 @@ function Restaurant() {
                     src={item.mainPicture}
                   />
 
-                  <div className="mx-2 w-44 py-2">
+                  <div className="mx-2 w-44 py-2 phone:w-64">
                     <div className="flex justify-end">
                       <p className="text-tiny font-bold">
                         {dateFormat(
@@ -161,8 +161,8 @@ function Restaurant() {
   return (
     <div className=" mb-4 flex justify-center">
       <Alert />
-      <div className="m-8 flex w-full max-w-[1400px] justify-between">
-        <div className="mr-8 w-3/4">
+      <div className="m-8 flex w-full max-w-[1400px] justify-between phone:block phone:px-8 tablet:block tablet:px-8">
+        <div className="mr-8 w-3/4 phone:w-full tablet:w-full">
           <div className="pb-6">
             <div>
               <img
@@ -251,16 +251,21 @@ function Restaurant() {
           </div>
         </div>
 
-        <div className="sticky top-28 mx-2 h-[calc(100vh-148px)] w-1/4 px-2 shadow-[-4px_0_4px_2px_rgba(0,0,0,0.16)]">
-          <h2 className="mt-4 text-2xl font-bold text-gray-400">相關食記</h2>
-          <ScrollShadow hideScrollBar className="h-[calc(100vh-196px)] w-full">
+        <div className="sticky top-28 mx-2 h-[calc(100vh-148px)] w-1/4 px-2 shadow-[-4px_0_4px_2px_rgba(0,0,0,0.16)] phone:h-[760px] phone:w-full phone:border-t-2 phone:border-solid phone:border-gray-300 phone:px-0 phone:shadow-none tablet:h-[760px] tablet:w-full tablet:border-t-2 tablet:border-solid tablet:border-gray-300 tablet:px-0 tablet:shadow-none">
+          <h2 className="mt-4 text-2xl font-bold text-gray-400 phone:mt-0 phone:text-[#ff6e06] tablet:mt-0 tablet:text-[#ff6e06]">
+            相關食記
+          </h2>
+          <ScrollShadow
+            hideScrollBar
+            className="h-[calc(100vh-196px)] w-full phone:flex phone:h-[680px] phone:flex-wrap tablet:flex tablet:h-[680px] tablet:flex-wrap"
+          >
             {posts}
           </ScrollShadow>
         </div>
       </div>
 
-      <div className="fixed bottom-4 flex w-full max-w-[1400px]">
-        <div className="h-12 w-[calc(75%-24px)] bg-white">
+      <div className="fixed bottom-4 w-full max-w-[1400px] phone:flex phone:justify-center tablet:flex tablet:justify-center">
+        <div className="h-12 w-[calc(75%-24px)] bg-white phone:w-5/6 tablet:w-5/6">
           <Button
             onClick={() => {
               if (userId === "") {
@@ -270,12 +275,11 @@ function Restaurant() {
               }
             }}
             radius="full"
-            className="mx-auto h-12 w-full rounded-lg bg-[#ff850e] text-center text-2xl font-black text-white shadow-lg"
+            className=" h-12 w-full rounded-lg bg-[#ff850e] text-center text-2xl font-black text-white shadow-lg"
           >
             線上預約
           </Button>
         </div>
-        <div className="w-1/4"></div>
       </div>
     </div>
   );
