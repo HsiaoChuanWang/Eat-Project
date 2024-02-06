@@ -26,7 +26,7 @@ function Post() {
   const [postList, setPostList] = useState([]);
   const [mainPoster, setMainPoster] = useState({});
   const [mainTime, setMainTime] = useState("");
-  const [isShowPosts, setIsShowPosts] = useState(false);
+  const [isShowPosts, setIsShowPosts] = useState(true);
   const userId = useUserStore((state) => state.userId);
 
   async function getHtml() {
