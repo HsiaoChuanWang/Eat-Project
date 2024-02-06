@@ -69,7 +69,7 @@ function Comment() {
             transition: { duration: 0.15 },
           }}
           whileTap={{ scale: 0.9 }}
-          className="w-xs max-w-xs cursor-pointer p-4"
+          className="cursor-pointer p-4 phone:w-full tablet:w-1/2"
           onClick={() => {
             if (show === false) {
               setShow(true);
@@ -78,7 +78,7 @@ function Comment() {
             }
           }}
         >
-          <Card className="min-h-[190px] w-72 p-4">
+          <Card className="min-h-[190px] w-72 p-4 phone:w-full tablet:w-full">
             <div className="flex justify-between">
               <div className="flex items-center">
                 <User

@@ -67,13 +67,6 @@ function OpenTime() {
   const Sat = dayFilter("星期六");
   const Sun = dayFilter("星期日");
 
-  const sortedTime = Mon.concat(Tue)
-    .concat(Wed)
-    .concat(Thr)
-    .concat(Fri)
-    .concat(Sat)
-    .concat(Sun);
-
   const MonList = Mon.map((item) => {
     return (
       <div key={item.timeId} className="mt-2 flex items-center">
@@ -87,6 +80,7 @@ function OpenTime() {
       </div>
     );
   });
+
   const TueList = Tue.map((item) => {
     return (
       <div key={item.timeId} className="mt-2 flex items-center">

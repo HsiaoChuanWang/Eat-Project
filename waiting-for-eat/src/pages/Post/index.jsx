@@ -11,11 +11,12 @@ import {
 import { motion } from "framer-motion";
 import { default as React, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { MdFastfood } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import Alert from "../../components/Alert/index.jsx";
+import NoItem from "../../components/NoItem/index.jsx";
 import db from "../../firebase";
 import useUserStore from "../../stores/userStore.js";
-import logologo from "./logologo.jpg";
 
 function Post() {
   const navigation = useNavigate();
@@ -25,6 +26,7 @@ function Post() {
   const [postList, setPostList] = useState([]);
   const [mainPoster, setMainPoster] = useState({});
   const [mainTime, setMainTime] = useState("");
+  const [isShowPosts, setIsShowPosts] = useState(true);
   const userId = useUserStore((state) => state.userId);
 
   async function getHtml() {
@@ -164,18 +166,42 @@ function Post() {
       );
     });
 
+  const handleShowPosts = () => {
+    setIsShowPosts(!isShowPosts);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1023) {
+        setIsShowPosts(true);
+      }
+
+      if (window.innerWidth <= 1023) {
+        setIsShowPosts(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <div className="flex justify-center">
       <Alert />
       <div className="m-8 flex w-full max-w-[1400px] justify-between">
-        <div className="w-3/4 pr-10">
-          <h2 className="text-5xl font-black text-[#134f6c]">{post.title}</h2>
+        <div className="w-3/4 pr-10 phone:w-full phone:p-4 tablet:w-full tablet:p-4">
+          <h2 className="text-5xl font-black text-[#134f6c] phone:text-4xl">
+            {post.title}
+          </h2>
 
           <div className="my-4 flex items-center">
-            <div className="mr-4 rounded border-2 border-solid border-lime-400  bg-lime-200 px-1 text-lg font-bold">
+            <div className="mr-4 rounded border-2 border-solid border-lime-400  bg-lime-200 px-1 text-lg font-bold phone:text-base">
               {mainPoster.userName}
             </div>
-            <p className="text-base font-bold">{mainTime}</p>
+            <p className="text-base font-bold phone:text-sm">{mainTime}</p>
           </div>
 
           <img
@@ -188,9 +214,9 @@ function Post() {
             dangerouslySetInnerHTML={{ __html: post.content }}
           ></div>
 
-          <Card className=" mt-8 w-3/4 bg-gradient-to-tr from-gray-300 to-stone-200 p-4 shadow-lg">
-            <div className="flex justify-between">
-              <div className="flex ">
+          <Card className=" mt-8 w-[78%] bg-gradient-to-tr from-gray-300 to-stone-200 p-4 shadow-lg phone:w-full tablet:w-full laptop:w-full">
+            <div className="flex justify-between phone:flex-col phone:items-center">
+              <div className="flex phone:flex-col">
                 <img
                   onClick={() => {
                     navigation(`/restaurant/${companyData.companyId}`);
@@ -199,8 +225,8 @@ function Post() {
                   src={companyData.picture}
                 />
 
-                <div className="py-4 pl-6">
-                  <h1 className="text-2xl font-black">{companyData.name}</h1>
+                <div className="py-4 pl-6 phone:pl-2">
+                  <h1 className="text-2xl font-black ">{companyData.name}</h1>
                   <h1 className="my-2 font-bold">
                     {companyData.city}
                     {companyData.district}
@@ -210,10 +236,10 @@ function Post() {
                 </div>
               </div>
 
-              <div className="mr-14">
+              <div className="mr-8 phone:mr-0 phone:flex phone:w-64 phone:justify-between laptop:mr-2">
                 <Button
                   radius="full"
-                  className="my-6 block h-11 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
+                  className="my-6 block h-11 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg phone:my-0"
                   onClick={() => {
                     if (userId === "") {
                       toast.error("請登入以進行預約");
@@ -236,25 +262,43 @@ function Post() {
           </Card>
         </div>
 
-        <div className="sticky top-28 mx-2 h-[calc(100vh-148px)] w-1/4 px-2 shadow-[-4px_0_4px_2px_rgba(0,0,0,0.16)]">
+        <div
+          className={`${
+            isShowPosts === false
+              ? "fixed right-2 top-24"
+              : "fixed right-[304px] top-24"
+          } flex w-7 flex-col items-center bg-gray-500 py-2 text-white laptop:hidden desktop:hidden`}
+          onClick={handleShowPosts}
+        >
+          <MdFastfood />
+          <h3 className={`${isShowPosts === true && "hidden"} text-center`}>
+            查看相關食記
+          </h3>
+          <h3 className={`${isShowPosts === false && "hidden"} text-center`}>
+            隱藏食記
+          </h3>
+        </div>
+
+        <motion.div
+          animate={{ x: isShowPosts === true ? 0 : 1000 }}
+          className={`${
+            isShowPosts === false && "hidden"
+          } sticky top-28 mx-2 h-[calc(100vh-148px)] w-1/4 bg-white px-2 shadow-[-4px_0_4px_2px_rgba(0,0,0,0.16)]  phone:fixed phone:right-2 phone:top-24 phone:w-72 tablet:fixed tablet:right-2 tablet:top-24 tablet:w-72`}
+        >
           <h2 className="mt-2 text-2xl font-bold text-gray-500">相關食記</h2>
           <ScrollShadow hideScrollBar className="h-[calc(100vh-196px)] w-full">
             {posts[0] === undefined ? (
-              <div className="my-4">
-                <Card className="flex h-36 w-full items-center justify-center border  border-solid border-gray-400 shadow-xl">
-                  <div className="flex items-center justify-center">
-                    <img src={logologo} className="h-20" />
-                    <h3 className="text-xl font-bold text-gray-600 ">
-                      痴吃等待你新增食記
-                    </h3>
-                  </div>
-                </Card>
-              </div>
+              <NoItem
+                content="暫無相關食記"
+                distance="w-[calc(100%-24px)]"
+                pictureWidth="w-36"
+                textSize="text-lg"
+              />
             ) : (
               posts
             )}
           </ScrollShadow>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
