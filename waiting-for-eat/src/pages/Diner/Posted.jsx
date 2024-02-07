@@ -85,9 +85,9 @@ function Posted() {
               key={data.postId}
             >
               <Card className="border-2 shadow-xl">
-                <div className="relative flex items-center">
-                  <div className="bg-amber-800/30 p-6 py-8">
-                    <div className="flex h-48 w-64 items-center justify-center">
+                <div className="relative flex items-center phone:flex-col">
+                  <div className="bg-amber-800/30 p-6 py-8 phone:w-full">
+                    <div className="flex h-48 w-64 items-center justify-center phone:h-40 phone:w-full tablet:w-44">
                       <img
                         className="h-full w-full cursor-pointer rounded-lg object-cover object-center"
                         src={data.mainPicture}
@@ -98,10 +98,10 @@ function Posted() {
                     </div>
                   </div>
 
-                  <div className="ml-4 pr-4">
+                  <div className="ml-4 pr-4 phone:mx-4 phone:mb-16 phone:mt-4 phone:pr-0 tablet:mb-12 laptop:mx-4">
                     <div>
                       <p
-                        className="my-4 cursor-pointer text-2xl font-black text-[#134f6c]"
+                        className="my-4 cursor-pointer text-2xl font-black text-[#134f6c] phone:text-xl"
                         onClick={() => {
                           navigate(`/post/${data.postId}`);
                         }}
@@ -111,24 +111,28 @@ function Posted() {
                     </div>
 
                     <div className="flex items-center">
-                      <IoRestaurant className="mr-2 text-2xl" />
-                      <p className="text-lg font-bold">{data.name}</p>
+                      <IoRestaurant className="mr-2 text-2xl phone:text-base tablet:text-base" />
+                      <p className="text-lg font-bold phone:text-sm tablet:text-sm">
+                        {data.name}
+                      </p>
                     </div>
 
                     <div className="flex items-center">
-                      <IoTimeSharp className="mr-2 text-2xl" />
-                      <p className="text-lg font-bold">{data.date}</p>
-                      <p className="my-4  ml-2 text-lg  font-bold">
+                      <IoTimeSharp className="mr-2 text-2xl phone:text-base tablet:text-base" />
+                      <p className="text-lg font-bold phone:text-sm tablet:text-sm">
+                        {data.date}
+                      </p>
+                      <p className="my-4  ml-2 text-lg font-bold phone:text-sm tablet:text-sm">
                         {data.start}
                       </p>
                     </div>
 
                     <div className="mb-4 flex items-center">
-                      <FaPenToSquare className="mr-2 text-2xl" />
-                      <p className="mr-2 text-lg font-bold">
+                      <FaPenToSquare className="mr-2 text-2xl phone:text-base tablet:text-base" />
+                      <p className="mr-2 text-lg font-bold phone:text-sm tablet:text-sm">
                         {dateFormat(data.createTime.toDate(), "yyyy/mm/dd")}
                       </p>
-                      <p className="text-lg font-bold">
+                      <p className="text-lg font-bold phone:text-sm tablet:text-sm">
                         {dateFormat(data.createTime.toDate(), "HH:MM")}
                       </p>
                     </div>
@@ -138,14 +142,14 @@ function Posted() {
                     onClick={() => {
                       navigate(`/postedEdit/${data.postId}`);
                     }}
-                    className=" absolute bottom-16 right-4 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
+                    className=" absolute bottom-16 right-4 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg phone:bottom-4 phone:right-28 phone:text-base tablet:bottom-4 tablet:right-28 tablet:text-base"
                   >
                     編輯
                   </Button>
 
                   <Button
                     onClick={() => handleDelete(data.postId)}
-                    className=" absolute bottom-4 right-4 mt-6 block h-10 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg"
+                    className=" absolute bottom-4 right-4 mt-6 block h-10 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg phone:text-base tablet:text-base"
                   >
                     刪除
                   </Button>
@@ -172,7 +176,9 @@ function Posted() {
         hideScrollBar
         className="flex h-[calc(100vh-300px)] w-full justify-center"
       >
-        <div className="flex h-full w-3/4 flex-col gap-12">{printDatas}</div>
+        <div className="flex h-full w-3/4 flex-col gap-12 phone:mt-12 phone:w-[90%] tablet:w-[90%] laptop:w-5/6">
+          {printDatas}
+        </div>
       </ScrollShadow>
     </div>
   );

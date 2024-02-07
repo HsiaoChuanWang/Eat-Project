@@ -9,7 +9,6 @@ import {
 } from "firebase/firestore";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import { IconContext } from "react-icons";
 import { HiThumbUp } from "react-icons/hi";
 import { IoMdPin } from "react-icons/io";
 import { IoRestaurant } from "react-icons/io5";
@@ -81,9 +80,9 @@ function LikeShop() {
             key={data.favoriteId}
           >
             <Card className="border-2 shadow-xl">
-              <div className="relative flex items-center">
-                <div className="bg-amber-800/30 p-6 py-8">
-                  <div className="flex h-44 w-64 items-center justify-center">
+              <div className="relative flex items-center phone:flex-col">
+                <div className="bg-amber-800/30 p-6 py-8 phone:w-full">
+                  <div className="flex h-44 w-64 items-center justify-center phone:w-full tablet:w-44">
                     <img
                       className="h-full w-full cursor-pointer rounded-lg object-cover object-center"
                       src={data.picture}
@@ -94,20 +93,24 @@ function LikeShop() {
                   </div>
                 </div>
 
-                <div className="ml-4">
+                <div className="ml-4 phone:mx-4 phone:mb-4 phone:mt-4 laptop:mx-4">
                   <div className="flex items-center">
-                    <IoRestaurant className="mr-2 text-2xl" />
-                    <p className="text-lg font-bold">{data.name}</p>
+                    <IoRestaurant className="mr-2 text-2xl phone:text-base tablet:text-base laptop:self-start" />
+                    <p className="text-lg font-bold phone:text-sm tablet:text-sm">
+                      {data.name}
+                    </p>
                   </div>
 
                   <div className="mt-4 flex items-center">
-                    <PiPhoneCallFill className="mr-2 text-2xl" />
-                    <p className="text-lg font-bold">{data.phone}</p>
+                    <PiPhoneCallFill className="mr-2 text-2xl phone:text-base tablet:text-base" />
+                    <p className="text-lg font-bold phone:text-sm tablet:text-sm">
+                      {data.phone}
+                    </p>
                   </div>
 
                   <div className="mt-4 flex items-center">
-                    <IoMdPin className="mr-2 text-2xl" />
-                    <p className="text-lg font-bold">
+                    <IoMdPin className="mr-2 text-2xl phone:self-start phone:text-base tablet:self-start tablet:text-base" />
+                    <p className="text-lg font-bold phone:text-sm tablet:text-sm">
                       {data.city}
                       {data.district}
                       {data.address}
@@ -115,12 +118,10 @@ function LikeShop() {
                   </div>
                 </div>
 
-                <div className="absolute right-4 top-4 flex w-24 items-center justify-between">
+                <div className="absolute right-4 top-4 flex w-24 items-center justify-between phone:right-9 phone:top-12 phone:h-8 phone:w-20 phone:overflow-y-hidden phone:rounded-lg">
                   <div className="flex h-10 w-28 items-center justify-center rounded-xl border border-solid bg-gray-200">
-                    <div className="mr-1">
-                      <IconContext.Provider value={{ size: "30px" }}>
-                        <HiThumbUp />
-                      </IconContext.Provider>
+                    <div className="mr-1 text-[30px] phone:text-xl">
+                      <HiThumbUp />
                     </div>
                     <p className="mr-1">|</p>
                     <p className="font-semibold">Like</p>
@@ -149,7 +150,9 @@ function LikeShop() {
         hideScrollBar
         className="flex h-[calc(100vh-300px)] w-full justify-center"
       >
-        <div className="flex h-full w-3/4 flex-col gap-12">{companyDatas}</div>
+        <div className="flex h-full w-3/4 flex-col gap-12 phone:mt-12 phone:w-[90%] tablet:w-[90%] laptop:w-5/6">
+          {companyDatas}
+        </div>
       </ScrollShadow>
     </div>
   );

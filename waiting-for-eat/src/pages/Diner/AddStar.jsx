@@ -69,11 +69,13 @@ function AddStar() {
 
   return (
     <div className="mt-12 flex h-full w-full justify-center">
-      <Card className="flex h-[450px] w-1/2 justify-center border-2 border-solid border-gray-300 shadow-2xl">
+      <Card className="flex h-[450px] w-1/2 justify-center border-2 border-solid border-gray-300 shadow-2xl phone:w-[90%] tablet:w-2/3">
         <div className="h-full p-12">
-          <h1 className="mb-4 text-xl font-bold">{companyName}</h1>
+          <h1 className="mb-4 text-xl font-bold phone:mb-2 phone:text-lg">
+            {companyName}
+          </h1>
           <Rate
-            className="mb-4 block px-24 text-4xl"
+            className="mb-4 block text-4xl phone:mb-2 phone:text-2xl"
             onChange={(e) => {
               setStar(e);
             }}
