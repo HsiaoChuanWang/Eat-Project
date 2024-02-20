@@ -100,16 +100,16 @@ function Login() {
       <Alert />
       <img
         src={loginBackground}
-        className="h-full w-3/5 object-cover object-center"
+        className="h-full w-3/5 object-cover object-center phone:absolute phone:z-0 phone:w-full tablet:w-1/2"
       />
 
-      <div className="flex h-full w-2/5 items-center justify-center">
+      <div className="flex h-full w-2/5 items-center justify-center phone:absolute phone:z-10 phone:w-full tablet:w-1/2">
         <div
           className={`${
             loginIdentity !== "" && "hidden"
-          } flex h-[520px] w-[450px] flex-col items-center justify-center rounded-2xl bg-white`}
+          } flex h-[520px] w-[450px] flex-col items-center justify-center rounded-2xl bg-white phone:h-full phone:w-full phone:rounded-none phone:bg-black/40`}
         >
-          <h1 className="mb-12 text-3xl font-black text-[#ff850e]">
+          <h1 className="mb-12 text-3xl font-black text-[#ff850e] phone:text-white">
             請選擇登入身份
           </h1>
           <div
@@ -138,14 +138,16 @@ function Login() {
         <div
           className={`${
             loginIdentity === "" && "hidden"
-          } flex h-[520px] w-[450px] flex-col items-center justify-center rounded-2xl bg-white`}
+          } flex h-[520px] w-[450px] flex-col items-center justify-center rounded-2xl bg-white phone:rounded-none `}
         >
           <div className="mt-1 flex w-full items-center">
-            <img src={cook} className="w-56" />
+            <img src={cook} className="w-56 tablet:w-48" />
             <div>
-              <h1 className="mb-1 text-2xl font-black">Waiting for eat</h1>
+              <h1 className="mb-1 text-2xl font-black tablet:text-xl">
+                Waiting for eat
+              </h1>
               <h1 className="mb-1 font-bold">期待與你一起</h1>
-              <h1 className="text-base font-bold">食不相瞞 口耳相傳</h1>
+              <h1 className="font-bold">食不相瞞 口耳相傳</h1>
             </div>
           </div>
 

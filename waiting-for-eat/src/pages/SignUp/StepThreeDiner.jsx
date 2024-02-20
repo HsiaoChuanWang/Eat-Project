@@ -66,25 +66,25 @@ function StepThreeDiner({ setActive }) {
   }
 
   return (
-    <div className="relative flex h-[calc(100vh-96px)] w-screen">
+    <div className="relative flex h-[calc(100vh-96px)] w-screen justify-center">
       <Alert />
       <img
         src={stepThree}
-        className="h-full w-3/5 object-cover object-center"
+        className="h-full w-3/5 object-cover object-center phone:absolute phone:z-0  phone:w-full tablet:w-2/5 laptop:w-1/2"
       />
 
-      <div className="flex h-full w-2/5 flex-col items-center justify-center">
+      <div className="flex h-full w-2/5 flex-col items-center justify-center phone:absolute phone:z-10 phone:w-full tablet:w-3/5 laptop:w-1/2">
         <div
-          className={`flex h-[520px] w-[450px] flex-col items-center justify-center rounded-2xl bg-white`}
+          className={`flex h-[520px] w-[450px] flex-col items-center justify-center rounded-2xl bg-white phone:w-full`}
         >
-          <div className=" mb-8 flex items-center gap-2 text-3xl font-black text-[#ff850e]">
+          <div className="mb-8 flex items-center gap-2 text-3xl font-black text-[#ff850e] phone:mb-4">
             <Bs3CircleFill />
             <h1>填寫基本資訊</h1>
           </div>
 
           <Form autoComplete="off" className="mb-8">
-            <div className="flex items-center">
-              <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+            <div className="flex items-center phone:flex-col phone:items-start">
+              <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:mb-0 phone:[text-align-last:auto]">
                 姓名
               </h1>
               <Input
@@ -95,8 +95,8 @@ function StepThreeDiner({ setActive }) {
               />
             </div>
 
-            <div className="flex items-center">
-              <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+            <div className="flex items-center phone:flex-col phone:items-start">
+              <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:mb-0 phone:[text-align-last:auto]">
                 性別
               </h1>
 
@@ -110,8 +110,8 @@ function StepThreeDiner({ setActive }) {
               </Radio.Group>
             </div>
 
-            <div className="flex items-center">
-              <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+            <div className="flex items-center phone:flex-col phone:items-start">
+              <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:mb-0 phone:[text-align-last:auto]">
                 手機
               </h1>
               <Input
@@ -123,8 +123,8 @@ function StepThreeDiner({ setActive }) {
               />
             </div>
 
-            <div className="mb-4 flex  items-center">
-              <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+            <div className="mb-4 flex items-center phone:flex-col phone:items-start">
+              <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:mb-0 phone:[text-align-last:auto]">
                 上傳大頭照
               </h1>
               <Input

@@ -2,6 +2,7 @@ import React from "react";
 import toast from "react-hot-toast";
 import { Bs1CircleFill } from "react-icons/bs";
 import Alert from "../../components/Alert/index.jsx";
+import Test from "../../components/Test";
 import boss from "./signUpPictures/boss.png";
 import diner from "./signUpPictures/diner.png";
 import stepOne from "./signUpPictures/stepOne.jpg";
@@ -22,13 +23,17 @@ function StepOne({ setActive, identity, setIdentity }) {
   return (
     <div className="relative flex h-[calc(100vh-96px)] w-screen">
       <Alert />
-      <img src={stepOne} className="h-full w-3/5 object-cover object-center" />
+      <Test />
+      <img
+        src={stepOne}
+        className="h-full w-3/5 object-cover object-center phone:absolute phone:z-0 phone:w-full tablet:w-1/2"
+      />
 
-      <div className="flex h-full w-2/5 items-center justify-center">
+      <div className="flex h-full w-2/5 items-center justify-center phone:absolute phone:z-10 phone:w-full phone:bg-black/40 tablet:w-1/2">
         <div
           className={`flex h-[520px] w-[450px] flex-col items-center justify-center rounded-2xl`}
         >
-          <div className="mb-12 flex items-center gap-2 text-3xl font-black text-[#ff850e]">
+          <div className="mb-12 flex items-center gap-2 text-3xl font-black text-[#ff850e] phone:text-white">
             <Bs1CircleFill />
             <h1>請選擇註冊身份</h1>
           </div>

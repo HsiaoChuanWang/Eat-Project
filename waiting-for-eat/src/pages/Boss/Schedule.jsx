@@ -217,6 +217,8 @@ function Schedule() {
 
   function changeStartDate(date, dateString) {
     if (date != null) myRef.current.getApi().gotoDate(dateString);
+    console.log(date, dateString);
+    console.log(myRef.current.getApi().gotoDate(dateString));
   }
 
   async function updateFirestore(finalUpdateOrders) {
@@ -297,7 +299,7 @@ function Schedule() {
           {tel}
         </div>
 
-        <div className="flex w-[80px] items-center justify-center ">
+        <div className="flex w-[80px] items-center justify-center">
           <div className="flex h-[60px] w-[60px] items-center justify-center rounded bg-[#8ba9ee] text-center">
             <h1> {people}人</h1>
           </div>
@@ -337,6 +339,10 @@ function Schedule() {
     );
   }
 
+  const calenderWidth = {
+    width: "100%",
+  };
+
   if (isLoading) {
     return <IsLoading />;
   }
@@ -355,7 +361,7 @@ function Schedule() {
       ) : (
         <div className="mt-8 w-5/6">
           <div className="flex items-center justify-between">
-            <div className="">
+            <div>
               <h1 className="font-bold">選擇日期</h1>
               <DatePicker
                 className="mb-4 border border-solid border-black"
@@ -363,7 +369,7 @@ function Schedule() {
               />
             </div>
 
-            <div className="mr-4">
+            <div className="mr-4 phone:hidden tablet:mr-0">
               <button
                 onClick={() => {
                   setEditable(true);
@@ -386,15 +392,16 @@ function Schedule() {
               </button>
             </div>
           </div>
-          <div>
+
+          <div className="phone:hidden">
             <ScrollShadow
               size={0}
               hideScrollBar
               orientation="horizontal"
-              className="flex h-[calc(100vh-300px)] w-[850px] justify-center"
+              className="flex h-[calc(100vh-300px)] w-[850px] justify-center tablet:w-full laptop:w-full"
             >
               <FullCalendar
-                resourceAreaWidth={150}
+                resourceAreaWidth={110}
                 contentHeight={"auto"}
                 slotMinWidth={80}
                 height={"auto"}
