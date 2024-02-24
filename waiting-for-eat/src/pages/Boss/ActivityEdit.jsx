@@ -124,21 +124,21 @@ function ActivityEdit() {
   const editorStyle =
     isPhoneSize === true
       ? {
-          height: "calc(100vh - 600px)",
+          height: "calc(100vh - 540px)",
           overflow: "auto",
           marginBottom: "5px",
           border: "1px solid #ddd",
         }
       : {
-          height: "calc(100vh - 350px)",
+          height: "calc(100vh - 400px)",
           overflow: "auto",
           marginBottom: "5px",
           border: "1px solid #ddd",
         };
 
   return (
-    <div className="flex h-full w-full p-12 phone:flex-col-reverse phone:px-4">
-      <div className="h-full w-5/6 border-2 border-solid border-black p-4 phone:w-full">
+    <div className="flex h-full w-full p-12 phone:flex-col-reverse phone:p-4">
+      <div className="h-[calc(100vh-280px)] w-5/6 border-2 border-solid border-black p-4 phone:h-[calc(100vh-380px)] phone:w-full">
         <Editor
           editorStyle={editorStyle}
           editorState={editorState}

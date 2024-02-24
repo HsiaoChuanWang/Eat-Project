@@ -294,9 +294,6 @@ function Search() {
             </div>
           </div>
         );
-
-      case "":
-        return;
     }
   };
 

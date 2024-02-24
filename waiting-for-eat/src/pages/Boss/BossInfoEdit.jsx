@@ -80,7 +80,7 @@ function BossInfoEdit() {
   return (
     <div className="flex h-full items-center justify-center">
       <Alert />
-      <Card className="w-2/3 phone:w-5/6 tablet:w-5/6">
+      <Card className="w-2/3 phone:mt-6 phone:w-5/6 tablet:w-5/6">
         <ScrollShadow
           size={0}
           hideScrollBar

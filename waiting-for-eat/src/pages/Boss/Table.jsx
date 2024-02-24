@@ -124,10 +124,10 @@ function Table() {
 
   return (
     <>
-      <div className="my-12 flex justify-center">
+      <div className="my-12 flex justify-center phone:my-4">
         <Alert />
         <div className="flex w-full justify-center phone:flex-col phone:items-center">
-          <Card className="ml-12 h-64 w-1/3 border-2 border-solid border-gray-400 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)] phone:mb-8 phone:ml-0 phone:w-5/6 tablet:h-80">
+          <Card className="ml-12 h-64 w-1/3 border-2 border-solid border-gray-400 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)] phone:mb-4 phone:ml-0 phone:h-64 phone:w-5/6 tablet:h-80">
             <div className="relative">
               <div className="flex h-16 items-center justify-center bg-[#292D4F]">
                 <h1 className="text-2xl font-black text-white">新增桌位</h1>
@@ -175,7 +175,7 @@ function Table() {
             </Button>
           </Card>
 
-          <Card className="mx-10 h-[calc(100vh-280px)] w-[400px] border-2 border-solid border-gray-400 pb-6 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)] phone:h-96 phone:w-5/6">
+          <Card className="mx-10 h-[calc(100vh-280px)] w-[400px] border-2 border-solid border-gray-400 pb-6 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)] phone:h-64 phone:w-5/6">
             <div className="flex h-16 items-center justify-center bg-[#292D4F]">
               <h1 className="border-gray-100 text-2xl font-black text-white">
                 桌位列表
@@ -185,7 +185,7 @@ function Table() {
             <ScrollShadow
               size={0}
               hideScrollBar
-              className="mt-6 h-[100vh-400px] w-full justify-center phone:h-80"
+              className="mt-6 h-[100vh-400px] w-full justify-center phone:h-36"
             >
               <div className="flex justify-center">
                 {items.length === 0 ? (
@@ -201,10 +201,6 @@ function Table() {
                     mode="inline"
                     openKeys={openKeys}
                     onOpenChange={onOpenChange}
-                    // style={{
-                    //   width: 256,
-                    //   border: "none",
-                    // }}
                     items={items}
                   />
                 )}

@@ -189,7 +189,7 @@ function OpenTime() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 1024) {
+      if (window.matchMedia("(max-width: 1023px)").matches) {
         setIsNeedPlusBtn(true);
         setIsShowPlus(false);
       } else {
@@ -197,6 +197,8 @@ function OpenTime() {
         setIsShowPlus(true);
       }
     };
+
+    handleResize();
 
     window.addEventListener("resize", handleResize);
 
@@ -210,7 +212,7 @@ function OpenTime() {
   }
 
   return (
-    <div className="my-12 flex justify-center tablet:my-8">
+    <div className="my-12 flex justify-center phone:my-8 tablet:my-8">
       <Alert />
       <div className="flex w-full justify-center phone:flex-col phone:items-center tablet:flex-col tablet:items-center">
         <div

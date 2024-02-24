@@ -29,7 +29,7 @@ function DinerSidebar() {
             }`}
             onClick={() => {
               navigate(`/diner/dinerInfo/${userId}`);
-              setSelectedDinerBar("diner");
+              setSelectedDinerBar("dinerInfo");
             }}
           >
             <div>
@@ -62,7 +62,7 @@ function DinerSidebar() {
             }`}
             onClick={() => {
               navigate(`/diner/reservedShop/${userId}`);
-              setSelectedDinerBar("reserved");
+              setSelectedDinerBar("reservedShop");
             }}
           >
             <div>
@@ -93,7 +93,7 @@ function DinerSidebar() {
             }`}
             onClick={() => {
               navigate(`/diner/eatenShop/${userId}`);
-              setSelectedDinerBar("eaten");
+              setSelectedDinerBar("eatenShop");
             }}
           >
             <div>
@@ -126,7 +126,7 @@ function DinerSidebar() {
             }`}
             onClick={() => {
               navigate(`/diner/likeShop/${userId}`);
-              setSelectedDinerBar("like");
+              setSelectedDinerBar("likeShop");
             }}
           >
             <div>
@@ -157,7 +157,7 @@ function DinerSidebar() {
             }`}
             onClick={() => {
               navigate(`/diner/dislikeShop/${userId}`);
-              setSelectedDinerBar("dislike");
+              setSelectedDinerBar("dislikeShop");
             }}
           >
             <div>

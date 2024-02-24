@@ -55,7 +55,7 @@ function BossInfo() {
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
-      <label className="swap swap-flip text-9xl phone:mt-12">
+      <label className="swap swap-flip text-9xl phone:mt-6">
         <input type="checkbox" />
 
         <div className="swap-off flex flex-col">
