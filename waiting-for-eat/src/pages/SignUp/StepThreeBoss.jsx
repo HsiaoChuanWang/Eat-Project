@@ -139,28 +139,31 @@ function StepThreeBoss({ setActive }) {
   }
 
   return (
-    <div className="relative flex h-[calc(100vh-96px)] w-screen">
+    <div className="relative flex h-[calc(100vh-96px)] w-screen items-center">
       <Alert />
       <img
         src={stepThree}
-        className="h-full w-3/5 object-cover object-center"
+        className="h-full w-3/5 object-cover object-center phone:absolute phone:z-0 phone:w-full tablet:w-2/5  laptop:w-1/2"
       />
 
-      <div className="flex h-full w-2/5 flex-col items-center justify-center py-8">
-        <div className=" mb-8 flex items-center gap-2 text-3xl font-black text-[#ff850e]">
+      <div className="flex w-2/5 flex-col items-center justify-center bg-white py-8 phone:absolute phone:z-10 phone:w-full tablet:w-3/5 laptop:w-1/2">
+        <div className="mb-8 flex items-center gap-2 text-3xl font-black text-[#ff850e] phone:text-2xl">
           <Bs3CircleFill />
           <h1>填寫資訊，上架你的餐廳。</h1>
         </div>
 
-        <ScrollShadow size={0} className="h-[450px] w-[500px] ">
+        <ScrollShadow
+          size={0}
+          className="h-[450px] w-[500px] phone:w-full tablet:w-full"
+        >
           <div
             className={`flex flex-col items-center justify-center rounded-2xl`}
           >
             <h2 className="mb-2 text-2xl font-bold">負責人資訊</h2>
             <div className="mx-auto w-4/5 border-t-2 border-solid border-gray-400 pb-2"></div>
             <Form autoComplete="off" className="mb-8">
-              <div className="flex items-center">
-                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+              <div className="flex items-center phone:flex-col phone:items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:mb-0 phone:[text-align-last:auto]">
                   姓名
                 </h1>
                 <Input
@@ -171,8 +174,8 @@ function StepThreeBoss({ setActive }) {
                 />
               </div>
 
-              <div className="flex items-center">
-                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+              <div className="flex items-center phone:flex-col phone:items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:mb-0 phone:[text-align-last:auto]">
                   性別
                 </h1>
 
@@ -186,8 +189,8 @@ function StepThreeBoss({ setActive }) {
                 </Radio.Group>
               </div>
 
-              <div className="flex items-center">
-                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+              <div className="flex items-center phone:flex-col phone:items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:mb-0 phone:[text-align-last:auto]">
                   手機
                 </h1>
                 <Input
@@ -198,8 +201,8 @@ function StepThreeBoss({ setActive }) {
                 />
               </div>
 
-              <div className="mb-4 flex  items-center">
-                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+              <div className="mb-4 flex items-center phone:flex-col phone:items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:mb-0 phone:[text-align-last:auto]">
                   上傳大頭照
                 </h1>
                 <Input
@@ -215,8 +218,8 @@ function StepThreeBoss({ setActive }) {
             <h2 className="mb-2 text-2xl font-bold">餐廳資訊</h2>
             <div className="mx-auto w-4/5 border-t-2 border-solid border-gray-400 pb-2"></div>
             <Form autoComplete="off" className="mb-8">
-              <div className="flex items-center">
-                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+              <div className="flex items-center phone:flex-col phone:items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:mb-0 phone:[text-align-last:auto]">
                   店名
                 </h1>
                 <Input
@@ -227,8 +230,8 @@ function StepThreeBoss({ setActive }) {
                 />
               </div>
 
-              <div className="my-4 flex ">
-                <h1 className="mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+              <div className="my-4 flex  phone:flex-col phone:items-start">
+                <h1 className="mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:mb-0 phone:[text-align-last:auto]">
                   地址
                 </h1>
 
@@ -269,8 +272,8 @@ function StepThreeBoss({ setActive }) {
                 </div>
               </div>
 
-              <div className="flex items-center">
-                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+              <div className="flex items-center phone:flex-col phone:items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:mb-0 phone:[text-align-last:auto]">
                   餐廳電話
                 </h1>
                 <Input
@@ -282,8 +285,8 @@ function StepThreeBoss({ setActive }) {
                 />
               </div>
 
-              <div className="flex items-center">
-                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+              <div className="flex items-center phone:flex-col phone:items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:mb-0 phone:[text-align-last:auto]">
                   類別
                 </h1>
                 <Select

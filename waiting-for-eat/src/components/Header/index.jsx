@@ -155,11 +155,9 @@ function Header() {
     <div className="sticky top-0 z-10 flex h-24 w-full items-center justify-between bg-white shadow-[0_0_4px_2px_rgba(0,0,0,0.16)]">
       <Alert />
       <Link to="/">
-        <img src={logo} className="ml-16 h-24 w-auto phone:ml-8" />
+        <img src={logo} className="ml-16 h-24 w-auto phone:ml-4" />
       </Link>
-      <div className="mr-16 flex phone:mr-8 phone:text-base">
-        {renderSwitch("LogOut")}
-      </div>
+      <div className="mr-16 flex phone:mr-4">{renderSwitch("LogOut")}</div>
     </div>
   );
 }

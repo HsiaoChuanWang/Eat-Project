@@ -68,7 +68,7 @@ function Table() {
         key: tableInfo.number,
         label: (
           <FaTrashCan
-            className="ml-36"
+            className="ml-36 phone:ml-20"
             onClick={() => {
               handleDelete(tableInfo.tableId);
             }}
@@ -87,7 +87,7 @@ function Table() {
             key: tableInfo.number,
             label: (
               <FaTrashCan
-                className="ml-36"
+                className="ml-36 phone:ml-20"
                 onClick={() => {
                   handleDelete(tableInfo.tableId);
                 }}
@@ -124,18 +124,18 @@ function Table() {
 
   return (
     <>
-      <div className="my-12 flex justify-center ">
+      <div className="my-12 flex justify-center phone:my-4">
         <Alert />
-        <div className="flex w-full justify-center">
-          <Card className="ml-12 h-64 w-1/3 border-2 border-solid border-gray-400 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)]">
+        <div className="flex w-full justify-center phone:flex-col phone:items-center">
+          <Card className="ml-12 h-64 w-1/3 border-2 border-solid border-gray-400 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)] phone:mb-4 phone:ml-0 phone:h-64 phone:w-5/6 tablet:h-80">
             <div className="relative">
               <div className="flex h-16 items-center justify-center bg-[#292D4F]">
                 <h1 className="text-2xl font-black text-white">新增桌位</h1>
               </div>
 
               <Form name="basic" autoComplete="off">
-                <div className="mx-6 my-6 flex items-center">
-                  <h1 className="mr-6 w-16 text-base font-bold [text-align-last:justify]">
+                <div className="mx-6 my-6 flex items-center tablet:flex-col">
+                  <h1 className="mr-6 w-16 text-base font-bold [text-align-last:justify] tablet:mr-0">
                     桌號
                   </h1>
                   <Input
@@ -148,8 +148,8 @@ function Table() {
                   />
                 </div>
 
-                <div className="mx-6 my-6 flex items-center">
-                  <h1 className="mr-6 w-16 text-base font-bold [text-align-last:justify]">
+                <div className="mx-6 my-6 flex items-center  tablet:flex-col">
+                  <h1 className="mr-6 w-16 text-base font-bold [text-align-last:justify] tablet:mr-0">
                     人數
                   </h1>
                   <Input
@@ -166,7 +166,7 @@ function Table() {
             </div>
 
             <Button
-              className="absolute bottom-6 right-6 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
+              className="absolute bottom-6 right-6 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg tablet:static tablet:mt-1 tablet:self-center"
               onClick={handleAddTable}
               type="primary"
               htmlType="button"
@@ -175,7 +175,7 @@ function Table() {
             </Button>
           </Card>
 
-          <Card className="mx-10 h-[calc(100vh-280px)] w-[400px] border-2 border-solid border-gray-400 pb-6 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)]">
+          <Card className="mx-10 h-[calc(100vh-280px)] w-[400px] border-2 border-solid border-gray-400 pb-6 shadow-[-4px_4px_4px_2px_rgba(0,0,0,0.2)] phone:h-64 phone:w-5/6">
             <div className="flex h-16 items-center justify-center bg-[#292D4F]">
               <h1 className="border-gray-100 text-2xl font-black text-white">
                 桌位列表
@@ -185,7 +185,7 @@ function Table() {
             <ScrollShadow
               size={0}
               hideScrollBar
-              className="mt-6 h-[100vh-400px] w-full justify-center"
+              className="mt-6 h-[100vh-400px] w-full justify-center phone:h-36"
             >
               <div className="flex justify-center">
                 {items.length === 0 ? (
@@ -197,14 +197,10 @@ function Table() {
                   </div>
                 ) : (
                   <Menu
-                    className="text-base font-black"
+                    className="w-64 border-none text-base font-black phone:w-48"
                     mode="inline"
                     openKeys={openKeys}
                     onOpenChange={onOpenChange}
-                    style={{
-                      width: 256,
-                      border: "none",
-                    }}
                     items={items}
                   />
                 )}

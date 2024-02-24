@@ -117,27 +117,27 @@ function TextEditor() {
 
   return (
     <div className="flex w-full justify-center">
-      <div className="relative w-full max-w-[1300px] px-20 pb-20 pt-12">
+      <div className="relative w-full max-w-[1300px] px-20 pb-20 pt-12 phone:p-4 phone:pb-12">
         <div>
           <Form>
-            <div className="mb-6 flex items-center">
-              <h1 className="mr-4 w-24 text-lg font-black text-gray-600 [text-align-last:justify]">
+            <div className="mb-6 flex items-center phone:mb-2 phone:flex-col phone:items-start">
+              <h1 className="mr-4 w-24 text-lg font-black text-gray-600 [text-align-last:justify] phone:[text-align-last:auto]">
                 標題
               </h1>
               <Input
-                className="h-10 w-[500px] border border-solid border-gray-600 text-lg"
+                className="h-10 w-[500px] border border-solid border-gray-600 text-lg phone:w-full"
                 name="title"
                 onChange={(e) => setTitle(e.target.value)}
                 value={title}
               />
             </div>
 
-            <div className="mb-6 flex items-center">
-              <h1 className="mr-4 w-24 text-lg font-black text-gray-600 [text-align-last:justify]">
+            <div className="mb-6 flex items-center phone:flex-col phone:items-start">
+              <h1 className="mr-4 w-24 text-lg font-black text-gray-600 [text-align-last:justify] phone:[text-align-last:auto]">
                 封面照片
               </h1>
               <Input
-                className="h-10 w-[500px] border border-solid border-gray-600"
+                className="h-10 w-[500px] border border-solid border-gray-600 phone:w-full"
                 type="file"
                 accept="image/*"
                 name="picture"
@@ -203,7 +203,7 @@ function TextEditor() {
         </div>
 
         <Button
-          className="absolute bottom-4 right-48 mt-8 block h-10 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg"
+          className="absolute bottom-4 right-48 mt-8 block h-10 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg phone:bottom-0 phone:right-28"
           onClick={() => {
             navigate(`/diner/eatenShop/${orderData.userId}`);
           }}
@@ -212,7 +212,7 @@ function TextEditor() {
         </Button>
 
         <Button
-          className="absolute bottom-4 right-20 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
+          className="absolute bottom-4 right-20 mt-6 block h-10 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg phone:bottom-0 phone:right-4 phone:mt-0"
           onClick={() => {
             handleSend().then(() => {
               navigate(`/diner/posted/${orderData.userId}`);
