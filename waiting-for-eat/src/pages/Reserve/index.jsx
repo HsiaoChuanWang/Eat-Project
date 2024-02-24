@@ -165,7 +165,8 @@ function Reserve() {
       }
       send.tableNumber = tableNumbers;
 
-      updateData(send);
+      await updateData(send);
+      onOpen();
       setIsSelected("");
     } else {
       toast.error("請填寫完整資訊");
@@ -363,9 +364,6 @@ function Reserve() {
                       radius="full"
                       className="block h-11 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg phone:mr-4 phone:text-base tablet:mr-4"
                       onClick={handleSend}
-                      onPress={
-                        !Object.values(send).includes("") ? onOpen : null
-                      }
                     >
                       確認訂位
                     </Button>

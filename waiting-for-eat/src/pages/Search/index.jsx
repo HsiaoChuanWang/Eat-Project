@@ -294,9 +294,6 @@ function Search() {
             </div>
           </div>
         );
-
-      case "":
-        return;
     }
   };
 
@@ -398,7 +395,7 @@ function Search() {
           <Form className="mx-4 flex">
             <Form.Item className="w-48 map:w-36">
               <Select
-                className="rounded-lg border-2 border-solid border-[#ff6e06] map:h-8 map:leading-4"
+                className="h-10 rounded-lg border-2 border-solid border-[#ff6e06] map:h-8 map:leading-4"
                 name="category"
                 onChange={(e) => {
                   setSearchCategory(e);

@@ -32,6 +32,7 @@ function Schedule() {
   const [orders, setOrders] = useState([]);
   const [updateOrders, setUpdateOrders] = useState([]);
   const [finalUpdateOrders, setFinalUpdateOrders] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const companyRef = collection(db, "company");
   const tableRef = query(collection(companyRef, companyId, "table"));
@@ -217,6 +218,7 @@ function Schedule() {
 
   function changeStartDate(date, dateString) {
     if (date != null) myRef.current.getApi().gotoDate(dateString);
+    setSelectedDate(dateFormat(dateString, "yyyy/mm/dd"));
   }
 
   async function updateFirestore(finalUpdateOrders) {
@@ -297,7 +299,7 @@ function Schedule() {
           {tel}
         </div>
 
-        <div className="flex w-[80px] items-center justify-center ">
+        <div className="flex w-[80px] items-center justify-center">
           <div className="flex h-[60px] w-[60px] items-center justify-center rounded bg-[#8ba9ee] text-center">
             <h1> {people}人</h1>
           </div>
@@ -337,6 +339,17 @@ function Schedule() {
     );
   }
 
+  const phoneArrangedOrders = orders.sort((a, b) => {
+    const timeA = new Date(a.date + " " + a.start);
+    const timeB = new Date(b.date + " " + b.start);
+    return timeA - timeB;
+  });
+
+  const phoneSelectedOrders = phoneArrangedOrders.filter((order) => {
+    const orderTime = dateFormat(order.date, "yyyy/mm/dd");
+    return orderTime === selectedDate;
+  });
+
   if (isLoading) {
     return <IsLoading />;
   }
@@ -348,14 +361,14 @@ function Schedule() {
           <div>
             <img src={noSchedule} className="h-52" />
             <h1 className="text-center text-xl font-bold text-gray-600">
-              請先設定桌位以顯示預約日曆
+              請先設定桌位以顯示預約內容
             </h1>
           </div>
         </div>
       ) : (
         <div className="mt-8 w-5/6">
-          <div className="flex items-center justify-between">
-            <div className="">
+          <div className="flex items-center justify-between phone:flex-col">
+            <div>
               <h1 className="font-bold">選擇日期</h1>
               <DatePicker
                 className="mb-4 border border-solid border-black"
@@ -363,7 +376,72 @@ function Schedule() {
               />
             </div>
 
-            <div className="mr-4">
+            <div className="mt-4 h-96 overflow-y-auto tablet:hidden laptop:hidden desktop:hidden">
+              {phoneSelectedOrders.map((order) => {
+                return (
+                  <div
+                    key={order.orderId}
+                    className="mb-6 h-36 w-[278px] rounded bg-[#e0effc] px-4 py-2 font-bold"
+                  >
+                    <div className="mb-2 flex w-full justify-between">
+                      <p>{order.date}</p>
+                      <p>{order.start}</p>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <p>桌號 | </p>
+                      {order.tableNumber.map((item) => {
+                        return <p>{item}</p>;
+                      })}
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex h-12 w-12 items-center justify-center bg-[#8ba9ee]">
+                        <p>{order.people}人</p>
+                      </div>
+
+                      <div>
+                        <p>{order.userName}</p>
+                        <p>{order.phone}</p>
+                      </div>
+
+                      <div className="text-white">
+                        <div>
+                          <button
+                            className={`mb-2 h-8 rounded bg-[#082567] px-2 ${
+                              order.attend === "no" && "cursor-pointer"
+                            }`}
+                            onClick={() => {
+                              AddFavorite(order.orderId, order.userId);
+                              UpdateAttend(order.orderId);
+                            }}
+                            disabled={order.attend === "yes"}
+                          >
+                            {order.attend === "no" ? "入席" : "已出席"}
+                          </button>
+                        </div>
+
+                        <div>
+                          <button
+                            className={`h-8 cursor-pointer rounded bg-gray-400 px-2 ${
+                              order.attend === "yes" && "hidden"
+                            } `}
+                            onClick={() => {
+                              DeleteOrder(order.orderId);
+                            }}
+                            disabled={order.attend === "yes"}
+                          >
+                            取消
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mr-4 phone:hidden tablet:mr-0">
               <button
                 onClick={() => {
                   setEditable(true);
@@ -386,15 +464,16 @@ function Schedule() {
               </button>
             </div>
           </div>
-          <div>
+
+          <div className="phone:hidden">
             <ScrollShadow
               size={0}
               hideScrollBar
               orientation="horizontal"
-              className="flex h-[calc(100vh-300px)] w-[850px] justify-center"
+              className="flex h-[calc(100vh-300px)] w-[850px] justify-center tablet:w-full laptop:w-full"
             >
               <FullCalendar
-                resourceAreaWidth={150}
+                resourceAreaWidth={110}
                 contentHeight={"auto"}
                 slotMinWidth={80}
                 height={"auto"}

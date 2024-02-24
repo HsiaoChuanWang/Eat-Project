@@ -19,98 +19,172 @@ function DinerSidebar() {
   return (
     <>
       <div className="w-full">
-        <div className="flex flex-wrap bg-zinc-600/70">
+        <div className="flex flex-wrap bg-zinc-600/70 phone:w-full phone:flex-nowrap">
           <div
-            className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
+            className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white phone:h-20 ${
               selectedDinerBar === "dinerInfo" ||
               selectedDinerBar === "dinerInfoEdit"
-                ? "bg-zinc-800/80"
-                : "duration-150 hover:bg-zinc-500"
+                ? "bg-zinc-800/80 phone:w-[calc(100%/8*2)]"
+                : "duration-150 hover:bg-zinc-500 phone:w-[calc(100%/8)]"
             }`}
             onClick={() => {
               navigate(`/diner/dinerInfo/${userId}`);
-              setSelectedDinerBar("diner");
+              setSelectedDinerBar("dinerInfo");
             }}
           >
             <div>
-              <BsPersonFill className="mx-auto mb-1 text-4xl" />
-              <button>食客資訊</button>
+              <BsPersonFill
+                className={`mx-auto mb-1 text-4xl ${
+                  selectedDinerBar === "dinerInfo" ||
+                  selectedDinerBar === "dinerInfoEdit"
+                    ? "phone:text-2xl"
+                    : "phone:text-xl"
+                }`}
+              />
+              <button
+                className={`text-sm ${
+                  selectedDinerBar === "dinerInfo" ||
+                  selectedDinerBar === "dinerInfoEdit"
+                    ? "phone:text-xs"
+                    : "phone:hidden"
+                }`}
+              >
+                食客資訊
+              </button>
             </div>
           </div>
 
           <div
-            className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
+            className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white phone:h-20 ${
               selectedDinerBar === "reservedShop"
-                ? "bg-zinc-800/80"
-                : "duration-150 hover:bg-zinc-500"
+                ? "bg-zinc-800/80 phone:w-[calc(100%/8*2)]"
+                : "duration-150 hover:bg-zinc-500 phone:w-[calc(100%/8)]"
             }`}
             onClick={() => {
               navigate(`/diner/reservedShop/${userId}`);
-              setSelectedDinerBar("reserved");
+              setSelectedDinerBar("reservedShop");
             }}
           >
             <div>
-              <FaCalendarCheck className="mx-auto mb-1 text-4xl" />
-              <button>已預約餐廳</button>
+              <FaCalendarCheck
+                className={`mx-auto mb-1 text-4xl ${
+                  selectedDinerBar === "reservedShop"
+                    ? "phone:text-2xl"
+                    : "phone:text-xl"
+                }`}
+              />
+              <button
+                className={`text-sm ${
+                  selectedDinerBar === "reservedShop"
+                    ? "phone:text-xs"
+                    : "phone:hidden"
+                }`}
+              >
+                已預約餐廳
+              </button>
             </div>
           </div>
 
           <div
-            className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
-              selectedDinerBar === "eatenShop"
-                ? "bg-zinc-800/80"
-                : "duration-150 hover:bg-zinc-500"
+            className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white phone:h-20 ${
+              selectedDinerBar === "eatenShop" || selectedDinerBar === "addStar"
+                ? "bg-zinc-800/80 phone:w-[calc(100%/8*2)]"
+                : "duration-150 hover:bg-zinc-500 phone:w-[calc(100%/8)]"
             }`}
             onClick={() => {
               navigate(`/diner/eatenShop/${userId}`);
-              setSelectedDinerBar("eaten");
+              setSelectedDinerBar("eatenShop");
             }}
           >
             <div>
-              <PiForkKnifeFill className="mx-auto mb-1 text-4xl" />
-              <button>吃過的餐廳</button>
+              <PiForkKnifeFill
+                className={`mx-auto mb-1 text-4xl ${
+                  selectedDinerBar === "eatenShop" ||
+                  selectedDinerBar === "addStar"
+                    ? "phone:text-2xl"
+                    : "phone:text-xl"
+                }`}
+              />
+              <button
+                className={`text-sm ${
+                  selectedDinerBar === "eatenShop" ||
+                  selectedDinerBar === "addStar"
+                    ? "phone:text-xs"
+                    : "phone:hidden"
+                }`}
+              >
+                吃過的餐廳
+              </button>
             </div>
           </div>
 
           <div
-            className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
+            className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white phone:h-20 ${
               selectedDinerBar === "likeShop"
-                ? "bg-zinc-800/80"
-                : "duration-150 hover:bg-zinc-500"
+                ? "bg-zinc-800/80 phone:w-[calc(100%/8*2)]"
+                : "duration-150 hover:bg-zinc-500 phone:w-[calc(100%/8)]"
             }`}
             onClick={() => {
               navigate(`/diner/likeShop/${userId}`);
-              setSelectedDinerBar("like");
+              setSelectedDinerBar("likeShop");
             }}
           >
             <div>
-              <HiThumbUp className="mx-auto mb-1 text-4xl" />
-              <button>狠讚的餐廳</button>
+              <HiThumbUp
+                className={`mx-auto mb-1 text-4xl ${
+                  selectedDinerBar === "likeShop"
+                    ? "phone:text-2xl"
+                    : "phone:text-xl"
+                }`}
+              />
+              <button
+                className={`text-sm ${
+                  selectedDinerBar === "likeShop"
+                    ? "phone:text-xs"
+                    : "phone:hidden"
+                }`}
+              >
+                狠讚的餐廳
+              </button>
             </div>
           </div>
 
           <div
-            className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
+            className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white phone:h-20 ${
               selectedDinerBar === "dislikeShop"
-                ? "bg-zinc-800/80"
-                : "duration-150 hover:bg-zinc-500"
+                ? "bg-zinc-800/80 phone:w-[calc(100%/8*2)]"
+                : "duration-150 hover:bg-zinc-500 phone:w-[calc(100%/8)]"
             }`}
             onClick={() => {
               navigate(`/diner/dislikeShop/${userId}`);
-              setSelectedDinerBar("dislike");
+              setSelectedDinerBar("dislikeShop");
             }}
           >
             <div>
-              <HiThumbDown className="mx-auto mb-1 text-4xl" />
-              <button>黑名單餐廳</button>
+              <HiThumbDown
+                className={`mx-auto mb-1 text-4xl ${
+                  selectedDinerBar === "dislikeShop"
+                    ? "phone:text-2xl"
+                    : "phone:text-xl"
+                }`}
+              />
+              <button
+                className={`text-sm ${
+                  selectedDinerBar === "dislikeShop"
+                    ? "phone:text-xs"
+                    : "phone:hidden"
+                }`}
+              >
+                黑名單餐廳
+              </button>
             </div>
           </div>
 
           <div
-            className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
+            className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white phone:h-20 ${
               selectedDinerBar === "posted"
-                ? "bg-zinc-800/80"
-                : "duration-150 hover:bg-zinc-500"
+                ? "bg-zinc-800/80 phone:w-[calc(100%/8*2)]"
+                : "duration-150 hover:bg-zinc-500 phone:w-[calc(100%/8)]"
             }`}
             onClick={() => {
               navigate(`/diner/posted/${userId}`);
@@ -118,17 +192,31 @@ function DinerSidebar() {
             }}
           >
             <div>
-              <CgNotes className="mx-auto mb-1 text-4xl" />
-              <button>我的食記</button>
+              <CgNotes
+                className={`mx-auto mb-1 text-4xl ${
+                  selectedDinerBar === "posted"
+                    ? "phone:text-2xl"
+                    : "phone:text-xl"
+                }`}
+              />
+              <button
+                className={`text-sm ${
+                  selectedDinerBar === "posted"
+                    ? "phone:text-xs"
+                    : "phone:hidden"
+                }`}
+              >
+                我的食記
+              </button>
             </div>
           </div>
 
           <div
-            className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white ${
+            className={`flex h-[calc((100vh-176px)/7)] w-full cursor-pointer items-center justify-center border-b border-solid border-gray-400 font-black text-white phone:h-20 ${
               selectedDinerBar === "commented" ||
               selectedDinerBar === "starEdit"
-                ? "bg-zinc-800/80"
-                : "duration-150 hover:bg-zinc-500"
+                ? "bg-zinc-800/80 phone:w-[calc(100%/8*2)]"
+                : "duration-150 hover:bg-zinc-500 phone:w-[calc(100%/8)]"
             }`}
             onClick={() => {
               navigate(`/diner/commented/${userId}`);
@@ -136,8 +224,24 @@ function DinerSidebar() {
             }}
           >
             <div>
-              <BiSolidCommentDetail className="mx-auto mb-1 text-4xl" />
-              <button>我的評論</button>
+              <BiSolidCommentDetail
+                className={`mx-auto mb-1 text-4xl ${
+                  selectedDinerBar === "commented" ||
+                  selectedDinerBar === "starEdit"
+                    ? "phone:text-2xl"
+                    : "phone:text-xl"
+                }`}
+              />
+              <button
+                className={`text-sm ${
+                  selectedDinerBar === "commented" ||
+                  selectedDinerBar === "starEdit"
+                    ? "phone:text-xs"
+                    : "phone:hidden"
+                }`}
+              >
+                我的評論
+              </button>
             </div>
           </div>
         </div>

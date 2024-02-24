@@ -48,6 +48,7 @@ function ActivityEdit() {
   const navigate = useNavigate();
   const { companyId } = useParams();
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [isPhoneSize, setIsPhoneSize] = useState(false);
   const [companyData, setCompanyData] = useState([]);
   const uuid = uuidv4();
 
@@ -80,6 +81,22 @@ function ActivityEdit() {
     return companySnap;
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsPhoneSize(true);
+      } else {
+        setIsPhoneSize(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   async function uploadPicture(picture) {
     const storage = getStorage();
     const storageRef = ref(storage, uuid);
@@ -104,16 +121,24 @@ function ActivityEdit() {
     });
   }
 
-  const editorStyle = {
-    height: "calc(100vh - 350px)",
-    overflow: "auto",
-    marginBottom: "5px",
-    border: "1px solid #ddd",
-  };
+  const editorStyle =
+    isPhoneSize === true
+      ? {
+          height: "calc(100vh - 540px)",
+          overflow: "auto",
+          marginBottom: "5px",
+          border: "1px solid #ddd",
+        }
+      : {
+          height: "calc(100vh - 400px)",
+          overflow: "auto",
+          marginBottom: "5px",
+          border: "1px solid #ddd",
+        };
 
   return (
-    <div className="flex h-full w-full p-12">
-      <div className="h-full w-5/6 border-2 border-solid border-black p-4">
+    <div className="flex h-full w-full p-12 phone:flex-col-reverse phone:p-4">
+      <div className="h-[calc(100vh-280px)] w-5/6 border-2 border-solid border-black p-4 phone:h-[calc(100vh-380px)] phone:w-full">
         <Editor
           editorStyle={editorStyle}
           editorState={editorState}
@@ -167,9 +192,9 @@ function ActivityEdit() {
         />
       </div>
 
-      <div className="w-1/6 self-end pl-12">
+      <div className="w-1/6 self-end pl-12 phone:mb-8 phone:flex phone:w-auto phone:gap-4 phone:pl-0">
         <Button
-          className="block h-11 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
+          className="h-11 rounded-lg bg-[#ff850e] px-4 text-center text-lg font-black text-white shadow-lg"
           onClick={() => {
             handleSend();
             navigate(`/boss/activity/${companyId}`);
@@ -179,7 +204,7 @@ function ActivityEdit() {
         </Button>
 
         <Button
-          className="mt-4 block h-11 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg "
+          className="mt-4 h-11 rounded-lg bg-[#b0aba5] px-4 text-center text-lg font-black text-white shadow-lg phone:mt-0"
           onClick={() => {
             navigate(`/boss/activity/${companyId}`);
           }}

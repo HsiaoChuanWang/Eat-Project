@@ -80,22 +80,24 @@ function BossInfoEdit() {
   return (
     <div className="flex h-full items-center justify-center">
       <Alert />
-      <Card className="w-2/3">
+      <Card className="w-2/3 phone:mt-6 phone:w-5/6 tablet:w-5/6">
         <ScrollShadow
           size={0}
           hideScrollBar
           className=" h-[calc(100vh-300px)] w-full"
         >
           <div className="relative mt-8">
-            <h2 className="mb-2 ml-20 text-2xl font-bold">負責人資訊</h2>
+            <h2 className="mb-2 ml-20 text-2xl font-bold phone:text-xl">
+              負責人資訊
+            </h2>
             <div className="mx-auto w-4/5 border-t-2 border-solid border-gray-400 pb-2"></div>
-            <Form className="ml-20">
-              <div className="flex items-center">
-                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+            <Form className="ml-20 phone:mx-8">
+              <div className="flex items-center phone:flex-col phone:items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:my-2 phone:w-20 phone:text-xs phone:[text-align-last:auto]">
                   姓名
                 </h1>
                 <Input
-                  className="h-8 w-28"
+                  className="h-8 w-28 phone:mb-4 phone:w-20 phone:text-xs"
                   onChange={(e) =>
                     setUpdateUser({
                       ...updateUser,
@@ -106,12 +108,12 @@ function BossInfoEdit() {
                 />
               </div>
 
-              <div className="flex items-center">
-                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+              <div className="flex items-center phone:flex-col phone:items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:my-2 phone:w-20 phone:text-xs phone:[text-align-last:auto]">
                   性別
                 </h1>
                 <Radio.Group
-                  className="font-black"
+                  className="font-black phone:mb-4"
                   name="gender"
                   onChange={(e) =>
                     setUpdateUser({
@@ -126,12 +128,12 @@ function BossInfoEdit() {
                 </Radio.Group>
               </div>
 
-              <div className="flex items-center">
-                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+              <div className="flex items-center phone:flex-col phone:items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:my-2 phone:w-20 phone:text-xs phone:[text-align-last:auto]">
                   手機
                 </h1>
                 <Input
-                  className="h-8 w-64"
+                  className="h-8 w-64 phone:mb-4 phone:w-44 phone:text-xs"
                   name="phone"
                   onChange={(e) =>
                     setUpdateUser({
@@ -143,12 +145,12 @@ function BossInfoEdit() {
                 />
               </div>
 
-              <div className="mb-4 flex  items-center">
-                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+              <div className="mb-4 flex items-center phone:flex-col phone:items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:my-2 phone:w-20 phone:text-xs phone:[text-align-last:auto]">
                   上傳大頭照
                 </h1>
                 <Input
-                  className="h-8 w-64 text-xs"
+                  className="h-8 w-64 text-xs phone:w-44"
                   type="file"
                   accept="image/*"
                   onChange={(e) => handlePicture(e)}
@@ -163,7 +165,7 @@ function BossInfoEdit() {
               >
                 <Button
                   style={{ background: "#b0aba5", cursor: "pointer" }}
-                  className="absolute bottom-0 right-36  font-bold"
+                  className="absolute bottom-0 right-36  font-bold phone:right-32 tablet:right-28"
                   onClick={() => navigate(`/boss/bossInfo/${companyId}`)}
                   type="primary"
                   htmlType="button"
@@ -172,7 +174,7 @@ function BossInfoEdit() {
                 </Button>
 
                 <Button
-                  className="absolute bottom-0 right-16 font-bold"
+                  className="absolute bottom-0 right-16 font-bold phone:right-12 tablet:right-8"
                   onClick={handleUserUpdate}
                   type="primary"
                   htmlType="button"
@@ -184,15 +186,17 @@ function BossInfoEdit() {
           </div>
 
           <div className="relative">
-            <h2 className="mb-2 ml-20 text-2xl font-bold">餐廳資訊</h2>
+            <h2 className="mb-2 ml-20 text-2xl font-bold phone:text-xl">
+              餐廳資訊
+            </h2>
             <div className="mx-auto w-4/5 border-t-2 border-solid border-gray-400 pb-2"></div>
-            <Form className="ml-20">
-              <div className="flex items-center">
-                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+            <Form className="ml-20 phone:mx-8">
+              <div className="flex items-center phone:flex-col phone:items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:my-2 phone:w-20 phone:text-xs phone:[text-align-last:auto]">
                   店名
                 </h1>
                 <Input
-                  className="h-8 w-64"
+                  className="h-8 w-64 phone:mb-4 phone:w-44 phone:text-xs"
                   name="name"
                   onChange={(e) =>
                     setUpdateCompany({ ...updateCompany, name: e.target.value })
@@ -201,64 +205,72 @@ function BossInfoEdit() {
                 />
               </div>
 
-              <div className="flex items-start">
-                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+              <div className="flex items-start phone:flex-col phone:items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:my-2 phone:w-20 phone:text-xs phone:[text-align-last:auto]">
                   地址
                 </h1>
 
-                <div className="mr-4">
-                  <h2 className="text-xs text-gray-400">縣市</h2>
-                  <Input
-                    className="w-20"
-                    name="city"
-                    onChange={(e) =>
-                      setUpdateCompany({
-                        ...updateCompany,
-                        city: e.target.value,
-                      })
-                    }
-                    value={updateCompany.city}
-                  />
-                </div>
+                <div className="flex phone:mb-4 phone:flex-wrap tablet:w-[calc(100%-136px)] tablet:flex-wrap laptop:w-[calc(100%-136px)] laptop:flex-wrap">
+                  <div className="mr-4">
+                    <h2 className="text-xs text-gray-400 phone:text-[10px]">
+                      縣市
+                    </h2>
+                    <Input
+                      className="w-20 phone:h-8 phone:w-16 phone:text-xs"
+                      name="city"
+                      onChange={(e) =>
+                        setUpdateCompany({
+                          ...updateCompany,
+                          city: e.target.value,
+                        })
+                      }
+                      value={updateCompany.city}
+                    />
+                  </div>
 
-                <div className="mr-4">
-                  <h2 className="text-xs text-gray-400">鄉鎮市區</h2>
-                  <Input
-                    className="w-20"
-                    name="district"
-                    onChange={(e) =>
-                      setUpdateCompany({
-                        ...updateCompany,
-                        district: e.target.value,
-                      })
-                    }
-                    value={updateCompany.district}
-                  />
-                </div>
+                  <div className="mr-4">
+                    <h2 className="text-xs text-gray-400 phone:text-[10px]">
+                      鄉鎮市區
+                    </h2>
+                    <Input
+                      className="w-20 phone:h-8 phone:w-16 phone:text-xs"
+                      name="district"
+                      onChange={(e) =>
+                        setUpdateCompany({
+                          ...updateCompany,
+                          district: e.target.value,
+                        })
+                      }
+                      value={updateCompany.district}
+                    />
+                  </div>
 
-                <div>
-                  <h2 className="text-xs text-gray-400">詳細地址</h2>
+                  <div>
+                    <h2 className="text-xs text-gray-400 phone:text-[10px]">
+                      詳細地址
+                    </h2>
 
-                  <Input
-                    className="w-44"
-                    name="address"
-                    onChange={(e) =>
-                      setUpdateCompany({
-                        ...updateCompany,
-                        address: e.target.value,
-                      })
-                    }
-                    value={updateCompany.address}
-                  />
+                    <Input
+                      className="w-44 phone:h-8 phone:text-xs"
+                      name="address"
+                      onChange={(e) =>
+                        setUpdateCompany({
+                          ...updateCompany,
+                          address: e.target.value,
+                        })
+                      }
+                      value={updateCompany.address}
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-center">
-                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+              <div className="flex items-center phone:flex-col phone:items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:my-2 phone:w-20 phone:text-xs phone:[text-align-last:auto]">
                   餐廳電話
                 </h1>
                 <Input
-                  className="h-8 w-64"
+                  className="h-8 w-64 phone:mb-4 phone:w-44 phone:text-xs"
                   name="telephone"
                   onChange={(e) =>
                     setUpdateCompany({
@@ -270,8 +282,8 @@ function BossInfoEdit() {
                 />
               </div>
 
-              <div className="flex items-center">
-                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify]">
+              <div className="mb-4 flex items-center phone:flex-col phone:items-start">
+                <h1 className="my-4 mr-6 w-28 text-base font-semibold [text-align-last:justify] phone:my-2 phone:w-20 phone:text-xs phone:[text-align-last:auto]">
                   類別
                 </h1>
                 <Select
@@ -281,9 +293,7 @@ function BossInfoEdit() {
                   }
                   value={updateCompany.category}
                   showSearch
-                  style={{
-                    width: 200,
-                  }}
+                  className="w-48 phone:mb-4 phone:w-44 phone:text-xs"
                   placeholder="點選類別"
                   optionFilterProp="children"
                   filterOption={(input, option) =>
@@ -326,7 +336,7 @@ function BossInfoEdit() {
               >
                 <Button
                   style={{ background: "#b0aba5", cursor: "pointer" }}
-                  className="absolute bottom-0 right-36  font-bold"
+                  className="absolute bottom-0 right-36 font-bold phone:right-32 tablet:right-28"
                   onClick={() => navigate(`/boss/bossInfo/${companyId}`)}
                   type="primary"
                   htmlType="button"
@@ -335,7 +345,7 @@ function BossInfoEdit() {
                 </Button>
 
                 <Button
-                  className="absolute bottom-0 right-16 font-bold"
+                  className="absolute bottom-0 right-16 font-bold phone:right-12 tablet:right-8"
                   onClick={handleCompanyUpdate}
                   type="primary"
                   htmlType="button"
